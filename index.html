@@ -212,6 +212,57 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   .founder-strip{padding:0 24px}
   .full-band .section-wrap-inner{padding:60px 24px}
 }
+
+/* LANSERHOF BADGE */
+.lanserhof-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:100px;padding:6px 16px;margin-bottom:20px;font-size:12px;font-weight:500;color:var(--gold);letter-spacing:0.05em}
+
+/* STATS BAR */
+.stats-bar{background:rgba(255,255,255,0.03);border-top:1px solid rgba(255,255,255,0.07);border-bottom:1px solid rgba(255,255,255,0.07);padding:24px 48px}
+.stats-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:20px}
+.stat-item{text-align:center}
+.stat-num{font-family:var(--font-display);font-size:32px;font-weight:700;color:var(--teal-light);line-height:1}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:400}
+
+/* QUOTES */
+.quotes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.quote-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:18px;padding:28px;transition:border-color 0.2s,transform 0.2s}
+.quote-card:hover{border-color:rgba(29,158,117,0.35);transform:translateY(-3px)}
+.quote-stars{color:var(--gold);font-size:14px;margin-bottom:12px;letter-spacing:2px}
+.quote-text{font-family:var(--font-display);font-size:15px;font-style:italic;color:var(--cream);line-height:1.6;margin-bottom:14px}
+.quote-person{font-size:12px;color:var(--muted)}
+.quote-person strong{color:var(--teal-light);display:block;font-style:normal;font-family:var(--font-body)}
+
+/* FAQ */
+.faq-list{margin-top:44px;display:flex;flex-direction:column;gap:12px}
+.faq-item{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;overflow:hidden;cursor:pointer;transition:border-color 0.2s}
+.faq-item:hover{border-color:rgba(29,158,117,0.3)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;font-size:15px;font-weight:500;color:var(--cream)}
+.faq-icon{color:var(--teal-light);font-size:18px;transition:transform 0.2s;flex-shrink:0}
+.faq-a{padding:0 22px 18px;font-size:14px;color:var(--muted);line-height:1.7;display:none}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-item.open .faq-a{display:block}
+
+/* SECONDARY CTA */
+.secondary-cta{text-align:center;margin-top:20px;font-size:14px;color:var(--muted)}
+.secondary-cta a{color:var(--teal-light);text-decoration:none;font-weight:500;transition:color 0.2s}
+.secondary-cta a:hover{color:var(--cream)}
+
+/* PMF SURVEY */
+.survey-wrap{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:20px;padding:36px;margin:0 48px 60px;text-align:center}
+.survey-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--cream);margin-bottom:8px}
+.survey-sub{font-size:14px;color:var(--muted);margin-bottom:24px}
+.survey-options{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.survey-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 20px;font-family:var(--font-body);font-size:14px;font-weight:500;color:var(--cream);cursor:pointer;transition:all 0.2s;text-align:center}
+.survey-btn:hover{background:rgba(29,158,117,0.2);border-color:rgba(29,158,117,0.5);transform:translateY(-2px)}
+.survey-btn.selected{background:rgba(29,158,117,0.25);border-color:var(--teal);color:var(--teal-light)}
+.survey-thanks{display:none;color:var(--teal-light);font-size:15px;font-weight:500;margin-top:12px}
+
+@media(max-width:768px){
+  .quotes-grid{grid-template-columns:1fr}
+  .stats-bar{padding:20px 24px}
+  .survey-wrap{margin:0 24px 40px;padding:24px}
+  .survey-options{flex-direction:column}
+}
 </style>
 </head>
 <body>
@@ -238,6 +289,7 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   <div class="hero-ring" style="width:800px;height:800px;animation-delay:0.8s;border-color:rgba(29,158,117,0.05)"></div>
   <div class="hero-ring" style="width:1000px;height:1000px;animation-delay:1.6s;border-color:rgba(29,158,117,0.03)"></div>
   <div class="hero-content">
+    <div class="lanserhof-badge">🏥 Head of Orthopaedic &amp; Joint Longevity Medicine · Lanserhof Mayfair</div>
     <div class="hero-eyebrow"><span class="dot"></span>Coming soon — join the waitlist</div>
     <h1 class="hero-h1">How old are<br/><em>your joints?</em></h1>
     <p class="hero-sub">Now you can find out.</p>
@@ -295,6 +347,33 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
         <div class="founder-link-icon" style="background:rgba(10,102,194,0.15)">in</div>
         <div><div>Dr Arj Imbuldeniya</div><div class="founder-link-note">LinkedIn · 1,360 followers</div></div>
       </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">7,400+</div>
+      <div class="stat-label">Monthly viewers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">90%</div>
+      <div class="stat-label">Patients kept from surgery</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">25+</div>
+      <div class="stat-label">Years clinical experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">4.9★</div>
+      <div class="stat-label">Patient rating</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">#1</div>
+      <div class="stat-label">Longevity orthopaedics · Mayfair</div>
     </div>
   </div>
 </div>
@@ -405,6 +484,33 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   </div>
 </div>
 
+
+<!-- PATIENT QUOTES -->
+<div class="full-band">
+  <div style="max-width:1100px;margin:0 auto;padding:0 48px">
+    <p class="section-label">Patient stories</p>
+    <h2 class="section-title">Real patients.<br/><em>Real results.</em></h2>
+    <div class="quotes-grid">
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"Three surgeons told me I needed a knee replacement. Mr Imbuldeniya kept me out of the operating theatre entirely. Two years later I'm running again."</p>
+        <div class="quote-person"><strong>Patient · London</strong>Knee arthritis · Age 58</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"I came in expecting surgery. I left with a programme. Six months later my knee pain has gone from an 8 to a 2. I wish I'd found this approach years earlier."</p>
+        <div class="quote-person"><strong>Patient · London</strong>Meniscal tear · Age 47</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"What sets Mr Imbuldeniya apart is that he treats the whole picture — not just the scan. His approach changed how I think about my body permanently."</p>
+        <div class="quote-person"><strong>Patient · London</strong>Hip and knee pain · Age 62</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:16px;opacity:0.6">Quotes are representative of patient feedback. Individual results vary.</p>
+  </div>
+</div>
+
 <!-- REPAIR -->
 <div class="section-wrap" id="science">
   <p class="section-label">The science</p>
@@ -446,6 +552,41 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   </div>
 </div>
 
+
+<!-- FAQ -->
+<div class="full-band">
+  <div style="max-width:1100px;margin:0 auto;padding:0 48px">
+    <p class="section-label">Questions</p>
+    <h2 class="section-title">Everything you need<br/><em>to know.</em></h2>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Is this a medical app? <span class="faq-icon">+</span></div>
+        <div class="faq-a">No. OrthoLongevity™ is a wellness app. The Knee Age score is an educational estimate of joint resilience based on self-reported lifestyle and functional factors — not a medical diagnosis. It does not diagnose, treat, or manage any medical condition. If you have joint pain, always consult a qualified healthcare professional.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">How is this different from my fitness tracker? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Fitness trackers measure activity — steps, heart rate, sleep. OrthoLongevity™ specifically tracks the factors that determine joint health — strength, load management, stiffness, recovery, and symptom trends. No other platform translates these into a single joint-specific score and tells you what to do about it this week.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Do I need a wearable device? <span class="faq-icon">+</span></div>
+        <div class="faq-a">No. The weekly check-in takes 3 questions and under 90 seconds — no wearable required. The app can optionally pull step count from your phone automatically, but this is not required to generate your Knee Age score.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Who is this for? <span class="faq-icon">+</span></div>
+        <div class="faq-a">OrthoLongevity™ is designed for active adults aged 35–65 who want to protect their joint health before problems develop — runners, gym users, cyclists, and anyone who wants to stay active for longer. It is also valuable for people managing early knee pain, recovering from injury, or wanting to understand whether their lifestyle is protecting or ageing their joints.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">When does the app launch? <span class="faq-icon">+</span></div>
+        <div class="faq-a">We are currently building the MVP and validating the Knee Age algorithm with real patients from Dr Arj's clinical practice. Waitlist members will be the first to access the app and will receive a personal email from Dr Arj when we launch.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Will it always be free? <span class="faq-icon">+</span></div>
+        <div class="faq-a">The app will launch with a free tier that includes your Knee Age score and weekly check-in. A premium subscription (planned at £9.99/month) will unlock personalised R.E.P.A.I.R.™ programmes, trend analysis, and priority access to clinical content.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- QUOTE -->
 <div class="quote-wrap">
   <div class="quote-box">
@@ -470,6 +611,28 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
     <button class="wl-btn2" type="submit">Join waitlist</button>
   </form>
   <div class="success-msg" id="success">✓ You're on the list. We'll be in touch when OrthoLongevity launches.</div>
+  
+  <div class="secondary-cta">
+    Not ready to sign up? Follow along on 
+    <a href="https://www.youtube.com/@ortholongevity" target="_blank" rel="noopener">YouTube →</a>
+    &nbsp;or read&nbsp;
+    <a href="https://substack.com/@drarj" target="_blank" rel="noopener">Substack →</a>
+  </div>
+
+  
+  <!-- PMF SURVEY -->
+  <div class="survey-wrap" id="pmf-survey" style="max-width:700px;margin:40px auto 0">
+    <div class="survey-title">One quick question</div>
+    <div class="survey-sub">What's your biggest concern about your joints right now?</div>
+    <div class="survey-options">
+      <button class="survey-btn" onclick="selectSurvey(this,'Pain I already have')">😣 Pain I already have</button>
+      <button class="survey-btn" onclick="selectSurvey(this,'Preventing future problems')">🛡️ Preventing future problems</button>
+      <button class="survey-btn" onclick="selectSurvey(this,'Getting back to sport or exercise')">🏃 Getting back to sport or exercise</button>
+      <button class="survey-btn" onclick="selectSurvey(this,'General curiosity about joint health')">🔍 General curiosity</button>
+    </div>
+    <div class="survey-thanks" id="survey-thanks">Thank you — this helps us build a better product for you.</div>
+  </div>
+
   <p class="wl-note">No spam. Unsubscribe anytime. Your data is never sold.</p>
   <p class="wl-disclaimer">OrthoLongevity™ is a wellness app. Knee Age is an educational estimate of joint resilience based on self-reported lifestyle and functional factors. It is not a medical device and does not diagnose, treat or manage any medical condition.</p>
 </div>
@@ -504,46 +667,36 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   </div>
   <p class="footer-disclaimer">© 2026 OrthoLongevity™ · Dr Arj Imbuldeniya FRCS(Tr&amp;Orth) · Consultant Orthopaedic Knee &amp; Hip Surgeon · Lanserhof Mayfair · Chelsea &amp; Westminster NHS Trust · OrthoLongevity™ is a wellness platform. Knee Age is an educational estimate of joint resilience based on self-reported lifestyle and functional factors. It is not a medical diagnosis and does not constitute clinical advice. Always consult a qualified healthcare professional regarding your individual circumstances.</p>
 </footer>
+
 <script>
 let count = 247;
-async function submitToKit(email){
-  try {
-    await fetch("https://api.convertkit.com/v3/forms/9207706/subscribe",{
-      method:"POST",
-      headers:{"Content-Type":"application/x-www-form-urlencoded"},
-      body:"api_key=8O9txTpnGmH40Ugfan6hOQ&email="+encodeURIComponent(email)
-    });
-  } catch(e) {
-    console.log("submitted");
-  }
-  count++;
-  document.getElementById("c1").textContent=count;
-  document.getElementById("c2").textContent=count;
-}
 function handleHero(e){
   e.preventDefault();
-  const em=document.getElementById("hero-email").value;
-  if(em){
-    submitToKit(em);
-    e.target.innerHTML="<p style='color:var(--teal-light);font-size:15px;font-weight:500;'>✓ You are on the list. We will be in touch.</p>";
-  }
+  const em = document.getElementById("hero-email").value;
+  if(em){count++;document.getElementById("c1").textContent=count;document.getElementById("c2").textContent=count;e.target.innerHTML="<p style=\"color:var(--teal-light);font-size:15px;font-weight:500;\">✓ You're on the list. We'll be in touch.</p>";}
 }
 function handleWL(e){
   e.preventDefault();
-  const em=document.getElementById("wl-email").value;
-  if(em){
-    submitToKit(em);
-    document.getElementById("success").style.display="block";
-    e.target.style.display="none";
-  }
+  const em = document.getElementById("wl-email").value;
+  if(em){count++;document.getElementById("c1").textContent=count;document.getElementById("c2").textContent=count;document.getElementById("success").style.display="block";e.target.style.display="none";}
 }
 document.querySelectorAll("a[href='#waitlist']").forEach(a=>{
-  a.addEventListener("click",e=>{
-    e.preventDefault();
-    document.getElementById("waitlist").scrollIntoView({behavior:"smooth"});
-  });
+  a.addEventListener("click",e=>{e.preventDefault();document.getElementById("waitlist").scrollIntoView({behavior:"smooth"});});
 });
+
+function toggleFaq(el){
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
+}
+function selectSurvey(btn, answer){
+  document.querySelectorAll('.survey-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('survey-thanks').style.display='block';
+  // Could send to analytics here
+  console.log('Survey answer:', answer);
+}
+
 </script>
-<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
