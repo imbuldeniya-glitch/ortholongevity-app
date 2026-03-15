@@ -507,7 +507,15 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
 <script>
 let count = 247;
 async function submitToKit(email){
-  await fetch("https://app.kit.com/forms/9207706/subscriptions",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"email_address="+encodeURIComponent(email)});
+  try {
+    await fetch("https://api.convertkit.com/v3/forms/9207706/subscribe",{
+      method:"POST",
+      headers:{"Content-Type":"application/x-www-form-urlencoded"},
+      body:"api_key=8O9txTpnGmH40Ugfan6hOQ&email="+encodeURIComponent(email)
+    });
+  } catch(e) {
+    console.log("submitted");
+  }
   count++;
   document.getElementById("c1").textContent=count;
   document.getElementById("c2").textContent=count;
@@ -515,15 +523,25 @@ async function submitToKit(email){
 function handleHero(e){
   e.preventDefault();
   const em=document.getElementById("hero-email").value;
-  if(em){submitToKit(em);e.target.innerHTML="<p style=\"color:var(--teal-light);font-size:15px;font-weight:500;\">✓ You\'re on the list. We\'ll be in touch.</p>";}
+  if(em){
+    submitToKit(em);
+    e.target.innerHTML="<p style='color:var(--teal-light);font-size:15px;font-weight:500;'>✓ You are on the list. We will be in touch.</p>";
+  }
 }
 function handleWL(e){
   e.preventDefault();
   const em=document.getElementById("wl-email").value;
-  if(em){submitToKit(em);document.getElementById("success").style.display="block";e.target.style.display="none";}
+  if(em){
+    submitToKit(em);
+    document.getElementById("success").style.display="block";
+    e.target.style.display="none";
+  }
 }
 document.querySelectorAll("a[href='#waitlist']").forEach(a=>{
-  a.addEventListener("click",e=>{e.preventDefault();document.getElementById("waitlist").scrollIntoView({behavior:"smooth"});});
+  a.addEventListener("click",e=>{
+    e.preventDefault();
+    document.getElementById("waitlist").scrollIntoView({behavior:"smooth"});
+  });
 });
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
