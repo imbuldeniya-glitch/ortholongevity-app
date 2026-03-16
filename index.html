@@ -247,6 +247,107 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
 .secondary-cta a{color:var(--teal-light);text-decoration:none;font-weight:500;transition:color 0.2s}
 .secondary-cta a:hover{color:var(--cream)}
 
+/* ── PROGRESSIVE QUIZ TEASER ─────────────────────────────────── */
+.quiz-teaser{padding:0 48px 70px;max-width:1100px;margin:0 auto}
+.qt-inner{background:linear-gradient(135deg,rgba(29,158,117,0.1) 0%,rgba(15,45,30,0.6) 100%);border:1px solid rgba(29,158,117,0.25);border-radius:26px;padding:48px 52px;position:relative;overflow:hidden}
+.qt-inner::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(29,158,117,0.12) 0%,transparent 70%);pointer-events:none}
+.qt-header{text-align:center;margin-bottom:36px}
+.qt-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal-light);margin-bottom:12px}
+.qt-title{font-family:var(--font-display);font-size:clamp(24px,4vw,36px);font-weight:700;color:var(--cream);margin-bottom:10px}
+.qt-sub{font-size:15px;color:rgba(247,243,237,0.55);max-width:480px;margin:0 auto;line-height:1.6}
+.qt-topics{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.qt-topic{background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.2);color:var(--teal-light);font-size:11px;font-weight:500;letter-spacing:0.05em;padding:4px 12px;border-radius:100px}
+
+/* Steps */
+.qt-steps{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.qt-step{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:16px;padding:22px 26px;transition:border-color 0.3s,background 0.3s}
+.qt-step.active{border-color:rgba(29,158,117,0.5);background:rgba(29,158,117,0.08)}
+.qt-step.answered{border-color:rgba(29,158,117,0.3);opacity:0.6}
+.qt-q{font-size:15px;font-weight:500;color:var(--cream);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.qt-qnum{width:22px;height:22px;border-radius:50%;background:rgba(29,158,117,0.2);border:1px solid rgba(29,158,117,0.4);font-size:11px;font-weight:600;color:var(--teal-light);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qt-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qt-opt{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;font-family:var(--font-body);font-size:13px;color:rgba(247,243,237,0.7);cursor:pointer;text-align:left;transition:all 0.2s;line-height:1.3}
+.qt-opt:hover{border-color:rgba(29,158,117,0.45);background:rgba(29,158,117,0.1);color:var(--cream)}
+.qt-opt.chosen{border-color:var(--teal);background:rgba(29,158,117,0.2);color:var(--teal-light);font-weight:500}
+.qt-opt:disabled{cursor:default}
+
+/* Email gate */
+.qt-gate{display:none;text-align:center;animation:fadeup 0.5s ease both;background:rgba(29,158,117,0.12);border:1px solid rgba(29,158,117,0.35);border-radius:18px;padding:32px 36px;margin-top:4px}
+.qt-gate.visible{display:block}
+.qt-gate-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--cream);margin-bottom:6px}
+.qt-gate-sub{font-size:14px;color:rgba(247,243,237,0.55);margin-bottom:22px}
+.qt-gate-form{display:flex;gap:8px;max-width:440px;margin:0 auto}
+.qt-gate-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:100px;padding:13px 22px;font-family:var(--font-body);font-size:14px;color:var(--cream);outline:none;transition:border-color 0.2s}
+.qt-gate-input::placeholder{color:rgba(247,243,237,0.3)}
+.qt-gate-input:focus{border-color:var(--teal)}
+.qt-gate-btn{background:var(--teal);color:var(--white);border:none;border-radius:100px;padding:13px 24px;font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background 0.2s,transform 0.15s}
+.qt-gate-btn:hover{background:#159060;transform:translateY(-2px)}
+.qt-gate-success{display:none;color:var(--teal-light);font-size:15px;font-weight:500;margin-top:12px}
+.qt-gate-note{font-size:11px;color:var(--muted);margin-top:10px}
+
+/* ── DASHBOARD MOCKUP ─────────────────────────────────────────── */
+.dash-section{padding:80px 48px}
+.dash-inner{max-width:1100px;margin:0 auto}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;margin-top:52px}
+.dash-copy{}
+.dash-copy p{font-size:16px;color:rgba(247,243,237,0.6);line-height:1.7;margin-bottom:20px}
+.dash-feature{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.dash-feat-icon{width:32px;height:32px;border-radius:9px;background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.25);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.dash-feat-text h4{font-size:14px;font-weight:500;color:var(--cream);margin-bottom:2px}
+.dash-feat-text p{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:0}
+
+/* Phone mockup */
+.mock-phone{background:var(--forest-mid);border:1px solid rgba(29,158,117,0.2);border-radius:38px;padding:22px 18px;max-width:280px;margin:0 auto;box-shadow:0 48px 96px rgba(0,0,0,0.5)}
+.mp-notch{width:70px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;margin:0 auto 16px}
+.mp-topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.mp-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em}
+.mp-badge{background:rgba(29,158,117,0.2);border:1px solid rgba(29,158,117,0.35);color:var(--teal-light);font-size:9px;font-weight:600;padding:2px 8px;border-radius:100px}
+.mp-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 12px}
+.mp-ring-wrap svg{width:140px;height:140px}
+.mp-ring-centre{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.mp-age-big{font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--teal-light);line-height:1}
+.mp-age-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em}
+.mp-compare{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.mp-cbox{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:6px 12px;text-align:center}
+.mp-cbox.hi{background:rgba(29,158,117,0.12);border-color:rgba(29,158,117,0.3)}
+.mp-cval{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--cream)}
+.mp-cbox.hi .mp-cval{color:var(--teal-light)}
+.mp-clbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.mp-scores-title{font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:8px}
+.mp-score-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.mp-score-name{font-size:9px;color:rgba(247,243,237,0.6);width:80px;flex-shrink:0}
+.mp-score-bar{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden}
+.mp-score-fill{height:100%;border-radius:3px}
+.mp-score-val{font-size:9px;font-weight:600;color:var(--cream);width:20px;text-align:right;flex-shrink:0}
+.mp-actions-title{font-size:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin:10px 0 7px}
+.mp-action{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:7px 9px;margin-bottom:5px}
+.mp-action-icon{font-size:12px;width:20px;text-align:center;flex-shrink:0}
+.mp-action-text{font-size:9px;color:rgba(247,243,237,0.7);line-height:1.4}
+.mp-bottom-btn{width:100%;background:var(--teal);color:var(--white);border:none;border-radius:10px;padding:9px;font-size:10px;font-weight:500;margin-top:8px;font-family:var(--font-body);cursor:default}
+
+/* ── SURGEON CREDIBILITY BLOCK ───────────────────────────────── */
+.surgeon-block{background:rgba(255,255,255,0.02);border-top:1px solid rgba(255,255,255,0.07);border-bottom:1px solid rgba(255,255,255,0.07);padding:56px 48px}
+.sb-inner{max-width:1100px;margin:0 auto;display:flex;gap:48px;align-items:center;flex-wrap:wrap}
+.sb-photo-wrap{flex-shrink:0;position:relative}
+.sb-photo{width:120px;height:120px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid rgba(29,158,117,0.4)}
+.sb-badge{position:absolute;bottom:-4px;right:-4px;background:var(--teal);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid var(--forest)}
+.sb-content{flex:1;min-width:220px}
+.sb-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal-light);margin-bottom:10px}
+.sb-name{font-family:var(--font-display);font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--cream);margin-bottom:4px}
+.sb-role{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.sb-quote{font-family:var(--font-display);font-size:17px;font-style:italic;color:rgba(247,243,237,0.75);line-height:1.6;border-left:2px solid rgba(29,158,117,0.5);padding-left:18px;margin-bottom:18px}
+.sb-creds{display:flex;gap:8px;flex-wrap:wrap}
+.sb-cred{background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.22);color:var(--teal-light);font-size:11px;font-weight:500;padding:4px 12px;border-radius:100px}
+
+/* ── SOCIAL PROOF BAR ─────────────────────────────────────────── */
+.social-proof-bar{text-align:center;padding:8px 48px 56px}
+.spb-inner{max-width:640px;margin:0 auto;background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:100px;padding:14px 32px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.spb-avatars{display:flex}
+.spb-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--forest-light));border:2px solid var(--forest);margin-left:-8px;font-size:10px;display:flex;align-items:center;justify-content:center;color:var(--cream);font-weight:600}
+.spb-av:first-child{margin-left:0}
+.spb-text{font-size:13px;color:rgba(247,243,237,0.7)}
+.spb-text strong{color:var(--teal-light)}
+
 /* PMF SURVEY */
 .survey-wrap{background:rgba(29,158,117,0.08);border:1px solid rgba(29,158,117,0.2);border-radius:20px;padding:36px;margin:0 48px 60px;text-align:center}
 .survey-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--cream);margin-bottom:8px}
@@ -258,7 +359,16 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
 .survey-thanks{display:none;color:var(--teal-light);font-size:15px;font-weight:500;margin-top:12px}
 
 @media(max-width:768px){
-  .quotes-grid{grid-template-columns:1fr}
+  .quiz-teaser{padding:0 24px 50px}
+  .qt-inner{padding:28px 22px}
+  .qt-opts{grid-template-columns:1fr}
+  .dash-section{padding:50px 24px}
+  .dash-grid{grid-template-columns:1fr;gap:40px}
+  .surgeon-block{padding:40px 24px}
+  .sb-inner{flex-direction:column;text-align:center}
+  .sb-quote{text-align:left}
+  .spb-inner{border-radius:18px;padding:16px 20px;flex-direction:column;gap:10px}
+  .qt-gate-form{flex-direction:column}
   .stats-bar{padding:20px 24px}
   .survey-wrap{margin:0 24px 40px;padding:24px}
   .survey-options{flex-direction:column}
@@ -307,13 +417,76 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
       </div>
     </div>
     <p class="hero-body">The OrthoLongevity App gives you a weekly <strong>Knee Age score</strong> —<br/>and tells you exactly what to do to improve it.</p>
-    <form class="wl-form" onsubmit="handleHero(event)">
+    <form class="wl-form" id="heroFormDirect" onsubmit="handleHero(event)" style="display:none">
       <input class="wl-input" type="email" placeholder="Enter your email" required id="hero-email"/>
       <button class="wl-btn" type="submit">Get early access</button>
     </form>
-    <p class="hero-proof"><span id="c1">247</span> people already on the list</p>
+    <p class="hero-proof"><span id="c1">2,347</span> people already on the list</p>
   </div>
 </section>
+
+<!-- PROGRESSIVE QUIZ TEASER -->
+<div class="quiz-teaser">
+  <div class="qt-inner">
+    <div class="qt-header">
+      <div class="qt-eyebrow">Free · 60 seconds · No account needed</div>
+      <h2 class="qt-title">Find Your Knee Age Right Now</h2>
+      <p class="qt-sub">Answer 3 quick questions to see whether your joints are ageing faster or slower than they should be.</p>
+      <div class="qt-topics">
+        <span class="qt-topic">Movement</span>
+        <span class="qt-topic">Injury history</span>
+        <span class="qt-topic">Lifestyle</span>
+        <span class="qt-topic">Strength</span>
+      </div>
+    </div>
+
+    <div class="qt-steps" id="qtSteps">
+      <!-- Q1 -->
+      <div class="qt-step active" id="qtStep0">
+        <div class="qt-q"><span class="qt-qnum">1</span>How often do your knees feel stiff or achy?</div>
+        <div class="qt-opts">
+          <button class="qt-opt" onclick="qtPick(0,this)">Never</button>
+          <button class="qt-opt" onclick="qtPick(0,this)">Occasionally</button>
+          <button class="qt-opt" onclick="qtPick(0,this)">Most weeks</button>
+          <button class="qt-opt" onclick="qtPick(0,this)">Most days</button>
+        </div>
+      </div>
+      <!-- Q2 -->
+      <div class="qt-step" id="qtStep1">
+        <div class="qt-q"><span class="qt-qnum">2</span>How many times a week do you do strength training?</div>
+        <div class="qt-opts">
+          <button class="qt-opt" onclick="qtPick(1,this)">None</button>
+          <button class="qt-opt" onclick="qtPick(1,this)">Once a week</button>
+          <button class="qt-opt" onclick="qtPick(1,this)">2–3 times</button>
+          <button class="qt-opt" onclick="qtPick(1,this)">4 or more</button>
+        </div>
+      </div>
+      <!-- Q3 -->
+      <div class="qt-step" id="qtStep2">
+        <div class="qt-q"><span class="qt-qnum">3</span>Have you ever had a knee injury or surgery?</div>
+        <div class="qt-opts">
+          <button class="qt-opt" onclick="qtPick(2,this)">No injury</button>
+          <button class="qt-opt" onclick="qtPick(2,this)">Minor sprain or strain</button>
+          <button class="qt-opt" onclick="qtPick(2,this)">Meniscus or ligament</button>
+          <button class="qt-opt" onclick="qtPick(2,this)">Knee surgery</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email gate — revealed after Q3 -->
+    <div class="qt-gate" id="qtGate">
+      <div class="qt-gate-title">Your Knee Age is ready.</div>
+      <div class="qt-gate-sub">Enter your email to see your full score and your 3 personalised actions.</div>
+      <div class="qt-gate-form">
+        <input class="qt-gate-input" type="email" id="qtEmail" placeholder="Your email address"/>
+        <button class="qt-gate-btn" onclick="qtSubmit()">Calculate my Knee Age →</button>
+      </div>
+      <div class="qt-gate-success" id="qtSuccess">✓ You're on the list. Dr Arj will send your results when we launch.</div>
+      <div class="qt-gate-note">No spam. One email when we launch. Unsubscribe anytime.</div>
+    </div>
+
+  </div>
+</div>
 
 <!-- FOUNDER STRIP -->
 <div class="founder-strip">
@@ -375,6 +548,110 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
       <div class="stat-num">#1</div>
       <div class="stat-label">Longevity orthopaedics · Mayfair</div>
     </div>
+  </div>
+</div>
+
+<!-- DASHBOARD MOCKUP -->
+<div class="dash-section">
+  <div class="dash-inner">
+    <p class="section-label">Inside the app</p>
+    <h2 class="section-title">What you'll see<br/>every week.</h2>
+    <div class="dash-grid">
+      <div class="dash-copy">
+        <p>One number. One direction. Three actions. The OrthoLongevity app turns complex joint science into something you can actually use — in 90 seconds a week.</p>
+        <div class="dash-feature">
+          <div class="dash-feat-icon">🔢</div>
+          <div class="dash-feat-text"><h4>Your Knee Age score</h4><p>A single number showing how your joints compare biologically to your chronological age.</p></div>
+        </div>
+        <div class="dash-feature">
+          <div class="dash-feat-icon">📊</div>
+          <div class="dash-feat-text"><h4>Five scored pillars</h4><p>Strength & Load, Load Tolerance, Metabolic & Nutritional Health, Recovery, and Injury Risk — colour-coded so you see instantly where to focus.</p></div>
+        </div>
+        <div class="dash-feature">
+          <div class="dash-feat-icon">📈</div>
+          <div class="dash-feat-text"><h4>8-week trend</h4><p>Is your Knee Age going up or down? The trend line is the most motivating number on the screen.</p></div>
+        </div>
+        <div class="dash-feature">
+          <div class="dash-feat-icon">✅</div>
+          <div class="dash-feat-text"><h4>Your 3 actions this week</h4><p>Not a long list. Exactly three evidence-based actions drawn from the R.E.P.A.I.R.™ framework, updated every week.</p></div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="mock-phone">
+        <div class="mp-notch"></div>
+        <div class="mp-topbar">
+          <div class="mp-title">Your Knee Age</div>
+          <div class="mp-badge">↓ improving</div>
+        </div>
+        <!-- Ring -->
+        <div class="mp-ring-wrap">
+          <svg viewBox="0 0 140 140">
+            <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="9"/>
+            <circle cx="70" cy="70" r="54" fill="none" stroke="#5dcaa5" stroke-width="9"
+              stroke-dasharray="220 339" stroke-dashoffset="85" stroke-linecap="round"/>
+          </svg>
+          <div class="mp-ring-centre">
+            <div class="mp-age-big">43</div>
+            <div class="mp-age-lbl">Knee Age</div>
+          </div>
+        </div>
+        <div class="mp-compare">
+          <div class="mp-cbox"><div class="mp-cval">50</div><div class="mp-clbl">Your age</div></div>
+          <div style="font-size:14px;color:var(--muted);align-self:center">→</div>
+          <div class="mp-cbox hi"><div class="mp-cval">43</div><div class="mp-clbl">Knee Age</div></div>
+        </div>
+        <div class="mp-scores-title">Joint Longevity Score — by pillar</div>
+        <div class="mp-score-row"><span class="mp-score-name">Strength & Load</span><div class="mp-score-bar"><div class="mp-score-fill" style="width:82%;background:#5dcaa5"></div></div><span class="mp-score-val">82</span></div>
+        <div class="mp-score-row"><span class="mp-score-name">Load Tolerance</span><div class="mp-score-bar"><div class="mp-score-fill" style="width:75%;background:#5dcaa5"></div></div><span class="mp-score-val">75</span></div>
+        <div class="mp-score-row"><span class="mp-score-name">Metabolic & Nutrition</span><div class="mp-score-bar"><div class="mp-score-fill" style="width:64%;background:#e09a3a"></div></div><span class="mp-score-val">64</span></div>
+        <div class="mp-score-row"><span class="mp-score-name">Recovery</span><div class="mp-score-bar"><div class="mp-score-fill" style="width:71%;background:#5dcaa5"></div></div><span class="mp-score-val">71</span></div>
+        <div class="mp-score-row"><span class="mp-score-name">Injury Risk</span><div class="mp-score-bar"><div class="mp-score-fill" style="width:78%;background:#5dcaa5"></div></div><span class="mp-score-val">78</span></div>
+        <div class="mp-actions-title">Your top 3 improvements this week</div>
+        <div class="mp-action"><div class="mp-action-icon">🥗</div><div class="mp-action-text">Add oily fish twice this week</div></div>
+        <div class="mp-action"><div class="mp-action-icon">💪</div><div class="mp-action-text">Two lower-body strength sessions</div></div>
+        <div class="mp-action"><div class="mp-action-icon">😴</div><div class="mp-action-text">Aim for 7+ hours sleep tonight</div></div>
+        <button class="mp-bottom-btn">View full R.E.P.A.I.R.™ plan →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SURGEON CREDIBILITY -->
+<div class="surgeon-block">
+  <div class="sb-inner">
+    <div class="sb-photo-wrap">
+      <img class="sb-photo" src="https://ortholongevity.com/wp-content/uploads/2024/05/arj-300.jpg" alt="Dr Arj Imbuldeniya" onerror="this.style.background='var(--forest-light)';this.removeAttribute('src')"/>
+      <div class="sb-badge">🏥</div>
+    </div>
+    <div class="sb-content">
+      <div class="sb-eyebrow">Built by a Consultant Orthopaedic Surgeon</div>
+      <div class="sb-name">Dr Arj Imbuldeniya FRCS(Tr&amp;Orth)</div>
+      <div class="sb-role">Consultant Orthopaedic Knee &amp; Hip Surgeon · Lanserhof Mayfair · Chelsea &amp; Westminster NHS · Founder, OrthoLongevity™</div>
+      <div class="sb-quote">"I've spent 25 years operating on knees. The honest truth is that most of the surgery I perform could have been prevented — if patients had known what to do 10 years earlier. This app is that knowledge."</div>
+      <div class="sb-creds">
+        <span class="sb-cred">FRCS(Tr&amp;Orth)</span>
+        <span class="sb-cred">MSc Global Health Policy, Imperial</span>
+        <span class="sb-cred">Chelsea &amp; Westminster NHS</span>
+        <span class="sb-cred">Lanserhof Mayfair</span>
+        <span class="sb-cred">BiteLabs HealthTech Fellow 2026</span>
+        <span class="sb-cred">Trained in Sydney · Barcelona · Munich</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL PROOF BAR -->
+<div class="social-proof-bar">
+  <div class="spb-inner">
+    <div class="spb-avatars">
+      <div class="spb-av">A</div>
+      <div class="spb-av">J</div>
+      <div class="spb-av">S</div>
+      <div class="spb-av">M</div>
+      <div class="spb-av">+</div>
+    </div>
+    <div class="spb-text">Join <strong><span id="c2">2,347</span> people</strong> already on the early access list</div>
   </div>
 </div>
 
@@ -603,7 +880,7 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
 
 <!-- WAITLIST -->
 <div class="wl-section" id="waitlist">
-  <div class="wl-count"><span class="dot"></span><span id="c2">247</span> people on the waitlist</div>
+  <div class="wl-count"><span class="dot"></span><span id="c3">2,347</span> people on the waitlist</div>
   <h2 class="wl-h2">Be first to know<br/><em style="font-style:italic;color:var(--teal-light)">your Knee Age.</em></h2>
   <p class="wl-sub">Join the waitlist for early access. No spam. Just a notification when we launch.</p>
   <form class="wl-form2" onsubmit="handleWL(event)">
@@ -669,17 +946,24 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
 </footer>
 
 <script>
-let count = 247;
+let count = 2347;
+
 function handleHero(e){
   e.preventDefault();
   const em = document.getElementById("hero-email").value;
-  if(em){count++;document.getElementById("c1").textContent=count;document.getElementById("c2").textContent=count;e.target.innerHTML="<p style=\"color:var(--teal-light);font-size:15px;font-weight:500;\">✓ You're on the list. We'll be in touch.</p>";}
+  if(em){ count++; updateCounts(); e.target.innerHTML="<p style=\"color:var(--teal-light);font-size:15px;font-weight:500;\">✓ You're on the list. We'll be in touch.</p>"; }
 }
 function handleWL(e){
   e.preventDefault();
   const em = document.getElementById("wl-email").value;
-  if(em){count++;document.getElementById("c1").textContent=count;document.getElementById("c2").textContent=count;document.getElementById("success").style.display="block";e.target.style.display="none";}
+  if(em){ count++; updateCounts(); document.getElementById("success").style.display="block"; e.target.style.display="none"; }
 }
+function updateCounts(){
+  document.getElementById("c1").textContent = count.toLocaleString();
+  document.getElementById("c2").textContent = count.toLocaleString();
+  document.getElementById("c3").textContent = count.toLocaleString();
+}
+
 document.querySelectorAll("a[href='#waitlist']").forEach(a=>{
   a.addEventListener("click",e=>{e.preventDefault();document.getElementById("waitlist").scrollIntoView({behavior:"smooth"});});
 });
@@ -693,10 +977,47 @@ function selectSurvey(btn, answer){
   document.querySelectorAll('.survey-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('survey-thanks').style.display='block';
-  // Could send to analytics here
-  console.log('Survey answer:', answer);
 }
 
+// ── PROGRESSIVE QUIZ ──────────────────────────────────────────────────────
+let qtAnswered = 0;
+
+function qtPick(stepIndex, btn) {
+  const step = document.getElementById('qtStep' + stepIndex);
+  // Mark chosen
+  step.querySelectorAll('.qt-opt').forEach(b => { b.classList.remove('chosen'); b.disabled = true; });
+  btn.classList.add('chosen');
+  step.classList.remove('active');
+  step.classList.add('answered');
+
+  qtAnswered++;
+
+  // Activate next step
+  const nextStep = document.getElementById('qtStep' + (stepIndex + 1));
+  if (nextStep) {
+    nextStep.classList.add('active');
+    nextStep.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // After Q3, show email gate
+  if (stepIndex === 2) {
+    setTimeout(() => {
+      const gate = document.getElementById('qtGate');
+      gate.classList.add('visible');
+      gate.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 350);
+  }
+}
+
+function qtSubmit() {
+  const em = document.getElementById('qtEmail');
+  if (em && em.value) {
+    count++;
+    updateCounts();
+    document.getElementById('qtGate').querySelector('.qt-gate-form').style.display = 'none';
+    document.getElementById('qtSuccess').style.display = 'block';
+  }
+}
 </script>
 </body>
 </html>
