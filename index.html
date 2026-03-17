@@ -956,8 +956,7 @@ function handleHero(e){
 function handleWL(e){
   e.preventDefault();
   const em = document.getElementById("wl-email").value;
-  if(em){ count++; updateCounts(); document.getElementById("success").style.display="block"; e.target.style.display="none"; }
-}
+  if(em){ count++; updateCounts(); fetch("https://app.kit.com/forms/9207706/subscriptions",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"email_address="+encodeURIComponent(em)}).then(()=>{window.location.href="/confirmed";}); }
 function updateCounts(){
   document.getElementById("c1").textContent = count.toLocaleString();
   document.getElementById("c2").textContent = count.toLocaleString();
@@ -1015,19 +1014,20 @@ function qtSubmit() {
     count++;
     updateCounts();
     document.getElementById('qtGate').querySelector('.qt-gate-form').style.display = 'none';
-    window.location.href="/confirmed";
+    document.getElementById('qtSuccess').style.display = 'block';
+    setTimeout(()=>{ window.location.href="/confirmed"; }, 800);
 }
   function handleWL(event) {
   event.preventDefault();
   const email = event.target.querySelector('input[type="email"]').value;
   if (!email) return;
   event.target.style.display = 'none';
-  window.location.href="/confirmed";
+
   fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'email_address=' + encodeURIComponent(email)
-  });
+  method: 'POST',
+  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+  body: 'email_address=' + encodeURIComponent(email)
+}).then(()=>{ window.location.href="/confirmed"; });
 }
 </script>
 </body>
