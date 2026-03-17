@@ -79,7 +79,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .pain-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
 
 /* NEXT BTN */
-.next-wrap{margin-top:24px;text-align:right}
+.next-wrap{margin-top:24px;display:flex;align-items:center;justify-content:space-between}
+.back-btn{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.12);border-radius:100px;padding:14px 24px;font-family:var(--font-body);font-size:15px;cursor:pointer;transition:border-color 0.2s,color 0.2s}
+.back-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--cream)}
 .next-btn{background:var(--teal);color:var(--white);border:none;border-radius:100px;padding:14px 32px;font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;opacity:0.4;pointer-events:none}
 .next-btn.active{opacity:1;pointer-events:all}
 .next-btn.active:hover{background:#159060;transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,158,117,0.35)}
@@ -230,8 +232,8 @@ const CORE_QUESTIONS = [
     eyebrow:'About you',
     text:'How old are you?',
     sub:'We use this as the baseline your Knee Age is measured against.',
-    min:18, max:85, default:45, unit:'years old',
-    labels:['18','85']
+    min:13, max:85, default:35, unit:'years old',
+    labels:['13','85']
   },
   {
     id:'sex', type:'options',
@@ -319,10 +321,47 @@ const CORE_QUESTIONS = [
       {value:'processed',   icon:'🍟', label:'Mostly convenience / processed food', note:'Fast food, ready meals, high sugar'},
       {value:'unsure',      icon:'❓', label:'Not sure / varies a lot'}
     ]
+  },
+  {
+    id:'metabolic', type:'options',
+    eyebrow:'Metabolic health',
+    text:'Do you have any of the following conditions?',
+    sub:'Metabolic conditions drive systemic inflammation through different pathways to mechanical wear — this directly affects joint health scoring.',
+    options:[
+      {value:'none',       icon:'✅', label:'No known metabolic conditions'},
+      {value:'diabetes',   icon:'🩸', label:'Type 2 diabetes or pre-diabetes'},
+      {value:'cardio',     icon:'❤️', label:'High blood pressure or cardiovascular disease'},
+      {value:'prefer_not', icon:'◯', label:'Prefer not to say'}
+    ]
+  },
+  {
+    id:'inflammatory', type:'options',
+    eyebrow:'Inflammatory conditions',
+    text:'Have you ever been diagnosed with an inflammatory condition?',
+    sub:'Inflammatory arthritis, gout, and autoimmune conditions affect joints through fundamentally different mechanisms to osteoarthritis — and require different management strategies.',
+    options:[
+      {value:'none',        icon:'✅', label:'No inflammatory conditions'},
+      {value:'ra_psa',      icon:'🔴', label:'Rheumatoid or psoriatic arthritis'},
+      {value:'gout',        icon:'⚡', label:'Gout or pseudogout', note:'Uric acid or calcium crystal deposits'},
+      {value:'other_auto',  icon:'🧬', label:'Lupus or other autoimmune condition'}
+    ]
   }
 ];
 
 const OPTIONAL_QUESTIONS = [
+  {
+    id:'menopause', type:'options',
+    eyebrow:'Hormonal health — optional refinement',
+    text:'Where are you in relation to the menopause?',
+    sub:'Oestrogen withdrawal accelerates cartilage loss and increases systemic inflammation. This significantly affects joint health scoring for women over 35.',
+    conditional: (a) => a.sex === 'female' && (a.age || 0) >= 35,
+    options:[
+      {value:'pre',      icon:'🌱', label:'Pre-menopausal', note:'Regular periods, no menopausal symptoms'},
+      {value:'peri',     icon:'🌊', label:'Peri-menopausal', note:'Irregular periods, some symptoms beginning'},
+      {value:'post',     icon:'🍂', label:'Post-menopausal', note:'Periods stopped for 12+ months'},
+      {value:'prefer_not', icon:'◯', label:'Prefer not to say'}
+    ]
+  },
   {
     id:'omega3', type:'options',
     eyebrow:'Nutrition — optional refinement',
@@ -359,22 +398,29 @@ const OPTIONAL_QUESTIONS = [
 ];
 
 function calcKneeAge(answers, optAnswers) {
-  let age = answers.age || 45;
-  let strength = 70;
+  let age = answers.age || 35;
+  const isPaediatric = age < 18;
+
+  // Paediatric baselines — younger joints have natural resilience advantages
+  // but are also more vulnerable to growth plate injury and overuse
+  let strength      = isPaediatric ? 82 : 70;
+  let loadTolerance = isPaediatric ? 85 : 75;
+  let metabolic     = isPaediatric ? 80 : 72;
+  let recovery      = isPaediatric ? 85 : 72;
+  let injuryRisk    = isPaediatric ? 75 : 78;
+
   if (answers.activity === 'sedentary') strength -= 25;
   if (answers.activity === 'light')     strength -= 10;
   if (answers.activity === 'moderate')  strength += 10;
-  if (answers.activity === 'athletic')  strength += 18;
+  if (answers.activity === 'athletic')  strength += isPaediatric ? 10 : 18; // less credit for athletic load in teens
   if (answers.sitting === 'yes')        strength -= 10;
   if (answers.sitting === 'no')         strength += 5;
 
-  let loadTolerance = 75;
   if (answers.injury === 'injury_only') loadTolerance -= 15;
   if (answers.injury === 'surgery')     loadTolerance -= 25;
   if (answers.activity === 'athletic')  loadTolerance += 5;
   if (answers.activity === 'sedentary') loadTolerance -= 8;
 
-  let metabolic = 72;
   if (answers.bmi_mode === 'over')         metabolic -= 15;
   if (answers.bmi_mode === 'obese')        metabolic -= 28;
   if (answers.bmi_mode === 'under')        metabolic -= 8;
@@ -386,15 +432,18 @@ function calcKneeAge(answers, optAnswers) {
   if (optAnswers.omega3 === 'often')       metabolic += 6;
   if (optAnswers.omega3 === 'rarely')      metabolic -= 6;
   if (answers.sex === 'female' && age >= 50) metabolic -= 5;
+  if (answers.metabolic === 'diabetes')    metabolic -= 18;
+  if (answers.metabolic === 'cardio')      metabolic -= 10;
+  if (answers.inflammatory === 'ra_psa')   metabolic -= 20;
+  if (answers.inflammatory === 'gout')     metabolic -= 12;
+  if (answers.inflammatory === 'other_auto') metabolic -= 15;
 
-  let recovery = 72;
   if (optAnswers.sleep === 'poor')      recovery -= 20;
   if (optAnswers.sleep === 'ok')        recovery -= 8;
   if (optAnswers.sleep === 'good')      recovery += 5;
   if (answers.activity === 'sedentary') recovery -= 5;
   if (answers.smoking === 'yes')        recovery -= 8;
 
-  let injuryRisk = 78;
   if (answers.pain >= 4 && answers.pain <= 6) injuryRisk -= 15;
   if (answers.pain >= 7)                       injuryRisk -= 25;
   if (answers.injury === 'injury_only')        injuryRisk -= 10;
@@ -402,6 +451,14 @@ function calcKneeAge(answers, optAnswers) {
   if (optAnswers.family === 'yes')             injuryRisk -= 12;
   if (answers.activity === 'moderate')         injuryRisk += 5;
   if (answers.activity === 'athletic')         injuryRisk += 3;
+
+  // Paediatric — growth plate vulnerability and overuse risk
+  if (isPaediatric && answers.activity === 'athletic') injuryRisk -= 12;
+  if (isPaediatric && answers.pain >= 3)               injuryRisk -= 10;
+
+  // Menopause scoring — oestrogen withdrawal accelerates cartilage loss
+  if (optAnswers && optAnswers.menopause === 'peri')   { metabolic -= 8; recovery -= 5; }
+  if (optAnswers && optAnswers.menopause === 'post')   { metabolic -= 15; recovery -= 8; loadTolerance -= 8; }
 
   const clamp = v => Math.min(100, Math.max(10, Math.round(v)));
   strength      = clamp(strength);
@@ -411,43 +468,193 @@ function calcKneeAge(answers, optAnswers) {
   injuryRisk    = clamp(injuryRisk);
 
   const avgScore = (strength * 0.30 + loadTolerance * 0.20 + metabolic * 0.25 + recovery * 0.15 + injuryRisk * 0.10);
-  const delta = Math.round((75 - avgScore) * 0.35);
+
+  // Paediatric delta uses different baseline — 85 instead of 75
+  // because young joints should score higher on average
+  const baseline = isPaediatric ? 85 : 75;
+  const delta = Math.round((baseline - avgScore) * 0.35);
   let kneeAge = Math.round(age + delta);
-  kneeAge = Math.max(18, Math.min(kneeAge, 90));
-  return { kneeAge, delta, age, pillars: { strength, loadTolerance, metabolic, recovery, injuryRisk } };
+  // Paediatric min knee age is 10, adults min is 18
+  kneeAge = Math.max(isPaediatric ? 10 : 18, Math.min(kneeAge, 90));
+  return { kneeAge, delta, age, isPaediatric, pillars: { strength, loadTolerance, metabolic, recovery, injuryRisk } };
 }
 
-function getVerdict(delta) {
-  if (delta <= -3) return {
-    label:'Younger than your years',
-    color:'var(--green)', ring:'var(--green)',
-    body:'Your joints are tracking younger than your chronological age. Your current lifestyle is working. The goal now is to keep it this way — and extend the gap further.',
-    actions:[
-      {icon:'💪',title:'Maintain progressive strength work',sub:'Quad and glute strength are the primary load-absorbers for your knee joint. Keep loading them.',pill:'R.E.P.A.I.R. — Power'},
-      {icon:'🐟',title:'Prioritise anti-inflammatory nutrition',sub:'Omega-3s, polyphenols, and adequate protein support cartilage turnover and reduce background inflammation.',pill:'R.E.P.A.I.R. — Reset Biology'},
-      {icon:'📈',title:'Track your trend quarterly',sub:'Your score is good — now monitor it. Small lifestyle shifts in your 40s and 50s compound significantly over a decade.',pill:'R.E.P.A.I.R. — Resilience'}
-    ]
-  };
-  if (delta <= 3) return {
-    label:'Tracking close to your age',
-    color:'var(--amber)', ring:'var(--amber)',
-    body:'Your joint health broadly reflects your age — neither significantly better nor worse. The good news: a few targeted changes could meaningfully shift this in the right direction.',
-    actions:[
-      {icon:'🪑',title:'Break prolonged sitting every 45 minutes',sub:'Set a timer. Stand, walk to the kettle, do ten squats. Synovial fluid circulation depends on movement.',pill:'R.E.P.A.I.R. — Enhance Movement'},
-      {icon:'💪',title:'Add two strength sessions per week',sub:'Compound lower-body work — Romanian deadlifts, leg press, hip thrusts. Muscle is your best joint protection.',pill:'R.E.P.A.I.R. — Power'},
-      {icon:'😴',title:'Prioritise 7–8 hours of sleep',sub:'Sleep is when cartilage repairs. Chronic under-sleep is an underappreciated driver of joint inflammation.',pill:'R.E.P.A.I.R. — Reset Biology'}
-    ]
-  };
-  return {
-    label:'Older than your years',
-    color:'var(--red)', ring:'var(--red)',
-    body:'Your lifestyle factors are currently pushing your joint age ahead of your chronological age. The reassuring truth: most of these factors are modifiable. This score is a starting point, not a fixed outcome.',
-    actions:[
-      {icon:'⚖️',title:'Address body weight as a priority',sub:'Each kilogram of body weight adds approximately 4kg of force through your knee joint on every step.',pill:'R.E.P.A.I.R. — Reset Biology'},
-      {icon:'💪',title:'Start a structured strength programme',sub:'Even two sessions per week of progressive resistance training significantly reduces knee pain and slows cartilage loss.',pill:'R.E.P.A.I.R. — Power'},
-      {icon:'👨‍⚕️',title:'Consider a clinical assessment',sub:'If your pain is 4 or above, a one-time clinical assessment to rule out structural issues is worthwhile before committing to a training programme.',pill:'R.E.P.A.I.R. — Intervene (if needed)'}
-    ]
-  };
+// Full R.E.P.A.I.R. action library — picked based on pillar scores
+const ACTION_LIBRARY = {
+  strength: [
+    {icon:'💪',title:'Start a progressive strength programme',sub:'Two sessions per week of compound lower-body work — leg press, Romanian deadlifts, hip thrusts — meaningfully reduces knee load and slows cartilage loss.',pill:'R.E.P.A.I.R. — Power'},
+    {icon:'🦵',title:'Prioritise quad and glute strength',sub:'The quadriceps and gluteus medius are your knee\'s primary shock absorbers. Targeted strengthening reduces pain and improves long-term joint resilience.',pill:'R.E.P.A.I.R. — Power'},
+    {icon:'🏋️',title:'Add resistance training twice a week',sub:'Even two sessions per week produce measurable improvements in knee pain scores and functional capacity within 8–12 weeks.',pill:'R.E.P.A.I.R. — Power'},
+  ],
+  movement: [
+    {icon:'🪑',title:'Break prolonged sitting every 45 minutes',sub:'Set a timer. Stand, walk to the kettle, do ten squats. Synovial fluid needs movement to circulate — prolonged sitting starves your cartilage.',pill:'R.E.P.A.I.R. — Enhance Movement'},
+    {icon:'🚶',title:'Add a 20-minute walk to your daily routine',sub:'Low-impact aerobic movement lubricates joints, reduces stiffness, and supports healthy body composition without adding knee load.',pill:'R.E.P.A.I.R. — Enhance Movement'},
+    {icon:'🧘',title:'Incorporate daily mobility and flexibility work',sub:'5–10 minutes of hip flexor, hamstring, and calf stretching reduces joint stiffness and improves movement patterns that protect the knee.',pill:'R.E.P.A.I.R. — Enhance Movement'},
+  ],
+  nutrition: [
+    {icon:'🐟',title:'Increase omega-3 intake',sub:'Oily fish (salmon, mackerel, sardines) 2–3 times per week, or a quality fish oil supplement, is the most evidence-backed dietary intervention for joint inflammation.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🥗',title:'Shift to an anti-inflammatory diet',sub:'Prioritise colourful vegetables, olive oil, berries, nuts, and legumes. Reduce ultra-processed food, refined sugar, and seed oils — all of which drive systemic inflammation.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🥩',title:'Optimise your protein intake',sub:'Aim for 1.6–2g of protein per kg of bodyweight daily. Adequate protein supports muscle maintenance and cartilage repair — most people with joint problems significantly under-eat protein.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🫐',title:'Add polyphenol-rich foods daily',sub:'Blueberries, dark cherries, turmeric, green tea, and dark chocolate contain compounds that directly suppress inflammatory pathways linked to cartilage degradation.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🧂',title:'Reduce ultra-processed food intake',sub:'Processed foods drive chronic low-grade inflammation — the same pathway that accelerates joint ageing. Even modest reductions produce measurable improvements in inflammatory markers.',pill:'R.E.P.A.I.R. — Reset Biology'},
+  ],
+  recovery: [
+    {icon:'😴',title:'Prioritise 7–8 hours of sleep',sub:'Cartilage repair happens during sleep. Chronic under-sleep elevates cortisol and inflammatory cytokines — both directly accelerate joint degeneration.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🧊',title:'Manage acute pain and swelling proactively',sub:'Untreated joint swelling accelerates cartilage loss. Ice, compression, and relative rest in the first 48 hours of a flare-up limit secondary damage.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🫁',title:'Learn a daily stress-reduction practice',sub:'Chronic psychological stress elevates cortisol, which directly inhibits collagen synthesis and accelerates cartilage thinning. Even 10 minutes of breathwork daily has measurable anti-inflammatory effects.',pill:'R.E.P.A.I.R. — Reset Biology'},
+  ],
+  weight: [
+    {icon:'⚖️',title:'Address body weight as a priority',sub:'Each kilogram of body weight adds approximately 4kg of force through your knee joint on every step. A 5kg reduction produces a 20kg reduction in knee load — and is the single most impactful modifiable factor.',pill:'R.E.P.A.I.R. — Reset Biology'},
+  ],
+  injury: [
+    {icon:'👨‍⚕️',title:'Consider a clinical assessment',sub:'Given your history, a structured assessment to identify any residual instability, strength asymmetry, or structural change is worthwhile before committing to a training programme.',pill:'R.E.P.A.I.R. — Intervene (if needed)'},
+    {icon:'🔄',title:'Address movement asymmetry',sub:'Previous injuries commonly create compensatory movement patterns that overload the affected joint. A physiotherapist or sports medicine doctor can identify and correct these before they cause further damage.',pill:'R.E.P.A.I.R. — Intervene (if needed)'},
+  ],
+  resilience: [
+    {icon:'📈',title:'Track your Knee Age trend quarterly',sub:'Your score today is a baseline. What matters is the direction of travel. Reassess every 3 months to confirm your lifestyle changes are moving the dial.',pill:'R.E.P.A.I.R. — Resilience'},
+    {icon:'🎯',title:'Set a specific 90-day joint health goal',sub:'Vague intentions don\'t change behaviour. Pick one specific target — a strength benchmark, a body weight goal, or a dietary change — and track it weekly.',pill:'R.E.P.A.I.R. — Resilience'},
+  ],
+  smoking: [
+    {icon:'🚭',title:'Smoking cessation is a joint health priority',sub:'Smoking is an independent predictor of cartilage thinning and slower recovery from injury — entirely separate from its cardiovascular effects. NHS Stop Smoking services have the best evidence base.',pill:'R.E.P.A.I.R. — Reset Biology'},
+  ],
+  menopause: [
+    {icon:'🌸',title:'Consider discussing HRT with your GP for joint protection',sub:'Hormone replacement therapy has evidence for reducing the rate of cartilage loss in post-menopausal women. The risk-benefit balance has shifted significantly in recent years — a conversation with your GP about joint-specific benefits is worthwhile.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🦴',title:'Prioritise bone and cartilage nutrition',sub:'Post-menopausal oestrogen loss accelerates both bone density loss and cartilage thinning. Ensure adequate calcium (1000mg/day), vitamin D (1000-2000 IU), and collagen-supporting nutrients from diet or supplementation.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'💪',title:'Resistance training is especially important post-menopause',sub:'Oestrogen loss reduces the anabolic response to exercise. Progressive resistance training preserves both muscle mass and bone density post-menopause — the evidence base is strong.',pill:'R.E.P.A.I.R. — Power'},
+  ],
+  paediatric: [
+    {icon:'⚠️',title:'Rule out growth plate involvement',sub:'In patients under 18, knee pain during or after sport requires assessment to exclude Osgood-Schlatter disease, Sinding-Larsen-Johansson syndrome, or growth plate stress fractures. These are not the same as adult osteoarthritis and respond differently to management.',pill:'R.E.P.A.I.R. — Intervene (if needed)'},
+    {icon:'⚖️',title:'Balance training load with growth',sub:'Adolescent athletes are at higher risk of overuse injury during growth spurts. A 10% weekly load increase rule applies strictly. Rest days are not optional — they are when adaptation happens.',pill:'R.E.P.A.I.R. — Enhance Movement'},
+    {icon:'💪',title:'Build a strength foundation now',sub:'Quad and glute strength developed in adolescence provides joint protection that persists into adulthood. Focus on bodyweight and light resistance exercises through full range of motion.',pill:'R.E.P.A.I.R. — Power'},
+  ],
+  metabolic: [
+    {icon:'🩸',title:'Optimise blood sugar control for joint health',sub:'Elevated blood glucose drives glycation of cartilage proteins — a process that stiffens and weakens cartilage independently of mechanical load. Even modest HbA1c improvements reduce joint inflammation.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'❤️',title:'Address cardiovascular risk factors',sub:'Hypertension and metabolic syndrome share inflammatory pathways with joint degeneration. Managing cardiovascular risk factors has demonstrable benefits for joint longevity.',pill:'R.E.P.A.I.R. — Reset Biology'},
+  ],
+  inflammatory: [
+    {icon:'🔴',title:'Ensure your inflammatory arthritis is optimally managed',sub:'Rheumatoid and psoriatic arthritis require disease-modifying therapy — not just pain management. Undertreated synovial inflammation causes rapid, irreversible joint damage. Review with a rheumatologist if not already on a DMARD.',pill:'R.E.P.A.I.R. — Intervene (if needed)'},
+    {icon:'⚡',title:'Reduce dietary purine load and stay well hydrated',sub:'For gout: limit red meat, shellfish, organ meats, and high-fructose drinks. Target urine output of 2+ litres daily. Uric acid crystals in joints cause acute inflammatory flares and long-term cartilage damage.',pill:'R.E.P.A.I.R. — Reset Biology'},
+    {icon:'🧬',title:'Coordinate joint health with your autoimmune management',sub:'Autoimmune conditions require specialist oversight. Ensure your rheumatologist is aware of your joint symptoms — optimal disease control significantly reduces secondary joint damage.',pill:'R.E.P.A.I.R. — Intervene (if needed)'},
+  ]
+};
+
+function getVerdict(delta, pillars, answers, isPaediatric) {
+  // Determine overall verdict
+  let label, color, ring, body;
+  if (delta <= -3) {
+    label = 'Younger than your years';
+    color = 'var(--green)'; ring = 'var(--green)';
+    body = isPaediatric
+      ? 'Your joints are in good shape for your age. The habits you build now — strength training, good nutrition, adequate rest — will protect your joints for decades. Keep it up.'
+      : 'Your joints are tracking younger than your chronological age. Your current lifestyle is working. The goal now is to keep it this way — and extend the gap further.';
+  } else if (delta <= 3) {
+    label = 'Tracking close to your age';
+    color = 'var(--amber)'; ring = 'var(--amber)';
+    body = isPaediatric
+      ? 'Your joint health is reasonable for your age but there are some risk factors worth addressing. Small changes to load management, strength training, and nutrition now can prevent problems in your 20s and 30s.'
+      : 'Your joint health broadly reflects your age — neither significantly better nor worse. A few targeted changes could meaningfully shift this in the right direction.';
+  } else {
+    label = 'Older than your years';
+    color = 'var(--red)'; ring = 'var(--red)';
+    body = isPaediatric
+      ? 'Some of your joint risk factors are higher than we would expect for your age. This is not a diagnosis — it is a signal to take action now. Young joints are highly responsive to the right interventions.'
+      : 'Your lifestyle factors are currently pushing your joint age ahead of your chronological age. The reassuring truth: most of these factors are modifiable. This score is a starting point, not a fixed outcome.';
+  }
+
+  // Pick actions based on weakest pillars and specific answers
+  const scored = [];
+
+  // Paediatric — first priority for under-18s with pain
+  if (pillars && pillars.injuryRisk < 65 && answers.age < 18)
+    scored.push({priority:0, action: ACTION_LIBRARY.paediatric[0]});
+  if (answers.age < 18 && answers.activity === 'athletic' && scored.length < 3)
+    scored.push({priority:1, action: ACTION_LIBRARY.paediatric[1]});
+
+  // Smoking — always high priority if smoker
+  if (answers.smoking === 'yes') scored.push({priority:2, action: ACTION_LIBRARY.smoking[0]});
+
+  // Menopause
+  if (optAnswers && optAnswers.menopause === 'post' && scored.length < 3)
+    scored.push({priority:3, action: ACTION_LIBRARY.menopause[0]});
+  if (optAnswers && (optAnswers.menopause === 'post' || optAnswers.menopause === 'peri') && scored.length < 3)
+    scored.push({priority:4, action: ACTION_LIBRARY.menopause[2]});
+
+  // Inflammatory arthritis — high priority
+  if (answers.inflammatory === 'ra_psa' && scored.length < 3)
+    scored.push({priority:5, action: ACTION_LIBRARY.inflammatory[0]});
+  if (answers.inflammatory === 'gout' && scored.length < 3)
+    scored.push({priority:5, action: ACTION_LIBRARY.inflammatory[1]});
+  if (answers.inflammatory === 'other_auto' && scored.length < 3)
+    scored.push({priority:5, action: ACTION_LIBRARY.inflammatory[2]});
+
+  // Diabetes
+  if (answers.metabolic === 'diabetes' && scored.length < 3)
+    scored.push({priority:6, action: ACTION_LIBRARY.metabolic[0]});
+  if (answers.metabolic === 'cardio' && scored.length < 3)
+    scored.push({priority:6, action: ACTION_LIBRARY.metabolic[1]});
+
+  // High pain + injury history → clinical
+  if ((answers.pain >= 5 || answers.injury === 'surgery') && scored.length < 3)
+    scored.push({priority:1, action: ACTION_LIBRARY.injury[0]});
+
+  // Weak strength pillar
+  if (pillars.strength < 60 && scored.length < 3)
+    scored.push({priority:2, action: ACTION_LIBRARY.strength[0]});
+
+  // Sedentary / sitting
+  if ((answers.activity === 'sedentary' || answers.sitting === 'yes') && scored.length < 3)
+    scored.push({priority:3, action: ACTION_LIBRARY.movement[0]});
+
+  // Poor metabolic — weight issue
+  if (answers.bmi_mode === 'obese' && scored.length < 3)
+    scored.push({priority:4, action: ACTION_LIBRARY.weight[0]});
+
+  // Poor metabolic — nutrition
+  if ((answers.nutrition === 'processed' || answers.nutrition === 'mixed') && scored.length < 3)
+    scored.push({priority:5, action: ACTION_LIBRARY.nutrition[0]});
+
+  // Weak recovery — sleep
+  if (pillars.recovery < 60 && scored.length < 3)
+    scored.push({priority:6, action: ACTION_LIBRARY.recovery[0]});
+
+  // Omega-3 gap
+  if (optAnswers && optAnswers.omega3 === 'rarely' && scored.length < 3)
+    scored.push({priority:7, action: ACTION_LIBRARY.nutrition[0]});
+
+  // Protein — if overweight or strength-deficient
+  if ((answers.bmi_mode === 'over' || pillars.strength < 65) && scored.length < 3)
+    scored.push({priority:8, action: ACTION_LIBRARY.nutrition[2]});
+
+  // Anti-inflammatory diet fill
+  if (scored.length < 3)
+    scored.push({priority:9, action: ACTION_LIBRARY.nutrition[1]});
+
+  // Resilience — tracking (if doing well)
+  if (delta <= 0 && scored.length < 3)
+    scored.push({priority:10, action: ACTION_LIBRARY.resilience[0]});
+
+  // Injury asymmetry
+  if (answers.injury === 'injury_only' && scored.length < 3)
+    scored.push({priority:11, action: ACTION_LIBRARY.injury[1]});
+
+  // Strength fallback
+  if (scored.length < 3)
+    scored.push({priority:12, action: ACTION_LIBRARY.strength[1]});
+
+  // Movement fallback
+  if (scored.length < 3)
+    scored.push({priority:13, action: ACTION_LIBRARY.movement[1]});
+
+  // Deduplicate and take top 3
+  const seen = new Set();
+  const actions = [];
+  for (const s of scored.sort((a,b) => a.priority - b.priority)) {
+    const key = s.action.title;
+    if (!seen.has(key)) { seen.add(key); actions.push(s.action); }
+    if (actions.length === 3) break;
+  }
+
+  return { label, color, ring, body, actions };
 }
 
 let phase = 'core';
@@ -458,8 +665,8 @@ let optAnswers = {};
 
 function updateProgress() {
   if (phase === 'core') {
-    const pct = Math.round((coreIndex / 9) * 100);
-    document.getElementById('progressText').textContent = `Question ${coreIndex + 1} of 9`;
+    const pct = Math.round((coreIndex / 11) * 100);
+    document.getElementById('progressText').textContent = `Question ${coreIndex + 1} of 11`;
     document.getElementById('progressFill').style.width = pct + '%';
     document.getElementById('progressPct').textContent = pct + '%';
   } else if (phase === 'optional') {
@@ -480,12 +687,20 @@ function render() {
     renderQuestion(container, CORE_QUESTIONS[coreIndex], coreAnswers, (val) => {
       coreAnswers[CORE_QUESTIONS[coreIndex].id] = val;
       coreIndex++;
-      if (coreIndex >= 9) phase = 'optional-prompt';
+      if (coreIndex >= 11) phase = 'optional-prompt';
       render();
     });
   } else if (phase === 'optional-prompt') {
     renderOptionalPrompt(container);
   } else if (phase === 'optional') {
+    // Skip questions that don't meet their condition
+    while (optIndex < OPTIONAL_QUESTIONS.length && 
+           OPTIONAL_QUESTIONS[optIndex].conditional && 
+           !OPTIONAL_QUESTIONS[optIndex].conditional(coreAnswers)) {
+      optAnswers[OPTIONAL_QUESTIONS[optIndex].id] = null;
+      optIndex++;
+    }
+    if (optIndex >= OPTIONAL_QUESTIONS.length) { phase = 'result'; render(); return; }
     renderQuestion(container, OPTIONAL_QUESTIONS[optIndex], optAnswers, (val) => {
       optAnswers[OPTIONAL_QUESTIONS[optIndex].id] = val;
       optIndex++;
@@ -530,7 +745,11 @@ function renderQuestion(container, q, answersObj, onAnswer) {
     html += `</div><div class="pain-labels"><span>No pain</span><span>Severe</span></div>`;
   }
 
-  html += `<div class="next-wrap"><button class="next-btn${(answersObj[q.id] !== undefined || q.type === 'slider') ? ' active' : ''}" id="nextBtn" onclick="nextQ()">Continue →</button></div>`;
+  const showBack = (phase === 'core' && coreIndex > 0) || phase === 'optional';
+  html += `<div class="next-wrap">
+    ${showBack ? `<button class="back-btn" onclick="goBack()">← Back</button>` : `<span></span>`}
+    <button class="next-btn${(answersObj[q.id] !== undefined || q.type === 'slider') ? ' active' : ''}" id="nextBtn" onclick="nextQ()">Continue →</button>
+  </div>`;
   card.innerHTML = html;
   container.appendChild(card);
   window._onAnswer = onAnswer;
@@ -563,6 +782,16 @@ function nextQ() {
   if (ans !== undefined) window._onAnswer(ans);
 }
 
+function goBack() {
+  if (phase === 'optional') {
+    if (optIndex > 0) { optIndex--; }
+    else { phase = 'optional-prompt'; }
+  } else if (phase === 'core' && coreIndex > 0) {
+    coreIndex--;
+  }
+  render();
+}
+
 function renderOptionalPrompt(container) {
   const div = document.createElement('div');
   div.className = 'optional-banner';
@@ -580,11 +809,12 @@ function startOptional() { phase = 'optional'; render(); }
 function skipToResult() { phase = 'result'; render(); }
 
 function renderResult(container) {
-  const { kneeAge, delta, age, pillars } = calcKneeAge(coreAnswers, optAnswers);
-  const verdict = getVerdict(delta);
+  const { kneeAge, delta, age, isPaediatric, pillars } = calcKneeAge(coreAnswers, optAnswers);
+  const verdict = getVerdict(delta, pillars, coreAnswers, isPaediatric);
   const r = 72, cx = 90, cy = 90;
   const circ = 2 * Math.PI * r;
-  const dash = circ * Math.min(Math.max((kneeAge - 18) / (85 - 18), 0), 1);
+  const minAge = isPaediatric ? 10 : 18;
+  const dash = circ * Math.min(Math.max((kneeAge - minAge) / (85 - minAge), 0), 1);
 
   function pillarColor(v) { return v >= 70 ? '#5dcaa5' : v >= 50 ? '#e09a3a' : '#e05555'; }
   function pillarTag(v) {
