@@ -959,9 +959,17 @@ function handleWL(e){
 if(em){ count++; updateCounts(); window.location.href="/confirmed"; }
 }
   function handleQT(e){
-  e.preventDefault();
-  const em = document.getElementById("qtEmail").value;
-  if(em){ window.location.href="/confirmed"; }
+  const em = document.getElementById("qtEmail").value.trim();
+  if(em){
+    fetch("https://app.kit.com/forms/9207706/subscriptions", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: "email_address=" + encodeURIComponent(em)
+    });
+    window.location.href="/confirmed";
+  } else {
+    document.getElementById("qtEmail").focus();
+  }
 }
 function updateCounts(){
   document.getElementById("c1").textContent = count.toLocaleString();
