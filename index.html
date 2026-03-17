@@ -477,9 +477,9 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
     <div class="qt-gate" id="qtGate">
       <div class="qt-gate-title">Want your full Knee Longevity Profile?.</div>
       <div class="qt-gate-sub">Sign up for free and unlock your 12-question Knee Longevity Profile — personalised results and your 3 most impactful actions.</div>
-      <div class="qt-gate-form">
-        <input class="qt-gate-input" type="email" id="qtEmail" placeholder="Your email address"/>
-        <button class="qt-gate-btn" onclick="qtSubmit()">Calculate my Knee Age →</button>
+      <form class="qt-gate-form" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_blank">
+        <input class="qt-gate-input" type="email" name="email_address" id="qtEmail" placeholder="Your email address"/>
+        <button class="qt-gate-btn" type="submit">Calculate my Knee Age →</button>
       </div>
       <div class="qt-gate-success" id="qtSuccess">✓You're on the list. Check your email — your Knee Longevity Profile is waiting.</div>
       <div class="qt-gate-note">No spam. One email when we launch. Unsubscribe anytime.</div>
