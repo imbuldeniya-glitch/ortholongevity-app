@@ -477,9 +477,9 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
     <div class="qt-gate" id="qtGate">
       <div class="qt-gate-title">Want your full Knee Longevity Profile?.</div>
       <div class="qt-gate-sub">Sign up for free and unlock your 12-question Knee Longevity Profile — personalised results and your 3 most impactful actions.</div>
-      <form class="qt-gate-form" onsubmit="handleQT(event)">
-        <input class="qt-gate-input" type="text" name="email_address" id="qtEmail" placeholder="Your email address"/>
-        <button class="qt-gate-btn" type="button" onclick="handleQT(event)">Calculate my Knee Age →</button>
+      <form class="qt-gate-form" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_blank">
+        <input class="qt-gate-input" type="email" name="email_address" id="qtEmail" placeholder="Your email address"/>
+        <button class="qt-gate-btn" type="submit">Calculate my Knee Age →</button>
       </div>
       <div class="qt-gate-success" id="qtSuccess">✓You're on the list. Check your email — your Knee Longevity Profile is waiting.</div>
       <div class="qt-gate-note">No spam. One email when we launch. Unsubscribe anytime.</div>
@@ -883,9 +883,9 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   <div class="wl-count"><span class="dot"></span><span id="c3">2,347</span> people on the waitlist</div>
   <h2 class="wl-h2">Be first to know<br/><em style="font-style:italic;color:var(--teal-light)">your Knee Age.</em></h2>
   <p class="wl-sub">Join the waitlist for early access. No spam. Just a notification when we launch.</p>
-  <form class="wl-form2" onsubmit="return false;">
+  <form class="wl-form2" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_blank">
    <input class="wl-input2" type="email" name="email_address" placeholder="your@email.com" required id="wl-email"/>
-    <button class="wl-btn2" type="button" onclick="handleWL(event)">Join waitlist</button>
+    <button class="wl-btn2" type="submit">Join waitlist</button>
   </form>
   <div class="success-msg" id="success">✓ You're on the list. We'll be in touch when OrthoLongevity launches.</div>
   
@@ -956,20 +956,7 @@ function handleHero(e){
 function handleWL(e){
   e.preventDefault();
   const em = document.getElementById("wl-email").value;
-if(em){ count++; updateCounts(); window.location.href="/confirmed"; }
-}
-  function handleQT(e){
-  const em = document.getElementById("qtEmail").value.trim();
-  if(em){
-    fetch("https://app.kit.com/forms/9207706/subscriptions", {
-      method: "POST",
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: "email_address=" + encodeURIComponent(em)
-    });
-    window.location.href="/confirmed";
-  } else {
-    document.getElementById("qtEmail").focus();
-  }
+  if(em){ count++; updateCounts(); document.getElementById("success").style.display="block"; e.target.style.display="none"; }
 }
 function updateCounts(){
   document.getElementById("c1").textContent = count.toLocaleString();
@@ -1032,7 +1019,17 @@ function qtSubmit() {
     fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'email_address='+encodeURIComponent(em.value)});
   }
 }
-  
+  function handleWL(event) {
+  event.preventDefault();
+  const email = event.target.querySelector('input[type="email"]').value;
+  if (!email) return;
+  event.target.style.display = 'none';
+  document.querySelector('.wl-success') && (document.querySelector('.wl-success').style.display = 'block');
+  fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: 'email_address=' + encodeURIComponent(email)
+  });
 }
 </script>
 </body>
