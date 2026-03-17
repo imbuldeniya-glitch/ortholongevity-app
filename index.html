@@ -1032,17 +1032,7 @@ function qtSubmit() {
     fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'email_address='+encodeURIComponent(em.value)});
   }
 }
-  function handleWL(event) {
-  event.preventDefault();
-  const email = event.target.querySelector('input[type="email"]').value;
-  if (!email) return;
-  event.target.style.display = 'none';
-  document.querySelector('.wl-success') && (document.querySelector('.wl-success').style.display = 'block');
-  fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-    body: 'email_address=' + encodeURIComponent(email)
-  });
+  
 }
 </script>
 </body>
