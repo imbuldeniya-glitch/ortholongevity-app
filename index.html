@@ -1015,7 +1015,7 @@ function qtSubmit() {
     count++;
     updateCounts();
     document.getElementById('qtGate').querySelector('.qt-gate-form').style.display = 'none';
-    document.getElementById('qtSuccess').style.display = 'block';
+    window.location.href="/confirmed";
     fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'email_address='+encodeURIComponent(em.value)});
   }
 }
@@ -1024,7 +1024,7 @@ function qtSubmit() {
   const email = event.target.querySelector('input[type="email"]').value;
   if (!email) return;
   event.target.style.display = 'none';
-  document.querySelector('.wl-success') && (document.querySelector('.wl-success').style.display = 'block');
+  window.location.href="/confirmed";
   fetch('https://app.kit.com/forms/5d8aa86c30/subscriptions', {
     method: 'POST',
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
