@@ -883,9 +883,9 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
   <div class="wl-count"><span class="dot"></span><span id="c3">2,347</span> people on the waitlist</div>
   <h2 class="wl-h2">Be first to know<br/><em style="font-style:italic;color:var(--teal-light)">your Knee Age.</em></h2>
   <p class="wl-sub">Join the waitlist for early access. No spam. Just a notification when we launch.</p>
-  <form class="wl-form2" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_self" onsubmit="setTimeout(()=>{window.location.href='/confirmed'},500)">
+  <form class="wl-form2" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_self">
    <input class="wl-input2" type="email" name="email_address" placeholder="your@email.com" required id="wl-email"/>
-    <button class="wl-btn2" type="submit">Join waitlist</button>
+    <button class="wl-btn2" type="button" onclick="handleWL(event)">Join waitlist</button>
   </form>
   <div class="success-msg" id="success">✓ You're on the list. We'll be in touch when OrthoLongevity launches.</div>
   
@@ -957,6 +957,7 @@ function handleWL(e){
   e.preventDefault();
   const em = document.getElementById("wl-email").value;
 if(em){ count++; updateCounts(); window.location.href="/confirmed"; }
+}
   function handleQT(e){
   const em = document.getElementById("qtEmail").value.trim();
   if(em){
