@@ -477,7 +477,7 @@ footer{border-top:1px solid rgba(255,255,255,0.07);padding:36px 48px}
     <div class="qt-gate" id="qtGate">
       <div class="qt-gate-title">Want your full Knee Longevity Profile?.</div>
       <div class="qt-gate-sub">Sign up for free and unlock your 12-question Knee Longevity Profile — personalised results and your 3 most impactful actions.</div>
-      <form class="qt-gate-form" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_blank">
+      <form class="qt-gate-form" action="https://app.kit.com/forms/9207706/subscriptions" method="post" target="_self">
         <input class="qt-gate-input" type="email" name="email_address" id="qtEmail" placeholder="Your email address"/>
         <button class="qt-gate-btn" type="submit">Calculate my Knee Age →</button>
       </div>
@@ -956,7 +956,7 @@ function handleHero(e){
 function handleWL(e){
   e.preventDefault();
   const em = document.getElementById("wl-email").value;
-  if(em){ count++; updateCounts(); document.getElementById("success").style.display="block"; e.target.style.display="none"; }
+if(em){ count++; updateCounts(); window.location.href="/confirmed"; }
 }
 function updateCounts(){
   document.getElementById("c1").textContent = count.toLocaleString();
