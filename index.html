@@ -977,8 +977,7 @@ function qtPick(stepIndex, btn) {
   // Mark chosen
   step.querySelectorAll('.qt-opt').forEach(b => { b.classList.remove('chosen'); b.disabled = false; });
   btn.classList.add('chosen');
-  step.classList.remove('active');
-  step.classList.add('answered');
+  
 
   qtAnswered++;
   fetch('https://sheetdb.io/api/v1/h2ieydu7ts75q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:{timestamp:new Date().toISOString(),response:'Q'+(stepIndex+1)+': '+btn.textContent,email:'',source:'knee-quiz-landing'}})});
