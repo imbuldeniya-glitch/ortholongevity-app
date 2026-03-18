@@ -967,8 +967,8 @@ function selectSurvey(btn, answer){
   document.querySelectorAll('.survey-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('survey-thanks').style.display='block';
+  fetch('https://sheetdb.io/api/v1/h2ieydu7ts75q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:{timestamp:new Date().toISOString(),response:answer,email:'',source:'landing-survey'}})});
 }
-
 // ── PROGRESSIVE QUIZ ──────────────────────────────────────────────────────
 let qtAnswered = 0;
 
@@ -981,6 +981,7 @@ function qtPick(stepIndex, btn) {
   step.classList.add('answered');
 
   qtAnswered++;
+  fetch('https://sheetdb.io/api/v1/h2ieydu7ts75q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:{timestamp:new Date().toISOString(),response:'Q'+(stepIndex+1)+': '+btn.textContent,email:'',source:'knee-quiz-landing'}})});
 
   // Activate next step
   const nextStep = document.getElementById('qtStep' + (stepIndex + 1));
