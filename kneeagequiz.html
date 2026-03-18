@@ -736,7 +736,7 @@ function renderQuestion(container, q, answersObj, onAnswer) {
     html += `<div class="slider-wrap">
       <div class="slider-val" id="sliderVal">${val}</div>
       <div class="slider-unit">${q.unit}</div>
-      <input type="range" min="${q.min}" max="${q.max}" value="${val}" id="sliderInput" oninput="updateSlider(this)"/>
+      <input type="range" min="${q.min}" max="${q.max}" value="${val}" id="sliderInput" "oninput="updateSlider(this)" onclick="updateSlider(this)"/>
       <div class="slider-labels"><span>${q.labels[0]}</span><span>${q.labels[1]}</span></div>
     </div>`;
   } else if (q.type === 'pain') {
