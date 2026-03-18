@@ -946,6 +946,7 @@ function handleHero(e){
 function handleWL(e){
   e.preventDefault();
   const em = document.getElementById("wl-email").value;
+  if(em){ localStorage.setItem('ol_email', em); }
   if(em){ count++; updateCounts(); document.getElementById("success").style.display="block"; e.target.style.display="none"; }
 }
 function updateCounts(){
@@ -953,7 +954,6 @@ function updateCounts(){
   document.getElementById("c2").textContent = count.toLocaleString();
   document.getElementById("c3").textContent = count.toLocaleString();
 }
-
 document.querySelectorAll("a[href='#waitlist']").forEach(a=>{
   a.addEventListener("click",e=>{e.preventDefault();document.getElementById("waitlist").scrollIntoView({behavior:"smooth"});});
 });
