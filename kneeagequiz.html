@@ -226,6 +226,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 </div>
 
 <script>
+  const urlParams = new URLSearchParams(window.location.search);
+window._userEmail = urlParams.get('email') || '';
+
 const CORE_QUESTIONS = [
   {
     id:'age', type:'slider',
@@ -806,10 +809,25 @@ function renderOptionalPrompt(container) {
 }
 
 function startOptional() { phase = 'optional'; render(); }
+  function sendQuizData(coreAnswers, optAnswers, email, kneeAge) {
+  fetch('https://sheetdb.io/api/v1/h2ieydu7ts75q',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:{
+    timestamp:new Date().toISOString(),
+    response:'KneeAge:'+kneeAge,
+    email:email||'',
+    source:'knee-full-quiz',
+    age:coreAnswers.age,sex:coreAnswers.sex,bmi:coreAnswers.bmi_mode,
+    pain:coreAnswers.pain,activity:coreAnswers.activity,sitting:coreAnswers.sitting,
+    injury:coreAnswers.injury,smoking:coreAnswers.smoking,nutrition:coreAnswers.nutrition,
+    metabolic:coreAnswers.metabolic,inflammatory:coreAnswers.inflammatory,
+    menopause:optAnswers?optAnswers.menopause:'',omega3:optAnswers?optAnswers.omega3:'',
+    sleep:optAnswers?optAnswers.sleep:'',family:optAnswers?optAnswers.family:''
+  }})});
+}
 function skipToResult() { phase = 'result'; render(); }
 
 function renderResult(container) {
   const { kneeAge, delta, age, isPaediatric, pillars } = calcKneeAge(coreAnswers, optAnswers);
+  sendQuizData(coreAnswers, optAnswers, window._userEmail || '', kneeAge);
   const verdict = getVerdict(delta, pillars, coreAnswers, isPaediatric);
   const r = 72, cx = 90, cy = 90;
   const circ = 2 * Math.PI * r;
