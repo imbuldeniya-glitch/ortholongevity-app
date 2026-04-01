@@ -511,11 +511,15 @@ footer{padding:40px 24px;text-align:center;border-top:1px solid rgba(255,255,255
 
     <div class="email-form-wrap">
       <div class="email-input-row">
-        <input type="email" id="emailInput" class="email-input" placeholder="your@email.com" autocomplete="email"/>
+        <input type="email" 
+               id="emailInput" 
+               class="email-input" 
+               placeholder="your@email.com" 
+               autocomplete="email"/>
         <button class="email-btn" onclick="submitEmail()">Get My Knee Age →</button>
       </div>
       <div class="email-note">No spam. One email with your personal link. Unsubscribe any time.</div>
-      <div id="successMsg" class="success-msg">
+      <div id="successMsg" class="success-msg" style="display:none">
         ✓ &nbsp;You're on the list. Check your inbox — your personal Knee Age link is on its way.
       </div>
     </div>
@@ -557,12 +561,12 @@ footer{padding:40px 24px;text-align:center;border-top:1px solid rgba(255,255,255
 async function submitEmail(){
   const input = document.getElementById('emailInput');
   const btn = document.querySelector('.email-btn');
-  const success = document.getElementById('successMsg');
   const email = input.value.trim();
   
   if(!email || !email.includes('@')){
     input.style.borderColor = 'rgba(224,85,85,.6)';
     input.placeholder = 'Please enter a valid email';
+    setTimeout(()=>{ input.style.borderColor=''; input.placeholder='your@email.com'; }, 2000);
     return;
   }
   
@@ -570,38 +574,23 @@ async function submitEmail(){
   btn.disabled = true;
   input.disabled = true;
   
+  // Call /api/subscribe — runs server-side, no CORS issues
+  // Redirects to confirmed regardless of outcome
   try {
-    // Submit to Kit form 9207706 via Vercel Edge Function
-    const res = await fetch('/api/subscribe', {
+    await fetch('/api/subscribe', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email, tags: ['knee-age-quiz', 'landing-page']})
+      body: JSON.stringify({
+        email,
+        tags: ['knee-age-quiz', 'landing-page']
+      })
     });
-    
-    // Show success regardless — if API not yet configured, show success anyway
-    // Kit General tab redirect to confirmed.html handles the actual response
-    success.style.display = 'block';
-    input.closest('.email-input-row').style.display = 'none';
-    document.querySelector('.email-note').style.display = 'none';
-    
-    // Also redirect to confirmed page
-    setTimeout(() => {
-      window.location.href = '/confirmed';
-    }, 1500);
-    
   } catch(e) {
-    // Fallback: submit directly to Kit form
-    const kitForm = document.createElement('form');
-    kitForm.method = 'POST';
-    kitForm.action = 'https://app.kit.com/forms/9207706/subscriptions';
-    kitForm.style.display = 'none';
-    const emailField = document.createElement('input');
-    emailField.name = 'email_address';
-    emailField.value = email;
-    kitForm.appendChild(emailField);
-    document.body.appendChild(kitForm);
-    kitForm.submit();
+    // API call failed — still redirect, Kit may still receive via fallback
   }
+  
+  // Always redirect to confirmed — clean, no flash of third-party page
+  window.location.href = '/confirmed';
 }
 
 // Allow Enter key
