@@ -791,11 +791,29 @@ function nextQ(){
 function showResult(){
   const R_data = calc(answers);
   incrementCounter({
+    email: answers._email || '',
     age: R_data.age,
     sex: R_data.sex,
     kneeAge: R_data.isTeen ? null : R_data.kneeAge,
-    score: R_data.isTeen ? R_data.jhs : R_data.composite,
-    isTeen: R_data.isTeen
+    score: R_data.isTeen ? R_data.jhs : Math.round(R_data.composite),
+    isTeen: R_data.isTeen,
+    answers: {
+      metabolic:     answers.metabolic     || '',
+      nutrition:     answers.nutrition     || '',
+      sleep:         answers.sleep         || '',
+      stiffness:     answers.stiffness     !== undefined ? answers.stiffness : '',
+      sitting:       answers.sitting       || '',
+      strength:      answers.strength      || '',
+      sit_stand:     answers.sit_stand     || '',
+      pain:          answers.pain          !== undefined ? answers.pain : '',
+      injury:        answers.injury        || '',
+      family:        answers.family        || '',
+      hypermobility: answers.hypermobility || '',
+      menopause:     answers.menopause     || '',
+      sport_load:    answers.sport_load    || '',
+      teen_hormonal: answers.teen_hormonal || '',
+    },
+    domains: R_data.domains || {}
   });
   const R=calc(answers);
   const {isTeen,age,kneeAge,jhs,diff,domains,familyRisk,painLevel,menoStatus,teenHorStatus,hypermobile}=R;
