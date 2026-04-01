@@ -3,55 +3,54 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Know Your Knee Age — OrthoLongevity™ · Free Assessment</title>
+<title>Know Your Knee Age — OrthoLongevity™</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --forest:#0f2d1e;--forest-mid:#1a3d2a;--forest-light:#234d36;
+  --forest:#0f2d1e;--forest-mid:#1a3d2a;
   --teal:#1d9e75;--teal-light:#5dcaa5;--teal-pale:#e1f5ee;
-  --cream:#f7f3ed;--charcoal:#1c1c1a;--muted:#6b7c71;
-  --gold:#c9a84c;--white:#ffffff;--red:#e05555;--amber:#e09a3a;--green:#27a96c;
+  --cream:#f7f3ed;--muted:#6b7c71;
+  --gold:#c9a84c;--white:#ffffff;
+  --red:#e05555;--amber:#e09a3a;--green:#27a96c;
+  /* Domain colours */
+  --d1:#085041; --d1-bg:#e1f5ee; --d1-mid:#1d9e75;
+  --d2:#27500a; --d2-bg:#eaf3de; --d2-mid:#639922;
+  --d3:#633806; --d3-bg:#faeeda; --d3-mid:#ba7517;
+  --d4:#791f1f; --d4-bg:#fcebeb; --d4-mid:#e24b4a;
+  --d5:#3c3489; --d5-bg:#eeedfe; --d5-mid:#7f77dd;
   --font-display:'Playfair Display',Georgia,serif;
   --font-body:'DM Sans',system-ui,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
 body{background:var(--forest);color:var(--cream);font-family:var(--font-body);font-size:16px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:20px}
 .shell{width:100%;max-width:580px;margin:0 auto}
 
-/* HEADER */
 .hdr{text-align:center;padding:36px 0 28px;animation:fadeup 0.5s ease both}
-@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.hdr-logo-wrap{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px}
-.hdr-logo{font-family:var(--font-display);font-size:19px;color:var(--cream);letter-spacing:0.01em}
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.hdr-logo{font-family:var(--font-display);font-size:20px;color:var(--cream);margin-bottom:4px}
 .hdr-logo span{color:var(--teal-light)}
-.hdr-tag{font-size:12px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:28px}
+.hdr-tag{font-size:12px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase}
 
-/* TRUST STRIP */
-.trust-strip{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:16px 20px;margin-bottom:28px;text-align:left;animation:fadeup 0.5s 0.1s ease both}
-.trust-photo{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid rgba(29,158,117,0.45);flex-shrink:0;box-shadow:0 0 18px rgba(29,158,117,0.18)}
+.trust-strip{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:16px 20px;margin-bottom:28px;animation:fadeup 0.5s 0.1s ease both}
 .trust-name{font-size:13px;font-weight:600;color:var(--cream);font-family:var(--font-display);line-height:1.2;margin-bottom:2px}
 .trust-role{font-size:11px;color:rgba(247,243,237,0.55);line-height:1.5}
 .trust-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:100px;padding:2px 9px;font-size:10px;color:var(--gold);margin-top:5px;font-weight:500}
 
-/* PROGRESS */
 .progress-wrap{margin-bottom:32px}
 .progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px}
 .progress-bar{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
 .progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-light));border-radius:2px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
 
-/* CARD */
 .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:36px;margin-bottom:16px;animation:cardIn 0.35s ease both}
-@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.q-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal-light);margin-bottom:12px}
-.q-stage-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.2);border-radius:100px;padding:3px 10px;font-size:10px;color:var(--teal-light);margin-bottom:14px;font-weight:500}
-.q-text{font-family:var(--font-display);font-size:clamp(20px,4vw,26px);font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:8px}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.q-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal-light);margin-bottom:10px}
+.q-domain-badge{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:4px 12px;font-size:11px;font-weight:500;margin-bottom:14px;border:1px solid}
+.q-text{font-family:var(--font-display);font-size:clamp(19px,4vw,25px);font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:8px}
 .q-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.5}
 
-/* OPTIONS */
 .options{display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 20px;cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.15s;text-align:left;width:100%;font-family:var(--font-body);font-size:15px;color:var(--cream)}
+.opt{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:16px 20px;cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.15s;text-align:left;width:100%;font-family:var(--font-body);color:var(--cream)}
 .opt:hover{border-color:rgba(29,158,117,0.5);background:rgba(29,158,117,0.07);transform:translateX(3px)}
 .opt.selected{border-color:var(--teal);background:rgba(29,158,117,0.15)}
 .opt-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -59,7 +58,6 @@ body{background:var(--forest);color:var(--cream);font-family:var(--font-body);fo
 .opt-label{font-size:15px;font-weight:400;color:var(--cream)}
 .opt-note{font-size:11px;color:var(--muted);margin-top:2px}
 
-/* SLIDER */
 .slider-wrap{margin-top:8px}
 .slider-val{font-family:var(--font-display);font-size:48px;font-weight:700;color:var(--teal-light);text-align:center;margin-bottom:4px;line-height:1}
 .slider-unit{font-size:14px;color:var(--muted);text-align:center;margin-bottom:20px}
@@ -67,21 +65,18 @@ input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:rgba(
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--teal);cursor:pointer;box-shadow:0 2px 8px rgba(29,158,117,0.4)}
 .slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}
 
-/* PAIN SCALE */
 .pain-scale{display:flex;gap:5px;margin-top:8px}
 .pain-btn{flex:1;aspect-ratio:1;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);cursor:pointer;font-size:12px;font-weight:500;color:var(--muted);transition:all 0.15s;font-family:var(--font-body)}
-.pain-btn:hover{border-color:rgba(29,158,117,0.4)}
 .pain-btn.selected{color:var(--cream);font-weight:600}
 .pain-btn[data-v="0"].selected,.pain-btn[data-v="1"].selected,.pain-btn[data-v="2"].selected,.pain-btn[data-v="3"].selected{background:rgba(39,169,108,0.25);border-color:var(--green)}
 .pain-btn[data-v="4"].selected,.pain-btn[data-v="5"].selected,.pain-btn[data-v="6"].selected{background:rgba(224,154,58,0.25);border-color:var(--amber)}
 .pain-btn[data-v="7"].selected,.pain-btn[data-v="8"].selected,.pain-btn[data-v="9"].selected,.pain-btn[data-v="10"].selected{background:rgba(224,85,85,0.25);border-color:var(--red)}
 .pain-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:6px}
 
-/* NEXT BTN */
 .next-wrap{margin-top:24px;text-align:right}
-.next-btn{background:var(--teal);color:var(--white);border:none;border-radius:100px;padding:14px 32px;font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;opacity:0.4;pointer-events:none}
+.next-btn{background:var(--teal);color:var(--white);border:none;border-radius:100px;padding:14px 32px;font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;transition:background 0.2s,transform 0.15s;opacity:0.4;pointer-events:none}
 .next-btn.active{opacity:1;pointer-events:all}
-.next-btn.active:hover{background:#159060;transform:translateY(-2px);box-shadow:0 8px 24px rgba(29,158,117,0.35)}
+.next-btn.active:hover{background:#159060;transform:translateY(-2px)}
 
 /* RESULT */
 .result-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:40px 36px;animation:cardIn 0.4s ease both;text-align:center}
@@ -93,72 +88,74 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 .result-age-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-top:3px}
 .result-compare{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:24px}
 .rc-box{text-align:center;padding:14px 24px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:14px}
-.rc-box.highlight{background:rgba(29,158,117,0.15);border-color:rgba(29,158,117,0.4)}
+.rc-box.hl{background:rgba(29,158,117,0.15);border-color:rgba(29,158,117,0.4)}
 .rc-val{font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--cream)}
-.rc-box.highlight .rc-val{color:var(--teal-light)}
+.rc-box.hl .rc-val{color:var(--teal-light)}
 .rc-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px}
 .rc-arrow{font-size:22px;color:var(--muted)}
 .result-verdict{font-family:var(--font-display);font-size:22px;font-style:italic;color:var(--cream);margin-bottom:8px}
 .result-body{font-size:14px;color:rgba(247,243,237,0.6);line-height:1.7;margin-bottom:28px;max-width:480px;margin-left:auto;margin-right:auto}
 
-/* REPAIR STAGES */
-.stages-title{font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;text-align:left}
-.stage-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.stage-letter{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;font-family:var(--font-display)}
-.stage-name{font-size:12px;color:rgba(247,243,237,0.7);width:160px;flex-shrink:0;line-height:1.3}
-.stage-bar{flex:1;height:7px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
-.stage-fill{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(0.4,0,0.2,1)}
-.stage-val{font-size:12px;font-weight:600;color:var(--cream);width:26px;text-align:right;flex-shrink:0}
-.stage-tag{font-size:9px;font-weight:500;letter-spacing:0.04em;padding:1px 6px;border-radius:100px;flex-shrink:0}
-.stage-tag.good{background:rgba(39,169,108,0.15);color:#5dcaa5;border:1px solid rgba(39,169,108,0.25)}
-.stage-tag.warn{background:rgba(224,154,58,0.15);color:#e09a3a;border:1px solid rgba(224,154,58,0.25)}
-.stage-tag.risk{background:rgba(224,85,85,0.15);color:#e05555;border:1px solid rgba(224,85,85,0.25)}
-
-/* ACTIONS */
-.actions-title{font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;text-align:left}
-.action-item{display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:8px;text-align:left}
-.ai-icon{width:36px;height:36px;border-radius:10px;background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.25);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.ai-title{font-size:14px;font-weight:500;color:var(--cream);margin-bottom:3px}
-.ai-sub{font-size:12px;color:var(--muted);line-height:1.5}
-.ai-pill{display:inline-block;font-size:10px;font-weight:500;letter-spacing:0.05em;background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.2);color:var(--teal-light);padding:2px 8px;border-radius:100px;margin-top:5px}
+/* DOMAIN BARS */
+.domains-title{font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;text-align:left}
+.domain-row{margin-bottom:14px}
+.domain-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.domain-name-wrap{display:flex;align-items:center;gap:8px}
+.domain-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.domain-name-text{font-size:13px;font-weight:500;color:var(--cream)}
+.domain-stage-pill{font-size:9px;font-weight:500;letter-spacing:0.04em;padding:2px 7px;border-radius:100px;border:1px solid}
+.domain-score-wrap{display:flex;align-items:center;gap:8px}
+.domain-score{font-size:13px;font-weight:600;color:var(--cream)}
+.domain-tag{font-size:9px;font-weight:500;letter-spacing:0.04em;padding:1px 7px;border-radius:100px;border:1px solid}
+.domain-tag.good{background:rgba(39,169,108,0.15);color:#5dcaa5;border-color:rgba(39,169,108,0.3)}
+.domain-tag.warn{background:rgba(224,154,58,0.15);color:#e09a3a;border-color:rgba(224,154,58,0.3)}
+.domain-tag.risk{background:rgba(224,85,85,0.15);color:#e05555;border-color:rgba(224,85,85,0.3)}
+.domain-bar{height:8px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
+.domain-fill{height:100%;border-radius:4px;transition:width 1.3s cubic-bezier(0.4,0,0.2,1)}
+.domain-desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5;text-align:left}
 
 /* GENETIC PANEL */
 .genetic-panel{border-radius:14px;padding:16px 18px;margin-bottom:8px;text-align:left}
 .gp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-.gp-title{font-size:13px;font-weight:600;line-height:1.2}
-.gp-body{font-size:12px;color:rgba(247,243,237,0.65);line-height:1.6;margin:0 0 8px}
-.gp-cta{display:inline-block;font-size:10px;font-weight:500;letter-spacing:0.05em;padding:3px 10px;border-radius:100px;margin-top:2px}
+.gp-icon{font-size:16px}
+.gp-title{font-size:13px;font-weight:600}
+.gp-body{font-size:12px;color:rgba(247,243,237,0.65);line-height:1.6;margin:0 0 6px}
+.gp-cta{display:inline-block;font-size:10px;font-weight:500;letter-spacing:0.05em;padding:3px 10px;border-radius:100px}
+
+/* ACTIONS */
+.actions-title{font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;text-align:left;margin-top:24px}
+.action-item{display:flex;gap:14px;align-items:flex-start;border-radius:14px;padding:16px;margin-bottom:8px;text-align:left;border:1px solid rgba(255,255,255,0.08)}
+.ai-icon-wrap{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ai-title{font-size:14px;font-weight:500;color:var(--cream);margin-bottom:3px}
+.ai-sub{font-size:12px;color:var(--muted);line-height:1.5}
+.ai-pill{display:inline-block;font-size:10px;font-weight:500;letter-spacing:0.05em;padding:2px 8px;border-radius:100px;margin-top:5px;border:1px solid}
 
 /* CTA */
-.wl-cta{background:linear-gradient(160deg,rgba(15,45,30,0.95) 0%,rgba(26,61,42,0.98) 100%);border:1px solid rgba(29,158,117,0.4);border-radius:22px;padding:36px 32px;margin-top:24px;text-align:center;position:relative;overflow:hidden}
-.wl-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(29,158,117,0.1) 0%,transparent 70%);pointer-events:none}
-.wl-cta-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal-light);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px}
-.wl-cta h3{font-family:var(--font-display);font-size:clamp(22px,4vw,30px);font-weight:700;color:var(--cream);margin-bottom:12px;line-height:1.2}
+.wl-cta{background:rgba(15,45,30,0.95);border:1px solid rgba(29,158,117,0.4);border-radius:22px;padding:32px;margin-top:24px;text-align:center}
+.wl-cta-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal-light);margin-bottom:12px}
+.wl-cta h3{font-family:var(--font-display);font-size:clamp(22px,4vw,28px);font-weight:700;color:var(--cream);margin-bottom:10px;line-height:1.2}
 .wl-cta h3 em{font-style:italic;color:var(--teal-light)}
-.wl-cta-body{font-size:15px;color:rgba(247,243,237,0.65);margin-bottom:24px;line-height:1.7;max-width:400px;margin-left:auto;margin-right:auto}
-.wl-features{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
-.wl-feat{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:6px 14px;font-size:12px;color:rgba(247,243,237,0.7)}
-.wl-success{padding:18px 20px;background:rgba(29,158,117,0.12);border:1px solid rgba(29,158,117,0.3);border-radius:16px;margin-bottom:16px}
-.wl-success-tick{font-size:28px;margin-bottom:6px}
-.wl-success-title{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--cream);margin-bottom:4px}
+.wl-feats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0}
+.wl-feat{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:5px 12px;font-size:12px;color:rgba(247,243,237,0.7)}
+.wl-success{padding:16px;background:rgba(29,158,117,0.12);border:1px solid rgba(29,158,117,0.3);border-radius:14px;margin-bottom:14px}
+.wl-success-tick{font-size:26px;margin-bottom:4px}
+.wl-success-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--cream);margin-bottom:3px}
 .wl-success-body{font-size:13px;color:rgba(247,243,237,0.6);line-height:1.6}
-.wl-proof{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:28px;font-size:12px;color:var(--muted)}
+.wl-proof{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;font-size:12px;color:var(--muted)}
 .wl-proof-count{color:var(--teal-light);font-weight:600}
-.social-link{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 18px;margin-bottom:8px;text-decoration:none;transition:background 0.2s,border-color 0.2s;cursor:pointer}
+.social-link{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 16px;margin-bottom:8px;text-decoration:none;cursor:pointer}
 .social-link:hover{background:rgba(29,158,117,0.08);border-color:rgba(29,158,117,0.3)}
-.social-icon{width:38px;height:38px;border-radius:10px;background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.social-icon{width:34px;height:34px;border-radius:9px;background:rgba(29,158,117,0.15);border:1px solid rgba(29,158,117,0.2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
 .social-name{font-size:13px;font-weight:500;color:var(--cream);line-height:1.2}
-.social-desc{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
-.social-arrow{margin-left:auto;color:var(--teal-light);font-size:16px;flex-shrink:0}
-.disclaimer{font-size:11px;color:var(--muted);opacity:0.5;text-align:center;margin-top:20px;line-height:1.6;padding:0 10px}
+.social-desc{font-size:11px;color:var(--muted);margin-top:1px}
+.social-arrow{margin-left:auto;color:var(--teal-light);font-size:15px;flex-shrink:0}
+.disclaimer{font-size:11px;color:var(--muted);opacity:0.5;text-align:center;margin-top:18px;line-height:1.6;padding:0 8px}
 
 @media(max-width:480px){
   body{padding:12px}
-  .card{padding:24px 20px}
+  .card,.result-card,.wl-cta{padding:24px 18px}
   .pain-scale{gap:3px}
   .pain-btn{font-size:10px}
-  .result-card{padding:28px 20px}
-  .wl-cta{padding:28px 20px}
 }
 </style>
 </head>
@@ -166,10 +163,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 <div class="shell">
 
 <div class="hdr">
-  <div class="hdr-logo-wrap">
-    <div class="hdr-logo">Ortho<span>Longevity™</span></div>
-  </div>
-  <div class="hdr-tag">Know Your Knee Age · Free Assessment</div>
+  <div class="hdr-logo">Ortho<span>Longevity™</span></div>
+  <div class="hdr-tag" style="margin-top:4px">Know Your Knee Age · Free Assessment</div>
 </div>
 
 <div class="trust-strip">
@@ -189,511 +184,381 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;heigh
 </div>
 
 <div id="quizContainer"></div>
-
 </div>
 
 <script>
-// ─── QUESTIONS ───────────────────────────────────────────────────────────────
-// Each question is mapped to a R.E.P.A.I.R.™ stage and contributes to that stage score.
-// Scores are 0–100 per stage; higher = healthier.
+// ── Domain definitions ────────────────────────────────────────────────────────
+const DOMAINS = [
+  { key:'bio',      name:'Biological health',           stage:'R — Reset Biology',         color:'#1d9e75', dotColor:'#1d9e75', bg:'rgba(29,158,117,0.12)', border:'rgba(29,158,117,0.3)', pillColor:'#085041', pillBg:'#e1f5ee', pillBorder:'#5dcaa5' },
+  { key:'move',     name:'Movement quality',             stage:'E — Enhance Movement',       color:'#639922', dotColor:'#639922', bg:'rgba(99,153,34,0.12)',  border:'rgba(99,153,34,0.3)',  pillColor:'#27500a', pillBg:'#eaf3de', pillBorder:'#97c459' },
+  { key:'strength', name:'Muscle strength & capacity',  stage:'P — Power',                  color:'#ba7517', dotColor:'#ba7517', bg:'rgba(186,117,23,0.12)', border:'rgba(186,117,23,0.3)', pillColor:'#633806', pillBg:'#faeeda', pillBorder:'#ef9f27' },
+  { key:'injury',   name:'Joint & injury history',       stage:'Phenotype + History',        color:'#e24b4a', dotColor:'#e24b4a', bg:'rgba(226,75,74,0.12)',  border:'rgba(226,75,74,0.3)',  pillColor:'#791f1f', pillBg:'#fcebeb', pillBorder:'#f09595' },
+  { key:'genetic',  name:'Genetic & longevity risk',    stage:'R — Resilience + Genomics',  color:'#7f77dd', dotColor:'#7f77dd', bg:'rgba(127,119,221,0.12)',border:'rgba(127,119,221,0.3)',pillColor:'#3c3489', pillBg:'#eeedfe', pillBorder:'#afa9ec' },
+];
 
+// ── Questions (12 total, each tagged with domain key) ─────────────────────────
 const QUESTIONS = [
-  // ── About You ──
-  {
-    id:'age', type:'slider', stage:null,
-    eyebrow:'About you',
-    text:'How old are you?',
-    sub:'Your Knee Age is measured against this — younger or older than your chronological baseline.',
-    min:18, max:85, default:45, unit:'years old', labels:['18','85']
-  },
-  {
-    id:'sex', type:'options', stage:null,
-    eyebrow:'About you',
-    text:'What is your biological sex?',
-    sub:'Cartilage thickness, hormonal profile, and OA risk differ between sexes. This calibrates your scoring norms.',
+  { id:'age', type:'slider', domain:null,
+    eyebrow:'About you', text:'How old are you?',
+    sub:'Your Knee Age is measured against this baseline.',
+    min:18, max:85, default:45, unit:'years old', labels:['18','85'] },
+
+  { id:'sex', type:'options', domain:null,
+    eyebrow:'About you', text:'What is your biological sex?',
+    sub:'Hormonal profile and cartilage norms differ between sexes — this calibrates your scoring.',
     options:[
       {value:'male',   icon:'♂', label:'Male', score:0},
       {value:'female', icon:'♀', label:'Female', score:0},
-      {value:'other',  icon:'◯', label:'Prefer not to say', note:"We'll use population-average norms", score:0}
-    ]
-  },
+      {value:'other',  icon:'◯', label:'Prefer not to say', note:"Population-average norms used", score:0}
+    ]},
 
-  // ── R — Reset Biology ──
-  {
-    id:'metabolic', type:'options', stage:'R',
-    eyebrow:'R — Reset Biology',
-    stageBadge:'R.E.P.A.I.R.™ Stage 1',
+  // Biological health (domain: bio)
+  { id:'metabolic', type:'options', domain:'bio',
+    eyebrow:'Biological health',
     text:'How would you describe your weight and metabolic health?',
-    sub:'Excess adipose tissue produces inflammatory cytokines that directly accelerate cartilage breakdown. Metabolic health is as important to joint longevity as physical activity.',
+    sub:'Excess adipose tissue produces inflammatory cytokines that directly accelerate cartilage breakdown and impair the joint\'s repair environment.',
     options:[
-      {value:'healthy',    icon:'✅', label:'Healthy weight, no metabolic concerns', score:100},
-      {value:'over_mild',  icon:'📊', label:'Slightly overweight, broadly healthy', score:65},
-      {value:'over_mod',   icon:'📈', label:'Moderately overweight, or pre-diabetic / elevated HbA1c', score:35},
-      {value:'obese',      icon:'⚠️', label:'Significantly overweight, or type 2 diabetes', score:10}
-    ]
-  },
-  {
-    id:'inflammation', type:'options', stage:'R',
-    eyebrow:'R — Reset Biology',
-    stageBadge:'R.E.P.A.I.R.™ Stage 1',
-    text:'How would you rate your diet most of the time?',
-    sub:'Omega-3 fatty acids, polyphenols, and adequate protein are the most evidence-backed nutritional inputs for joint repair. Ultra-processed diets drive systemic inflammation — independently of weight.',
+      {value:'healthy',   icon:'✅', label:'Healthy weight, no metabolic concerns', score:100},
+      {value:'over_mild', icon:'📊', label:'Slightly overweight, broadly healthy', score:65},
+      {value:'over_mod',  icon:'📈', label:'Moderately overweight, or pre-diabetic', score:35},
+      {value:'obese',     icon:'⚠️', label:'Significantly overweight, or type 2 diabetes', score:10}
+    ]},
+
+  { id:'nutrition', type:'options', domain:'bio',
+    eyebrow:'Biological health',
+    text:'How would you describe your diet most of the time?',
+    sub:'Omega-3s, polyphenols, and adequate protein are the most evidence-backed nutritional inputs for joint repair. Ultra-processed diets drive systemic inflammation independently of weight.',
     options:[
-      {value:'anti_inflam', icon:'🥗', label:'Mostly anti-inflammatory', note:'Oily fish, veg, olive oil, minimal processed food', score:100},
-      {value:'balanced',    icon:'⚖️', label:'Broadly balanced', note:'Some good habits, some less so', score:65},
-      {value:'processed',   icon:'🍟', label:'Mostly convenience or processed food', note:'High sugar, fast food, ready meals', score:25},
-      {value:'unsure',      icon:'❓', label:"Not sure / varies a great deal", score:50}
-    ]
-  },
-  {
-    id:'sleep', type:'options', stage:'R',
-    eyebrow:'R — Reset Biology',
-    stageBadge:'R.E.P.A.I.R.™ Stage 1',
+      {value:'anti',      icon:'🥗', label:'Mostly anti-inflammatory', note:'Oily fish, veg, olive oil, minimal processed food', score:100},
+      {value:'balanced',  icon:'⚖️', label:'Broadly balanced', score:65},
+      {value:'processed', icon:'🍟', label:'Mostly convenience or processed food', score:20},
+      {value:'unsure',    icon:'❓', label:'Not sure / varies a lot', score:50}
+    ]},
+
+  { id:'sleep', type:'options', domain:'bio',
+    eyebrow:'Biological health',
     text:'How much sleep do you typically get?',
-    sub:'Cartilage remodelling and synovial fluid regulation are sleep-dependent processes. Chronic under-sleep elevates hs-CRP — a direct marker of the systemic inflammation that drives joint degeneration.',
+    sub:'Cartilage remodelling is sleep-dependent. Chronic under-sleep elevates hs-CRP — a direct marker of the systemic inflammation that drives joint degeneration.',
     options:[
       {value:'good', icon:'😴', label:'7–9 hours most nights', score:100},
-      {value:'ok',   icon:'🌙', label:'6–7 hours', score:60},
-      {value:'poor', icon:'⚠️', label:'Under 6 hours most nights', score:15}
-    ]
-  },
+      {value:'ok',   icon:'🌙', label:'6–7 hours', score:58},
+      {value:'poor', icon:'⚠️', label:'Under 6 hours most nights', score:12}
+    ]},
 
-  // ── E — Enhance Movement ──
-  {
-    id:'stiffness', type:'options', stage:'E',
-    eyebrow:'E — Enhance Movement',
-    stageBadge:'R.E.P.A.I.R.™ Stage 2',
+  // Movement quality (domain: move)
+  { id:'stiffness', type:'options', domain:'move',
+    eyebrow:'Movement quality',
     text:'Do you experience morning stiffness or restricted movement in your knees or hips?',
-    sub:'Morning stiffness lasting more than 30 minutes suggests inflammatory or degenerative joint change. Stiffness under 30 minutes is typical of OA. Neither is inevitable — both are modifiable with the right movement programme.',
+    sub:'Morning stiffness lasting more than 30 minutes suggests an inflammatory pattern. Under 30 minutes is typical of OA. Both are modifiable with the right programme.',
     options:[
-      {value:'none',      icon:'✅', label:'No stiffness or restriction', score:100},
-      {value:'mild',      icon:'🌅', label:'Mild stiffness, resolves within 30 minutes', score:65},
-      {value:'moderate',  icon:'🔒', label:'Noticeable stiffness or restricted range most days', score:35},
-      {value:'severe',    icon:'⚠️', label:'Significant restriction that limits daily activities', score:10}
-    ]
-  },
-  {
-    id:'sitting', type:'options', stage:'E',
-    eyebrow:'E — Enhance Movement',
-    stageBadge:'R.E.P.A.I.R.™ Stage 2',
-    text:'How much time do you spend sitting each day?',
-    sub:'Prolonged sitting reduces synovial fluid circulation, weakens quadriceps through disuse atrophy, and is independently associated with accelerated cartilage thinning — even in people who exercise regularly outside of work.',
-    options:[
-      {value:'active',   icon:'🔄', label:'I move regularly throughout the day', score:100},
-      {value:'moderate', icon:'⚖️', label:'3–5 hours sitting, with movement breaks', score:70},
-      {value:'sedentary',icon:'💻', label:'6+ hours sitting most days', note:'Desk work, commuting, limited breaks', score:30},
-      {value:'mostly',   icon:'🛋️', label:'Mostly sedentary — mobility is limited', score:10}
-    ]
-  },
+      {value:'none',     icon:'✅', label:'No stiffness or restriction', score:100},
+      {value:'mild',     icon:'🌅', label:'Mild stiffness, resolves within 30 minutes', score:65},
+      {value:'moderate', icon:'🔒', label:'Noticeable stiffness most days', score:35},
+      {value:'severe',   icon:'⚠️', label:'Significant restriction that limits daily activities', score:10}
+    ]},
 
-  // ── P — Power ──
-  {
-    id:'strength', type:'options', stage:'P',
-    eyebrow:'P — Power',
-    stageBadge:'R.E.P.A.I.R.™ Stage 3',
-    text:'How would you describe your current strength and resistance training?',
-    sub:'Quadriceps weakness is one of the most powerful independent predictors of knee OA progression. Strength training 2–3 times per week is the single highest-evidence modifiable intervention for joint longevity — above injections and above weight loss.',
+  { id:'sitting', type:'options', domain:'move',
+    eyebrow:'Movement quality',
+    text:'How much time do you spend sitting each day?',
+    sub:'Prolonged sitting reduces synovial fluid circulation and is independently associated with cartilage thinning — even in people who exercise regularly outside of sedentary work.',
     options:[
-      {value:'regular',  icon:'🏋️', label:'Structured strength training 3+ times per week', score:100},
-      {value:'moderate', icon:'🚴', label:'Some resistance work, 1–2 times per week', score:65},
-      {value:'light',    icon:'🚶', label:'Mostly walking or low-impact activity, no resistance work', score:35},
-      {value:'sedentary',icon:'🪑', label:'Largely inactive', score:10}
-    ]
-  },
-  {
-    id:'sit_to_stand', type:'options', stage:'P',
-    eyebrow:'P — Power',
-    stageBadge:'R.E.P.A.I.R.™ Stage 3',
+      {value:'active',    icon:'🔄', label:'I move regularly throughout the day', score:100},
+      {value:'moderate',  icon:'⚖️', label:'3–5 hours sitting, with movement breaks', score:70},
+      {value:'sedentary', icon:'💻', label:'6+ hours sitting most days', note:'Desk work, commuting, limited breaks', score:28},
+      {value:'mostly',    icon:'🛋️', label:'Mostly sedentary — mobility is limited', score:8}
+    ]},
+
+  // Muscle strength & capacity (domain: strength)
+  { id:'strength', type:'options', domain:'strength',
+    eyebrow:'Muscle strength & capacity',
+    text:'How would you describe your current strength and resistance training?',
+    sub:'Quadriceps weakness is one of the most powerful independent predictors of knee OA progression. Strength training 2–3 times per week is the highest-evidence modifiable intervention for joint longevity.',
+    options:[
+      {value:'regular',   icon:'🏋️', label:'Structured strength training 3+ times per week', score:100},
+      {value:'moderate',  icon:'🚴', label:'Some resistance work, 1–2 times per week', score:65},
+      {value:'light',     icon:'🚶', label:'Mostly walking or light activity, no resistance work', score:32},
+      {value:'sedentary', icon:'🪑', label:'Largely inactive', score:8}
+    ]},
+
+  { id:'sit_stand', type:'options', domain:'strength',
+    eyebrow:'Muscle strength & capacity',
     text:'How many times can you stand from a chair and sit back down in 30 seconds — without using your arms?',
-    sub:'The 30-second sit-to-stand test is a validated clinical measure of lower-limb power and endurance. Under 12 reps indicates significant impairment; under 8 is associated with high fall risk and rapid OA progression.',
+    sub:'The 30-second sit-to-stand test is a validated clinical measure of lower-limb power. Under 12 indicates significant impairment; under 8 is associated with rapid OA progression.',
     options:[
       {value:'high',   icon:'💪', label:'15 or more', score:100},
       {value:'good',   icon:'✅', label:'12–14', score:75},
       {value:'low',    icon:'📉', label:'8–11', score:40},
-      {value:'poor',   icon:'⚠️', label:'Under 8, or I cannot do this without arm support', score:10},
-      {value:'unsure', icon:'❓', label:"I haven't tried — not sure", score:50}
-    ]
-  },
+      {value:'poor',   icon:'⚠️', label:'Under 8, or I cannot do this without arm support', score:8},
+      {value:'unsure', icon:'❓', label:"Haven't tried — not sure", score:50}
+    ]},
 
-  // ── A — Augment Healing ──
-  {
-    id:'pain', type:'pain', stage:'A',
-    eyebrow:'A — Augment Healing',
-    stageBadge:'R.E.P.A.I.R.™ Stage 4',
+  // Joint & injury history (domain: injury)
+  { id:'pain', type:'pain', domain:'injury',
+    eyebrow:'Joint & injury history',
     text:'Rate any knee or hip pain you have experienced in the last month.',
-    sub:'0 = none at all. 10 = severe pain limiting daily activity. Pain above 4 may indicate a biological environment where augmentation could add value — but only after Stages 1–3 are in place.'
-  },
+    sub:'0 = none at all. 10 = severe, limiting daily activity. Current pain level contributes to your joint history profile.'},
 
-  // ── I — Intervene (if needed) ──
-  {
-    id:'injury', type:'options', stage:'I',
-    eyebrow:'I — Intervene if Needed',
-    stageBadge:'R.E.P.A.I.R.™ Stage 5',
+  { id:'injury', type:'options', domain:'injury',
+    eyebrow:'Joint & injury history',
     text:'Any previous significant knee injury or surgery?',
-    sub:'Previous ACL tears, meniscal damage, or cartilage injury alter local joint mechanics and the biological repair environment — sometimes permanently. This does not make degeneration inevitable, but it changes the clinical calculation.',
+    sub:'Previous ACL tears, meniscal damage, or cartilage injury alter local joint mechanics and the biological repair environment — sometimes permanently. This changes the clinical calculation even when imaging looks stable.',
     options:[
-      {value:'none',         icon:'✅', label:'No previous knee injury or surgery', score:100},
-      {value:'minor',        icon:'🩹', label:'Minor injury — sprain, strain, bruising', score:80},
-      {value:'injury_only',  icon:'🔶', label:'Significant injury, no surgery', note:'ACL sprain, meniscal tear, cartilage damage', score:50},
-      {value:'surgery',      icon:'🏥', label:'Previous knee surgery', note:'ACL reconstruction, meniscectomy, arthroscopy', score:35},
-      {value:'replacement',  icon:'⚙️', label:'Partial or total knee replacement', score:20}
-    ]
-  },
+      {value:'none',        icon:'✅', label:'No previous knee injury or surgery', score:100},
+      {value:'minor',       icon:'🩹', label:'Minor injury — sprain, strain, bruising', score:82},
+      {value:'significant', icon:'🔶', label:'Significant injury, no surgery', note:'ACL sprain, meniscal tear, cartilage damage', score:50},
+      {value:'surgery',     icon:'🏥', label:'Previous knee surgery', note:'ACL reconstruction, meniscectomy, arthroscopy', score:32},
+      {value:'replacement', icon:'⚙️', label:'Partial or total knee replacement', score:18}
+    ]},
 
-  // ── R — Resilience ──
-  {
-    id:'family', type:'options', stage:'R2',
-    eyebrow:'R — Resilience & Genetic Risk',
-    stageBadge:'R.E.P.A.I.R.™ Stage 6 + Genomics',
+  // Genetic & longevity risk (domain: genetic)
+  { id:'family', type:'options', domain:'genetic',
+    eyebrow:'Genetic & longevity risk',
     text:'Does osteoarthritis or joint replacement run in your family?',
-    sub:'OA heritability is 40–60%. A first-degree relative with OA raises lifetime risk by ~40%. A 2025 Nature study of nearly 2 million people identified 900+ genetic associations — making family history one of the most important clinical data points for setting programme urgency.',
+    sub:'OA heritability is 40–60%. A 2025 Nature study of nearly 2 million people identified 900+ genetic associations. A first-degree relative with OA raises your lifetime risk by ~40% — independently of lifestyle.',
     options:[
       {value:'no',     icon:'✅', label:'No known family history of OA or joint replacement', score:100},
-      {value:'late',   icon:'🧬', label:'Yes — parent or sibling with OA, after age 65', score:60},
-      {value:'early',  icon:'⚠️', label:'Yes — parent or sibling with OA or replacement before age 65', note:'Substantially elevated genetic risk', score:25},
+      {value:'late',   icon:'🧬', label:'Yes — parent or sibling, after age 65', score:60},
+      {value:'early',  icon:'⚠️', label:'Yes — parent or sibling before age 65', note:'Substantially elevated genetic risk', score:22},
       {value:'unsure', icon:'❓', label:"Not sure / don't know", score:60}
-    ]
-  },
-  {
-    id:'smoking', type:'options', stage:'R2',
-    eyebrow:'R — Resilience',
-    stageBadge:'R.E.P.A.I.R.™ Stage 6',
-    text:'Do you smoke?',
-    sub:'Smoking is an independent predictor of cartilage degeneration — independent of weight, activity level, and injury history. It impairs the microvascular supply to cartilage and elevates systemic inflammatory load.',
-    options:[
-      {value:'never',  icon:'🚭', label:'Never smoked', score:100},
-      {value:'ex',     icon:'⏱️', label:'Ex-smoker (quit more than 2 years ago)', score:80},
-      {value:'recent', icon:'📅', label:'Ex-smoker (quit within the last 2 years)', score:55},
-      {value:'yes',    icon:'🚬', label:'Current smoker', score:10}
-    ]
-  }
+    ]},
 ];
 
-const TOTAL_Q = QUESTIONS.length;
-
-// ─── SCORING ─────────────────────────────────────────────────────────────────
-function calcKneeAge(answers) {
-  const age = answers.age || 45;
-  const sex = answers.sex || 'other';
-
-  // Stage scores (0–100, higher = healthier)
-  // R — Reset Biology (metabolic, inflammation, sleep)
-  const r1 = avg([
-    answers.metabolic_score ?? 65,
-    answers.inflammation_score ?? 65,
-    answers.sleep_score ?? 65
-  ]);
-
-  // E — Enhance Movement (stiffness, sitting)
-  const e = avg([
-    answers.stiffness_score ?? 65,
-    answers.sitting_score ?? 65
-  ]);
-
-  // P — Power (strength, sit-to-stand)
-  const p = avg([
-    answers.strength_score ?? 65,
-    answers.sit_to_stand_score ?? 65
-  ]);
-
-  // A — Augment Healing (pain — inverted: 0 pain = 100, 10 pain = 0)
-  const painRaw = answers.pain !== undefined ? answers.pain : 3;
-  const a = Math.max(0, 100 - (painRaw * 10));
-
-  // I — Intervene (injury history)
-  const iScore = answers.injury_score ?? 80;
-
-  // R2 — Resilience + Genomics (family history, smoking)
-  const r2 = avg([
-    answers.family_score ?? 70,
-    answers.smoking_score ?? 80
-  ]);
-
-  // Weighted composite — P is the highest-evidence stage
-  const composite = (
-    r1  * 0.20 +
-    e   * 0.15 +
-    p   * 0.30 +  // strongest evidence: muscle = primary modifier
-    a   * 0.10 +
-    iScore * 0.10 +
-    r2  * 0.15
-  );
-
-  // Age delta: composite 75 = neutral, each point moves ±0.35 years
-  const delta = Math.round((75 - composite) * 0.38);
-  let kneeAge = Math.round(age + delta);
-  // Female post-50 slight uplift (hormonal effect on cartilage)
-  if (sex === 'female' && age >= 50) kneeAge = Math.min(kneeAge + 2, 90);
-  kneeAge = Math.max(18, Math.min(kneeAge, 90));
-
-  return {
-    kneeAge, delta, age, sex,
-    stages: {
-      R: Math.round(r1),
-      E: Math.round(e),
-      P: Math.round(p),
-      A: Math.round(a),
-      I: Math.round(iScore),
-      R2: Math.round(r2)
-    },
-    familyRisk: answers.family || 'unsure',
-    painLevel: painRaw
-  };
-}
-
-function avg(arr) {
-  return arr.reduce((a,b) => a+b, 0) / arr.length;
-}
-
-// ─── RESULTS LOGIC ───────────────────────────────────────────────────────────
-function getVerdict(delta) {
-  if (delta <= -3) return {
-    label:'Younger than your years',
-    color:'var(--green)', ring:'var(--green)',
-    body:'Your joints are tracking younger than your chronological age. The biological work you are doing is measurable. The goal now is to sustain it — and extend the gap further with targeted monitoring.'
-  };
-  if (delta <= 4) return {
-    label:'Tracking close to your age',
-    color:'var(--amber)', ring:'var(--amber)',
-    body:'Your joint biology broadly reflects your age. This is reassuring — and it also means there is meaningful room to shift the trajectory. A few targeted changes to the R.E.P.A.I.R.™ stages with lowest scores can compound significantly over the next decade.'
-  };
-  return {
-    label:'Older than your years',
-    color:'var(--red)', ring:'var(--red)',
-    body:'Your current lifestyle factors are pushing your joint age ahead of your chronological age. The important truth: most of these factors are modifiable. This number is not a fixed outcome — it is a direction, and it can be changed.'
-  };
-}
-
-function getStageActions(stages, painLevel, familyRisk) {
-  // Rank stages by score (lowest first = most urgent)
-  const ranked = Object.entries(stages).sort((a,b) => a[1] - b[1]);
-  const actions = [];
-
-  const actionMap = {
-    R: {
-      icon:'🥗',
-      title:'Reset your biological environment first',
-      sub:'Anti-inflammatory nutrition (omega-3s, Mediterranean pattern), vitamin D optimisation, and consistent sleep 7–9 hours are the foundation everything else builds on. A joint recovering in a chronically inflamed body is working against the tide.',
-      pill:'R.E.P.A.I.R.™ — Reset Biology'
-    },
-    E: {
-      icon:'🔄',
-      title:'Break prolonged sitting every 45 minutes',
-      sub:'Set a timer. Stand, walk briefly, do ten slow bodyweight squats. Synovial fluid circulation depends on cyclical joint loading. Even small interruptions to sitting protect cartilage nutrition over thousands of daily repetitions.',
-      pill:'R.E.P.A.I.R.™ — Enhance Movement'
-    },
-    P: {
-      icon:'💪',
-      title:'Start a structured lower-limb strength programme',
-      sub:'Two sessions per week of progressive resistance training — leg press, Romanian deadlift, hip thrusts, goblet squats. Muscle is the primary shock-absorber of the knee joint. The evidence for this is more robust than for any injection or supplement.',
-      pill:'R.E.P.A.I.R.™ — Power'
-    },
-    A: {
-      icon:'💉',
-      title:'Pain above 4 — biological optimisation before augmentation',
-      sub:'If your pain is 4 or above, the most effective next step is ensuring Stages 1–3 are in place before considering injection therapies. PRP and HA both perform substantially better in a biologically prepared joint.',
-      pill:'R.E.P.A.I.R.™ — Augment Healing'
-    },
-    I: {
-      icon:'🏥',
-      title:'Previous injury requires a structured return-to-load plan',
-      sub:'Prior ACL, meniscal, or cartilage injury changes the loading mechanics of the joint. A graded return-to-strength programme under clinical guidance is the most evidence-based way to prevent secondary degeneration.',
-      pill:'R.E.P.A.I.R.™ — Intervene (if needed)'
-    },
-    R2: {
-      icon:'🧬',
-      title:'Genetic risk changes urgency, not the pathway',
-      sub:'If OA runs in your family — especially before 65 — the R.E.P.A.I.R.™ stages apply with greater urgency and at closer monitoring intervals. Genetics predicts how hard you need to work within the framework, not whether the framework applies.',
-      pill:'R.E.P.A.I.R.™ — Resilience + Genomics'
-    }
-  };
-
-  for (const [stage] of ranked) {
-    if (actions.length >= 3) break;
-    if (stage === 'A' && painLevel < 4) continue; // skip pain action if pain is low
-    if (actionMap[stage]) actions.push(actionMap[stage]);
-  }
-
-  // Fill to 3 if needed
-  if (actions.length < 3) {
-    for (const [stage] of ranked) {
-      if (actions.length >= 3) break;
-      if (!actions.find(a => a.pill.includes(stage)) && actionMap[stage]) {
-        actions.push(actionMap[stage]);
-      }
-    }
-  }
-
-  return actions;
-}
-
-function getGeneticPanel(familyRisk) {
-  if (familyRisk === 'early') return {
-    icon:'⚠️', label:'Elevated genetic risk', color:'var(--red)',
-    bg:'rgba(224,85,85,0.08)', border:'rgba(224,85,85,0.3)',
-    text:'A first-degree relative with OA or joint replacement before age 65 places you in a higher-risk genomic category. Your biology is modifiable — but the urgency to act on it is greater. Stages 1 (Reset) and 3 (Power) of R.E.P.A.I.R.™ should begin proactively, even without symptoms. Annual Knee Age monitoring is recommended.',
-    cta:'Consider a 360 Assessment at Lanserhof Mayfair', ctaColor:'rgba(224,85,85,0.2)', ctaBorder:'rgba(224,85,85,0.4)', ctaText:'var(--red)'
-  };
-  if (familyRisk === 'late') return {
-    icon:'🧬', label:'Moderate genetic context', color:'var(--amber)',
-    bg:'rgba(224,154,58,0.08)', border:'rgba(224,154,58,0.3)',
-    text:'A family history of OA after age 65 indicates some inherited risk — lower than early-onset, but worth factoring into your long-term joint strategy. Your monitoring intervals for Stages 3 and 6 should be reviewed every 6 months rather than annually.',
-    cta:null
-  };
-  if (familyRisk === 'no') return {
-    icon:'✅', label:'No known genetic risk factors', color:'var(--green)',
-    bg:'rgba(39,169,108,0.08)', border:'rgba(39,169,108,0.3)',
-    text:'No first-degree family history of OA or joint replacement. Your modifiable biology — strength, load, nutrition, sleep — is the primary driver of your joint trajectory. Build the habits that keep Knee Age as low as possible.',
-    cta:null
-  };
-  return {
-    icon:'❓', label:'Genetic risk — unknown', color:'var(--muted)',
-    bg:'rgba(255,255,255,0.04)', border:'rgba(255,255,255,0.12)',
-    text:"Family history of joint disease is one of the most useful clinical data points for setting programme urgency. If you can find out whether a parent or sibling has had OA or joint replacement, this will make your score more accurate.",
-    cta:null
-  };
-}
-
-// ─── STATE ────────────────────────────────────────────────────────────────────
+const TOTAL = QUESTIONS.length;
 let qIndex = 0;
 let answers = {};
 
-function updateProgress() {
-  const pct = Math.round((qIndex / TOTAL_Q) * 100);
-  document.getElementById('progressText').textContent = `Question ${Math.min(qIndex+1, TOTAL_Q)} of ${TOTAL_Q}`;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressPct').textContent = pct + '%';
+// ── Scoring ───────────────────────────────────────────────────────────────────
+function calcKneeAge(a){
+  const age = a.age || 45;
+  const sex = a.sex || 'other';
+
+  // Domain scores 0-100
+  const bio      = avg([a.metabolic_s??65, a.nutrition_s??65, a.sleep_s??65]);
+  const move     = avg([a.stiffness_s??65, a.sitting_s??65]);
+  const strength = avg([a.strength_s??65, a.sit_stand_s??65]);
+  const painRaw  = a.pain !== undefined ? a.pain : 3;
+  const injScore = a.injury_s ?? 80;
+  const injDomain= avg([Math.max(0,100-(painRaw*10)), injScore]);
+  const genetic  = a.family_s ?? 65;
+
+  // Weighted composite: strength highest evidence weight
+  const composite = (
+    bio      * 0.22 +
+    move     * 0.16 +
+    strength * 0.32 +
+    injDomain* 0.16 +
+    genetic  * 0.14
+  );
+
+  const delta = Math.round((75 - composite) * 0.38);
+  let kneeAge = Math.round(age + delta);
+  if(sex==='female' && age>=50) kneeAge = Math.min(kneeAge+2,90);
+  kneeAge = Math.max(18, Math.min(kneeAge, 90));
+
+  return {
+    kneeAge, delta, age,
+    domains:{
+      bio:      Math.round(bio),
+      move:     Math.round(move),
+      strength: Math.round(strength),
+      injury:   Math.round(injDomain),
+      genetic:  Math.round(genetic)
+    },
+    familyRisk: a.family || 'unsure',
+    painLevel:  painRaw
+  };
 }
 
-function render() {
+function avg(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
+
+// ── Verdict & actions ────────────────────────────────────────────────────────
+function getVerdict(delta){
+  if(delta<=-3) return {
+    label:'Younger than your years', color:'#27a96c', ring:'#27a96c',
+    body:'Your joint biology is tracking younger than your chronological age. The work you are doing is measurable. Focus now on sustaining it — and widening the gap further.'
+  };
+  if(delta<=4) return {
+    label:'Tracking close to your age', color:'#e09a3a', ring:'#e09a3a',
+    body:'Your joint biology broadly reflects your age. Reassuring — and it also means there is meaningful room to shift the trajectory. A few targeted changes to your lowest-scoring domains can compound significantly over the next decade.'
+  };
+  return {
+    label:'Older than your years', color:'#e05555', ring:'#e05555',
+    body:'Your current biology is pushing your joint age ahead of your chronological age. Most of these factors are modifiable. This number is a direction, not a sentence — and it can change.'
+  };
+}
+
+const DOMAIN_ACTIONS = {
+  bio: {
+    icon:'🥗',
+    title:'Prepare the biological soil first',
+    sub:'Anti-inflammatory nutrition (omega-3s, Mediterranean pattern), consistent 7–9 hours sleep, and addressing metabolic health are the foundation. Nothing in the R.E.P.A.I.R.™ pathway performs well inside a chronically inflamed body.',
+  },
+  move: {
+    icon:'🔄',
+    title:'Break prolonged sitting every 45 minutes',
+    sub:'Stand, walk briefly, do ten slow bodyweight squats. Synovial fluid circulation depends on cyclical joint loading. Even small interruptions protect cartilage nutrition across thousands of daily repetitions.',
+  },
+  strength: {
+    icon:'💪',
+    title:'Start a progressive lower-limb strength programme',
+    sub:'Two sessions per week — leg press, Romanian deadlift, hip thrusts, goblet squats. Muscle is the primary shock-absorber of the knee joint. The evidence for this is more robust than for any injection or supplement.',
+  },
+  injury: {
+    icon:'🏥',
+    title:'Previous injury or pain above 4 — clinical assessment before loading',
+    sub:'If your pain is 4 or above, or you have had significant structural injury, a one-time clinical assessment before committing to a loading programme is worthwhile and clinically recommended.',
+  },
+  genetic: {
+    icon:'🧬',
+    title:'Genetic risk changes urgency, not the pathway',
+    sub:'If OA runs in your family — especially before age 65 — the R.E.P.A.I.R.™ stages apply with greater urgency and at closer monitoring intervals. Start earlier, not differently.',
+  },
+};
+
+function getTopActions(domains, painLevel, familyRisk){
+  const ranked = Object.entries(domains)
+    .filter(([k,v]) => !(k==='injury' && painLevel<4 && domains.injury>60))
+    .sort((a,b)=>a[1]-b[1]);
+  const actions = [];
+  for(const [key] of ranked){
+    if(actions.length>=3) break;
+    if(DOMAIN_ACTIONS[key]) actions.push({...DOMAIN_ACTIONS[key], domain:key});
+  }
+  return actions;
+}
+
+function getGeneticPanel(risk){
+  if(risk==='early') return { icon:'⚠️', label:'Elevated genetic risk', color:'#e05555', bg:'rgba(226,75,74,0.08)', border:'rgba(226,75,74,0.3)', text:'A first-degree relative with OA or joint replacement before age 65 places you in a higher-risk genomic category. Your biology is modifiable — but the urgency to act is greater. Stages R (Reset Biology) and P (Power) of R.E.P.A.I.R.™ should begin proactively, even without current symptoms. Annual Knee Age monitoring recommended.', cta:'Consider a 360 Assessment at Lanserhof Mayfair', ctaBg:'rgba(226,75,74,0.15)', ctaColor:'#e05555' };
+  if(risk==='late') return { icon:'🧬', label:'Moderate genetic context', color:'#e09a3a', bg:'rgba(186,117,23,0.08)', border:'rgba(186,117,23,0.3)', text:'A family history of OA after age 65 indicates some inherited risk. Lower than early-onset, but worth factoring into your long-term joint strategy. Monitoring intervals for strength and resilience should be reviewed every 6 months.', cta:null };
+  if(risk==='no') return { icon:'✅', label:'No known genetic risk factors', color:'#27a96c', bg:'rgba(39,169,108,0.08)', border:'rgba(39,169,108,0.3)', text:'No first-degree family history of OA or joint replacement. Your modifiable biology — strength, load, nutrition, sleep — is the primary driver of your joint trajectory. Build the habits that keep Knee Age as low as possible.', cta:null };
+  return { icon:'❓', label:'Genetic risk — unknown', color:'#6b7c71', bg:'rgba(255,255,255,0.04)', border:'rgba(255,255,255,0.12)', text:"Family history of joint disease is one of the most useful clinical data points for setting programme urgency. If you can find out whether a parent or sibling has had OA or joint replacement, this will make your Knee Age score more accurate.", cta:null };
+}
+
+// ── Render logic ──────────────────────────────────────────────────────────────
+function updateProgress(){
+  const pct = Math.round((qIndex/TOTAL)*100);
+  document.getElementById('progressText').textContent = `Question ${Math.min(qIndex+1,TOTAL)} of ${TOTAL}`;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressPct').textContent = pct+'%';
+}
+
+function getDomainInfo(key){ return DOMAINS.find(d=>d.key===key); }
+
+function render(){
   const container = document.getElementById('quizContainer');
   container.innerHTML = '';
-  if (qIndex < TOTAL_Q) {
+  if(qIndex < TOTAL){
     updateProgress();
     renderQuestion(container, QUESTIONS[qIndex]);
   } else {
-    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('progressWrap').style.display='none';
     renderResult(container);
   }
 }
 
-function renderQuestion(container, q) {
+function renderQuestion(container, q){
   const card = document.createElement('div');
   card.className = 'card';
+  const dom = q.domain ? getDomainInfo(q.domain) : null;
 
   let html = `<div class="q-eyebrow">${q.eyebrow}</div>`;
-  if (q.stageBadge) html += `<div class="q-stage-badge">📍 ${q.stageBadge}</div>`;
-  html += `<div class="q-text">${q.text}</div>`;
-  html += `<div class="q-sub">${q.sub}</div>`;
+  if(dom){
+    html += `<div class="q-domain-badge" style="background:${dom.pillBg}22;color:${dom.pillColor};border-color:${dom.pillBorder}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${dom.color};display:inline-block"></span>
+      ${dom.name}
+    </div>`;
+  }
+  html += `<div class="q-text">${q.text}</div><div class="q-sub">${q.sub}</div>`;
 
-  if (q.type === 'options') {
+  if(q.type==='options'){
     html += `<div class="options">`;
     q.options.forEach(opt => {
-      const sel = answers[q.id] === opt.value ? ' selected' : '';
+      const sel = answers[q.id]===opt.value ? ' selected' : '';
       html += `<button class="opt${sel}" onclick="selectOpt(this,'${q.id}','${opt.value}',${opt.score})">
         <div class="opt-icon">${opt.icon}</div>
-        <div><div class="opt-label">${opt.label}</div>${opt.note ? `<div class="opt-note">${opt.note}</div>` : ''}</div>
+        <div><div class="opt-label">${opt.label}</div>${opt.note?`<div class="opt-note">${opt.note}</div>`:''}</div>
       </button>`;
     });
     html += `</div>`;
-  } else if (q.type === 'slider') {
+  } else if(q.type==='slider'){
     const val = answers[q.id] || q.default;
     html += `<div class="slider-wrap">
       <div class="slider-val" id="sliderVal">${val}</div>
       <div class="slider-unit">${q.unit}</div>
-      <input type="range" min="${q.min}" max="${q.max}" value="${val}" id="sliderInput" oninput="updateSlider(this)"/>
+      <input type="range" min="${q.min}" max="${q.max}" value="${val}" step="1" id="sliderInput" oninput="updateSlider(this)"/>
       <div class="slider-labels"><span>${q.labels[0]}</span><span>${q.labels[1]}</span></div>
     </div>`;
-  } else if (q.type === 'pain') {
-    const val = answers[q.id] !== undefined ? answers[q.id] : -1;
+  } else if(q.type==='pain'){
+    const val = answers[q.id]!==undefined ? answers[q.id] : -1;
     html += `<div class="pain-scale">`;
-    for (let i=0; i<=10; i++) {
-      html += `<button class="pain-btn${val===i?' selected':''}" data-v="${i}" onclick="selectPain(this,${i})">${i}</button>`;
-    }
+    for(let i=0;i<=10;i++) html += `<button class="pain-btn${val===i?' selected':''}" data-v="${i}" onclick="selectPain(this,${i})">${i}</button>`;
     html += `</div><div class="pain-labels"><span>No pain</span><span>Severe</span></div>`;
   }
 
-  const hasAnswer = answers[q.id] !== undefined;
-  const sliderActive = q.type === 'slider';
-  html += `<div class="next-wrap"><button class="next-btn${(hasAnswer || sliderActive) ? ' active' : ''}" id="nextBtn" onclick="nextQ()">Continue →</button></div>`;
+  const hasAns = answers[q.id]!==undefined;
+  const isSlider = q.type==='slider';
+  html += `<div class="next-wrap"><button class="next-btn${(hasAns||isSlider)?' active':''}" id="nextBtn" onclick="nextQ()">Continue →</button></div>`;
 
   card.innerHTML = html;
   container.appendChild(card);
   window._currentQ = q;
-  if (sliderActive) {
-    answers[q.id] = answers[q.id] || q.default;
-    document.getElementById('nextBtn').classList.add('active');
-  }
+  if(isSlider){ answers[q.id]=answers[q.id]||q.default; document.getElementById('nextBtn').classList.add('active'); }
 }
 
-function selectOpt(btn, qid, val, score) {
-  document.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+function selectOpt(btn,qid,val,score){
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-  answers[qid] = val;
-  answers[qid + '_score'] = score;
+  answers[qid]=val;
+  answers[qid+'_s']=score;
   document.getElementById('nextBtn').classList.add('active');
 }
-
-function selectPain(btn, val) {
-  document.querySelectorAll('.pain-btn').forEach(b => b.classList.remove('selected'));
+function selectPain(btn,val){
+  document.querySelectorAll('.pain-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-  answers['pain'] = val;
-  // Pain score: 0=100, 5=50, 10=0
-  answers['pain_score'] = Math.max(0, 100 - val * 10);
+  answers['pain']=val;
+  answers['pain_s']=Math.max(0,100-val*10);
   document.getElementById('nextBtn').classList.add('active');
 }
-
-function updateSlider(inp) {
-  document.getElementById('sliderVal').textContent = inp.value;
-  answers[window._currentQ.id] = parseInt(inp.value);
+function updateSlider(inp){
+  document.getElementById('sliderVal').textContent=inp.value;
+  answers[window._currentQ.id]=parseInt(inp.value);
 }
-
-function nextQ() {
-  const q = window._currentQ;
-  if (q.type === 'options' && answers[q.id] === undefined) return;
-  if (q.type === 'pain' && answers[q.id] === undefined) return;
+function nextQ(){
+  const q=window._currentQ;
+  if(q.type==='options'&&answers[q.id]===undefined) return;
+  if(q.type==='pain'&&answers[q.id]===undefined) return;
   qIndex++;
   render();
 }
 
-// ─── RESULT ───────────────────────────────────────────────────────────────────
-function renderResult(container) {
-  const result = calcKneeAge(answers);
-  const { kneeAge, delta, age, stages, familyRisk, painLevel } = result;
+// ── Result render ─────────────────────────────────────────────────────────────
+function renderResult(container){
+  const {kneeAge,delta,age,domains,familyRisk,painLevel} = calcKneeAge(answers);
   const verdict = getVerdict(delta);
-  const actions = getStageActions(stages, painLevel, familyRisk);
+  const actions = getTopActions(domains,painLevel,familyRisk);
   const genetic = getGeneticPanel(familyRisk);
 
-  const r = 72, cx = 90, cy = 90;
-  const circ = 2 * Math.PI * r;
-  const dash = circ * Math.min(Math.max((kneeAge - 18) / (85 - 18), 0), 1);
+  const r=72,cx=90,cy=90;
+  const circ=2*Math.PI*r;
+  const dash=circ*Math.min(Math.max((kneeAge-18)/(85-18),0),1);
 
-  const stageDefs = [
-    { key:'R',  letter:'R', name:'Reset Biology',         color:'#1d9e75' },
-    { key:'E',  letter:'E', name:'Enhance Movement',      color:'#5dcaa5' },
-    { key:'P',  letter:'P', name:'Power',                 color:'#c9a84c' },
-    { key:'A',  letter:'A', name:'Augment Healing',       color:'#e09a3a' },
-    { key:'I',  letter:'I', name:'Intervene if Needed',   color:'#e05555' },
-    { key:'R2', letter:'R', name:'Resilience + Genomics', color:'#6b7c71' }
-  ];
-
-  function stageColor(v) { return v >= 70 ? 'var(--green)' : v >= 50 ? 'var(--amber)' : 'var(--red)'; }
-  function stageTag(v) {
-    if (v >= 70) return '<span class="stage-tag good">Strong</span>';
-    if (v >= 50) return '<span class="stage-tag warn">Needs work</span>';
-    return '<span class="stage-tag risk">Priority</span>';
+  function domainColor(v){ return v>=70?'#27a96c':v>=50?'#e09a3a':'#e05555'; }
+  function domainTag(v){
+    if(v>=70) return '<span class="domain-tag good">Strong</span>';
+    if(v>=50) return '<span class="domain-tag warn">Needs work</span>';
+    return '<span class="domain-tag risk">Priority</span>';
   }
 
   const card = document.createElement('div');
-  card.className = 'result-card';
-  card.innerHTML = `
-    <div class="result-label">Your Knee Age — R.E.P.A.I.R.™ Assessment</div>
+  card.className='result-card';
 
+  card.innerHTML=`
+    <div class="result-label">Your Knee Age Assessment</div>
     <div class="result-ring">
       <svg viewBox="0 0 180 180">
         <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
         <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${verdict.ring}" stroke-width="10"
-          stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${circ * 0.25}"
+          stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${circ*0.25}"
           stroke-linecap="round" style="transition:stroke-dasharray 1s ease"/>
       </svg>
       <div class="result-centre">
@@ -701,57 +566,62 @@ function renderResult(container) {
         <div class="result-age-lbl">Knee Age</div>
       </div>
     </div>
-
     <div class="result-compare">
       <div class="rc-box"><div class="rc-val">${age}</div><div class="rc-lbl">Your age</div></div>
       <div class="rc-arrow">→</div>
-      <div class="rc-box highlight"><div class="rc-val">${kneeAge}</div><div class="rc-lbl">Knee Age</div></div>
+      <div class="rc-box hl"><div class="rc-val">${kneeAge}</div><div class="rc-lbl">Knee Age</div></div>
     </div>
-
     <div class="result-verdict">${verdict.label}</div>
     <div class="result-body">${verdict.body}</div>
 
-    <div class="stages-title">R.E.P.A.I.R.™ Stage Profile</div>
-    ${stageDefs.map(s => {
-      const v = stages[s.key];
-      return `<div class="stage-row">
-        <div class="stage-letter" style="background:${s.color}22;color:${s.color};border:1px solid ${s.color}44">${s.letter}</div>
-        <div class="stage-name">${s.name}</div>
-        <div class="stage-bar"><div class="stage-fill" style="width:${v}%;background:${stageColor(v)}"></div></div>
-        <div class="stage-val">${v}</div>
-        ${stageTag(v)}
+    <div class="domains-title">Your five biological domains</div>
+    ${DOMAINS.map(d => {
+      const v = domains[d.key];
+      const col = domainColor(v);
+      return `<div class="domain-row">
+        <div class="domain-row-top">
+          <div class="domain-name-wrap">
+            <div class="domain-dot" style="background:${d.dotColor}"></div>
+            <span class="domain-name-text">${d.name}</span>
+            <span class="domain-stage-pill" style="background:${d.pillBg}33;color:${d.pillColor};border-color:${d.pillBorder}">${d.stage}</span>
+          </div>
+          <div class="domain-score-wrap">
+            <span class="domain-score">${v}</span>
+            ${domainTag(v)}
+          </div>
+        </div>
+        <div class="domain-bar"><div class="domain-fill" style="width:${v}%;background:${col}"></div></div>
       </div>`;
     }).join('')}
 
-    <div class="stages-title" style="margin-top:24px">Genetic Risk Context</div>
+    <div class="domains-title" style="margin-top:22px">Genetic & longevity risk context</div>
     <div class="genetic-panel" style="background:${genetic.bg};border:1px solid ${genetic.border}">
       <div class="gp-header">
-        <span style="font-size:16px">${genetic.icon}</span>
+        <span class="gp-icon">${genetic.icon}</span>
         <span class="gp-title" style="color:${genetic.color}">${genetic.label}</span>
       </div>
       <p class="gp-body">${genetic.text}</p>
-      ${genetic.cta ? `<span class="gp-cta" style="background:${genetic.ctaColor};border:1px solid ${genetic.ctaBorder};color:${genetic.ctaText}">${genetic.cta}</span>` : ''}
+      ${genetic.cta?`<span class="gp-cta" style="background:${genetic.ctaBg};border:1px solid ${genetic.color}33;color:${genetic.ctaColor}">${genetic.cta}</span>`:''}
     </div>
 
-    <div class="actions-title" style="margin-top:24px">Your 3 highest-impact R.E.P.A.I.R.™ actions</div>
-    ${actions.map(a => `
-      <div class="action-item">
-        <div class="ai-icon">${a.icon}</div>
+    <div class="actions-title">Your 3 highest-impact actions</div>
+    ${actions.map(a => {
+      const dom = getDomainInfo(a.domain);
+      return `<div class="action-item" style="background:${dom.bg}">
+        <div class="ai-icon-wrap" style="background:${dom.pillBg}44;border:1px solid ${dom.pillBorder}">${a.icon}</div>
         <div>
           <div class="ai-title">${a.title}</div>
           <div class="ai-sub">${a.sub}</div>
-          <span class="ai-pill">${a.pill}</span>
+          <span class="ai-pill" style="background:${dom.pillBg}33;color:${dom.pillColor};border-color:${dom.pillBorder}">${dom.name} · R.E.P.A.I.R.™ ${dom.stage.split('—')[0].trim()}</span>
         </div>
-      </div>`).join('')}
+      </div>`;
+    }).join('')}
 
     <div class="wl-cta">
       <div class="wl-cta-eyebrow">🔬 OrthoLongevity™ App — Early Access</div>
       <h3>Track your Knee Age.<br/><em>Change its trajectory.</em></h3>
-      <p class="wl-cta-body">
-        The app delivers a full, personalised R.E.P.A.I.R.™ plan — tracked over time, updated as your biology changes, with a genomic risk modifier as the Cromwell Hospital partnership develops.
-      </p>
-      <div class="wl-features">
-        <div class="wl-feat">📈 Track Knee Age over time</div>
+      <div class="wl-feats">
+        <div class="wl-feat">📈 Five-domain tracking over time</div>
         <div class="wl-feat">🎯 Personalised R.E.P.A.I.R.™ plan</div>
         <div class="wl-feat">🧬 Genomic risk layer coming</div>
         <div class="wl-feat">👨‍⚕️ Built by a consultant surgeon</div>
@@ -762,9 +632,8 @@ function renderResult(container) {
         <div class="wl-success-body">Dr Arj will be in touch before launch with your personalised R.E.P.A.I.R.™ plan.</div>
       </div>
       <div class="wl-proof">🔒 <span>Joining <span class="wl-proof-count">2,400+</span> people already on the waitlist</span></div>
-
       <div style="margin-top:8px">
-        <div style="font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:12px">Follow the work</div>
+        <div style="font-size:11px;color:var(--muted);text-align:center;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:10px">Follow the work</div>
         <a class="social-link" href="https://substack.com/@drarj" target="_blank">
           <div class="social-icon">📖</div>
           <div><div class="social-name">The Ortholongevity Journal</div><div class="social-desc">Weekly clinical insights · Substack</div></div>
@@ -777,19 +646,16 @@ function renderResult(container) {
         </a>
       </div>
     </div>
-
     <p class="disclaimer">This assessment is for educational and wellness purposes only. Knee Age is an estimate of biological joint resilience based on self-reported lifestyle factors. It is not a medical diagnosis and does not constitute clinical advice. If you have joint pain, please consult a qualified healthcare professional.</p>
   `;
 
   container.appendChild(card);
-
-  setTimeout(() => {
-    card.querySelectorAll('.stage-fill').forEach(el => {
-      const w = el.style.width;
-      el.style.width = '0%';
-      requestAnimationFrame(() => { el.style.width = w; });
+  setTimeout(()=>{
+    card.querySelectorAll('.domain-fill').forEach(el=>{
+      const w=el.style.width; el.style.width='0%';
+      requestAnimationFrame(()=>{ el.style.width=w; });
     });
-  }, 100);
+  },100);
 }
 
 render();
