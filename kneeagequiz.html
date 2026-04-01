@@ -589,7 +589,7 @@ function showHook(){
           You can find out in <strong style="color:var(--cream)">60 seconds</strong> — free.
         </p>
 
-        <button class="start-btn" onclick="showEmailGate()" style="font-size:18px;padding:20px 52px;margin-bottom:14px">
+        <button class="start-btn" onclick="startQuiz()" style="font-size:18px;padding:20px 52px;margin-bottom:14px">
           Start My Knee Age Test &rarr;
         </button>
         <div style="font-size:12px;color:var(--muted)">Takes about 60 seconds &nbsp;&middot;&nbsp; No account needed</div>
@@ -1241,32 +1241,28 @@ function startQuizFromGate(){
 
 showHook();
 
-// Auto-start quiz if email pre-filled from Kit link
-if(window._prefilledEmail){
-  setTimeout(()=>{
-    // Small delay so hook renders first, then skip email gate
-    const btn = document.querySelector('.start-btn');
-    if(btn){
-      // Override: go straight to quiz with pre-filled email
-      btn.onclick = function(){
-        userEmail = window._prefilledEmail;
-        answers._email = window._prefilledEmail;
-        phase='quiz'; qIdx=0;
-        document.getElementById('app').innerHTML=`
-          <div style="padding-top:16px">
-            <div class="prog-wrap" id="pw">
-              <div class="prog-top"><span class="prog-txt" id="pt">Question 1</span><span class="prog-pct" id="pp">0%</span></div>
-              <div class="prog-bar"><div class="prog-fill" id="pf" style="width:0%"></div></div>
-            </div>
-            <div id="mr"></div>
-            <div id="qc"></div>
-          </div>`;
-        renderQ();
-      };
-      // Also update the button label if email is pre-filled
-      btn.textContent = 'Start My Knee Age Test →';
-    }
-  }, 100);
-}</script>
+// Start button ALWAYS goes straight to quiz — no email gate
+// Email is captured on the landing page before they arrive here
+// If arriving from Kit email link, ?email= param is read above
+setTimeout(()=>{
+  const btn = document.querySelector('.start-btn');
+  if(btn){
+    btn.onclick = function(){
+      userEmail = window._prefilledEmail || '';
+      answers._email = userEmail;
+      phase='quiz'; qIdx=0;
+      document.getElementById('app').innerHTML=`
+        <div style="padding-top:16px">
+          <div class="prog-wrap" id="pw">
+            <div class="prog-top"><span class="prog-txt" id="pt">Question 1</span><span class="prog-pct" id="pp">0%</span></div>
+            <div class="prog-bar"><div class="prog-fill" id="pf" style="width:0%"></div></div>
+          </div>
+          <div id="mr"></div>
+          <div id="qc"></div>
+        </div>`;
+      renderQ();
+    };
+  }
+}, 50);</script>
 </body>
 </html>
