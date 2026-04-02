@@ -51,7 +51,7 @@ export default async function handler(req) {
       pillar_bio: String(pillarScores.biology || pillarScores.bio || domains.bio || ''),
       pillar_move: String(pillarScores.movement || pillarScores.move || domains.move || ''),
       pillar_strength: String(pillarScores.strength || domains.strength || ''),
-      pillar_injury: String(pillarScores.history || domains.history || ''),
+      pillar_injury: String(pillarScores.history || domains.injury || ''),
       pillar_geneti: String(pillarScores.genetic || domains.genetic || ''),
     };
     const sheetRes = await fetch(SHEETDB_URL, {
