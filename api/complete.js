@@ -1,5 +1,4 @@
 export const config = { runtime: 'edge' };
-
 export default async function handler(req) {
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -7,15 +6,11 @@ export default async function handler(req) {
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json',
   };
-
   if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: corsHeaders });
-
   const ok = (msg, data = {}) => new Response(JSON.stringify({ success: true, msg, ...data }), { status: 200, headers: corsHeaders });
   const err = (msg) => new Response(JSON.stringify({ success: false, msg }), { status: 200, headers: corsHeaders });
-
   try {
     const body = await req.json().catch(() => ({}));
-
     const {
       email = '',
       age = '',
@@ -28,10 +23,8 @@ export default async function handler(req) {
       pillarScores = {},
       domains = {}
     } = body;
-
     const SHEETDB_URL = process.env.SHEETDB_URL;
     if (!SHEETDB_URL) return err('SHEETDB_URL not configured');
-
     const row = {
       timestamp: new Date().toISOString(),
       email: String(email),
@@ -55,25 +48,21 @@ export default async function handler(req) {
       q_menopause: String(answers.menopause || ''),
       q_sport_load: String(answers.sport_load || ''),
       q_teen_hormonal: String(answers.teen_hormonal || ''),
-      pillar_bio: String(pillarScores.biology || pillarScores.bio || domains.biology || ''),
-      pillar_move: String(pillarScores.movement || pillarScores.move || domains.movement || ''),
+      pillar_bio: String(pillarScores.biology || pillarScores.bio || domains.bio || ''),
+      pillar_move: String(pillarScores.movement || pillarScores.move || domains.move || ''),
       pillar_strength: String(pillarScores.strength || domains.strength || ''),
       pillar_injury: String(pillarScores.history || domains.history || ''),
       pillar_geneti: String(pillarScores.genetic || domains.genetic || ''),
     };
-
     const sheetRes = await fetch(SHEETDB_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ data: row }),
     });
-
     const sheetText = await sheetRes.text();
     if (!sheetRes.ok) return err(`SheetDB error: ${sheetRes.status}`);
-
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
-
     if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
       try {
         await fetch(`${SUPABASE_URL}/rest/v1/completions`, {
@@ -96,9 +85,7 @@ export default async function handler(req) {
         console.error('Supabase write failed:', e.message);
       }
     }
-
     return ok('saved', { sheetdb: sheetText });
-
   } catch (e) {
     console.error('Complete function error:', e.message);
     return err(e.message);
