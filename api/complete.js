@@ -1,10 +1,3 @@
-// api/complete.js
-// Vercel Edge Function — stores full quiz responses in Google Sheets via SheetDB
-// Environment variables needed in Vercel:
-//   SHEETDB_URL          — your SheetDB API URL
-//   SUPABASE_URL         — optional, for live counter
-//   SUPABASE_SERVICE_KEY — optional, for live counter
-
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
@@ -15,124 +8,112 @@ export default async function handler(req) {
     'Content-Type': 'application/json',
   };
 
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers: corsHeaders });
-  }
+  if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: corsHeaders });
 
-  const respond = () =>
-    new Response(JSON.stringify({ ok: true }), { status: 200, headers: corsHeaders });
+  const ok = (msg, data = {}) => new Response(JSON.stringify({ success: true, msg, ...data }), { status: 200, headers: corsHeaders });
+  const err = (msg) => new Response(JSON.stringify({ success: false, msg }), { status: 200, headers: corsHeaders });
 
   try {
-    const body = req.method === 'POST'
-      ? await req.json().catch(() => ({}))
-      : {};
+    const body = await req.json().catch(() => ({}));
+    console.log('Complete called with body:', JSON.stringify(body));
 
     const {
-      // Headline outputs
       email = '',
-      age = null,
-      sex = null,
-      kneeAge = null,
-      score = null,
+      age = '',
+      sex = '',
+      kneeAge = '',
+      score = '',
       isTeen = false,
-
-      // Individual question responses (answers object from quiz)
+      ageGap = '',
       answers = {},
-
-      // Domain pillar scores
-      domains = {},
-
+      pillarScores = {}
     } = body;
 
-    const timestamp = new Date().toISOString();
-
-    // Calculate age gap — negative is good (younger knees), positive is bad
-    const ageGap = (kneeAge !== null && age !== null)
-      ? kneeAge - age
-      : '';
-
-    // ── Write to Google Sheets via SheetDB ──────────────────────────────────
     const SHEETDB_URL = process.env.SHEETDB_URL;
+    console.log('SHEETDB_URL present:', !!SHEETDB_URL);
 
-    if (SHEETDB_URL) {
-      try {
-        const row = {
-          // Core outputs
-          timestamp,
-          email,
-          age:       age !== null ? String(age) : '',
-          sex:       sex || '',
-          knee_age:  kneeAge !== null ? String(kneeAge) : '',
-          score:     score !== null ? String(score) : '',
-          age_gap:   ageGap !== '' ? String(ageGap) : '',
-          is_teen:   isTeen ? 'yes' : 'no',
-
-          // Individual question responses
-          q_metabolic:    answers.metabolic    || '',
-          q_nutrition:    answers.nutrition    || '',
-          q_sleep:        answers.sleep        || '',
-          q_stiffness:    answers.stiffness    || '',
-          q_sitting:      answers.sitting      || '',
-          q_strength:     answers.strength     || '',
-          q_sit_stand:    answers.sit_stand    || '',
-          q_pain:         answers.pain         || '',
-          q_injury:       answers.injury       || '',
-          q_family:       answers.family       || '',
-          q_hypermobility: answers.hypermobility || '',
-          q_menopause:    answers.menopause    || '',
-          q_sport_load:   answers.sport_load   || '',
-          q_teen_hormonal: answers.teen_hormonal || '',
-
-          // Domain pillar scores (0-100 each)
-          pillar_bio:      domains.bio      !== undefined ? String(Math.round(domains.bio))      : '',
-          pillar_move:     domains.move     !== undefined ? String(Math.round(domains.move))     : '',
-          pillar_strength: domains.strength !== undefined ? String(Math.round(domains.strength)) : '',
-          pillar_injury:   domains.injury   !== undefined ? String(Math.round(domains.injury))   : '',
-          pillar_genetic:  domains.genetic  !== undefined ? String(Math.round(domains.genetic))  : '',
-        };
-
-        await fetch(SHEETDB_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: [row] })
-        });
-      } catch (e) {
-        console.error('SheetDB error:', e);
-      }
+    if (!SHEETDB_URL) {
+      console.error('SHEETDB_URL environment variable is not set');
+      return err('SHEETDB_URL not configured');
     }
 
-    // ── Supabase counter (optional) ────────────────────────────────────────
+    const row = {
+      timestamp: new Date().toISOString(),
+      email: String(email),
+      age: String(age),
+      sex: String(sex),
+      knee_age: String(kneeAge),
+      score: String(score),
+      is_teen: String(isTeen),
+      age_gap: String(ageGap),
+      q_pain: String(answers.q_pain || ''),
+      q_stiffness: String(answers.q_stiffness || ''),
+      q_sit_stand: String(answers.q_sit_stand || ''),
+      q_sitting: String(answers.q_sitting || ''),
+      q_sleep: String(answers.q_sleep || ''),
+      q_weight: String(answers.q_weight || ''),
+      q_diet: String(answers.q_diet || ''),
+      q_strength: String(answers.q_strength || ''),
+      q_injury: String(answers.q_injury || ''),
+      q_family: String(answers.q_family || ''),
+      q_hypermobility: String(answers.q_hypermobility || ''),
+      q_activity: String(answers.q_activity || ''),
+      pillar_biology: String(pillarScores.biology || ''),
+      pillar_movement: String(pillarScores.movement || ''),
+      pillar_strength: String(pillarScores.strength || ''),
+      pillar_history: String(pillarScores.history || ''),
+      pillar_genetic: String(pillarScores.genetic || ''),
+    };
+
+    console.log('Sending row to SheetDB:', JSON.stringify(row));
+
+    const sheetRes = await fetch(SHEETDB_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: row }),
+    });
+
+    const sheetText = await sheetRes.text();
+    console.log('SheetDB response status:', sheetRes.status);
+    console.log('SheetDB response body:', sheetText);
+
+    if (!sheetRes.ok) {
+      console.error('SheetDB write failed:', sheetRes.status, sheetText);
+      return err(`SheetDB error: ${sheetRes.status}`);
+    }
+
+    // Also write to Supabase if configured
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
     if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/completions`, {
+        const supRes = await fetch(`${SUPABASE_URL}/rest/v1/completions`, {
           method: 'POST',
           headers: {
+            'Content-Type': 'application/json',
             'apikey': SUPABASE_SERVICE_KEY,
             'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-            'Content-Type': 'application/json',
             'Prefer': 'return=minimal',
           },
           body: JSON.stringify({
-            completed_at: timestamp,
-            age: age || null,
+            age: age ? parseInt(age) : null,
             sex: sex || null,
-            knee_age: kneeAge || null,
-            score: score || null,
-            is_teen: isTeen || false,
-          })
+            knee_age: kneeAge ? parseInt(kneeAge) : null,
+            score: score ? parseInt(score) : null,
+            is_teen: !!isTeen,
+          }),
         });
+        console.log('Supabase response:', supRes.status);
       } catch (e) {
-        console.error('Supabase error:', e);
+        console.error('Supabase write failed:', e.message);
       }
     }
 
-    return respond();
+    return ok('saved', { sheetdb: sheetText });
 
-  } catch (err) {
-    console.error('Handler error:', err);
-    return respond();
+  } catch (e) {
+    console.error('Complete function error:', e.message);
+    return err(e.message);
   }
 }
