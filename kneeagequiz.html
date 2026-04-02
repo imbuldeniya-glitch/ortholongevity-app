@@ -786,7 +786,7 @@ function nextQ(){
 function showResult(){
   const R_data = calc(answers);
   incrementCounter({
-    email: answers._email || '',
+    email: answers._email || userEmail ||'',
     age: R_data.age,
     sex: R_data.sex,
     kneeAge: R_data.isTeen ? null : R_data.kneeAge,
@@ -1367,3 +1367,4 @@ setTimeout(()=>{
 }, 50);</script>
 </body>
 </html>
+
