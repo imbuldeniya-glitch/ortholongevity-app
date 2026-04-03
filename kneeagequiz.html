@@ -429,7 +429,7 @@ function calc(a){
   const composite=(bioAdj*.22+moveAdj*.16+strAdj*.32+injAdj*.16+genetic*.14);
   const delta=Math.round((75-composite)*.38);
   let kneeAge=isTeen?age:Math.round(age+delta+menoAgeMod);
-  if(!isTeen) kneeAge=Math.max(18,Math.min(kneeAge,90)); // never show younger than 18 for adults
+  if(!isTeen) kneeAge=Math.max(18,Math.min(kneeAge,90)); // floor at 18 for adults
   // For teens floor at actual age (joints still developing)
   if(isTeen) kneeAge=age;
   const jhs=Math.round(composite);
