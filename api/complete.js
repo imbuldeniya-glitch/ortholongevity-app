@@ -48,11 +48,11 @@ export default async function handler(req) {
       q_menopause: String(answers.menopause || ''),
       q_sport_load: String(answers.sport_load || ''),
       q_teen_hormonal: String(answers.teen_hormonal || ''),
-      pillar_bio: String(pillarScores.biology || pillarScores.bio || domains.bio || ''),
-      pillar_move: String(pillarScores.movement || pillarScores.move || domains.move || ''),
-      pillar_strength: String(pillarScores.strength || domains.strength || ''),
-      pillar_injury: String(pillarScores.history || domains.injury || ''),
-      pillar_geneti: String(pillarScores.genetic || domains.genetic || ''),
+      pillar_bio: String(pillarScores.biology || pillarScores.bio || domains.bio ?? ''),
+      pillar_move: String(pillarScores.movement || pillarScores.move || domains.move ?? ''),
+      pillar_strength: String(pillarScores.strength ?? domains.strength ?? ''),
+      pillar_injury: String(pillarScores.history ?? domains.injury ?? ''),
+      pillar_geneti: String(pillarScores.genetic ?? domains.genetic ?? ''),
     };
     const sheetRes = await fetch(SHEETDB_URL, {
       method: 'POST',
