@@ -581,7 +581,7 @@ async function submitEmail(){
     });
   } catch(e) {}
 
-  window.location.href = '/confirmed';
+  window.location.href = '/kneeagequiz.html?email=' + encodeURIComponent(email);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -594,3 +594,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+
