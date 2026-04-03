@@ -25,6 +25,11 @@ export default async function handler(req) {
     } = body;
     const SHEETDB_URL = process.env.SHEETDB_URL;
     if (!SHEETDB_URL) return err('SHEETDB_URL not configured');
+    const getBio = function() { if (pillarScores.biology !== undefined) return pillarScores.biology; if (pillarScores.bio !== undefined) return pillarScores.bio; if (domains.bio !== undefined) return domains.bio; return ''; };
+    const getMove = function() { if (pillarScores.movement !== undefined) return pillarScores.movement; if (pillarScores.move !== undefined) return pillarScores.move; if (domains.move !== undefined) return domains.move; return ''; };
+    const getStrength = function() { if (pillarScores.strength !== undefined) return pillarScores.strength; if (domains.strength !== undefined) return domains.strength; return ''; };
+    const getInjury = function() { if (pillarScores.history !== undefined) return pillarScores.history; if (domains.injury !== undefined) return domains.injury; return ''; };
+    const getGenetic = function() { if (pillarScores.genetic !== undefined) return pillarScores.genetic; if (domains.genetic !== undefined) return domains.genetic; return ''; };
     const row = {
       timestamp: new Date().toISOString(),
       email: String(email),
@@ -48,11 +53,11 @@ export default async function handler(req) {
       q_menopause: String(answers.menopause || ''),
       q_sport_load: String(answers.sport_load || ''),
       q_teen_hormonal: String(answers.teen_hormonal || ''),
-      pillar_bio: String((pillarScores.biology ?? pillarScores.bio ?? domains.bio) ?? ''),
-      pillar_move: String((pillarScores.movement ?? pillarScores.move ?? domains.move) ?? ''),
-      pillar_strength: String(pillarScores.strength ?? domains.strength ?? ''),
-      pillar_injury: String(pillarScores.history ?? domains.injury ?? ''),
-      pillar_geneti: String(pillarScores.genetic ?? domains.genetic ?? ''),
+      pillar_bio: String(getBio()),
+      pillar_move: String(getMove()),
+      pillar_strength: String(getStrength()),
+      pillar_injury: String(getInjury()),
+      pillar_geneti: String(getGenetic()),
     };
     const sheetRes = await fetch(SHEETDB_URL, {
       method: 'POST',
@@ -60,17 +65,17 @@ export default async function handler(req) {
       body: JSON.stringify({ data: row }),
     });
     const sheetText = await sheetRes.text();
-    if (!sheetRes.ok) return err(`SheetDB error: ${sheetRes.status}`);
+    if (!sheetRes.ok) return err('SheetDB error: ' + sheetRes.status);
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
     if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
       try {
-        await fetch(`${SUPABASE_URL}/rest/v1/completions`, {
+        await fetch(SUPABASE_URL + '/rest/v1/completions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'apikey': SUPABASE_SERVICE_KEY,
-            'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
+            'Authorization': 'Bearer ' + SUPABASE_SERVICE_KEY,
             'Prefer': 'return=minimal',
           },
           body: JSON.stringify({
