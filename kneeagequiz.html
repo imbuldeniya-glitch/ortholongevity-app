@@ -854,14 +854,14 @@ function showResult(){
 
   // Hero section
   const heroHTML = isTeen ? `
-    <div class="res-eyebrow">Your Joint Health Score</div>
+    <div class="res-eyebrow">Well done — you have found out your Joint Health Score</div>
     <div class="res-age-big" style="color:${status.heroColor}">${jhs}<span style="font-size:40%;opacity:.7">/100</span></div>
     <div class="res-age-lbl" style="margin-bottom:18px">Joint Health Score</div>
     <div style="background:rgba(127,119,221,.08);border:1px solid rgba(127,119,221,.2);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:left">
       <div style="font-size:12px;font-weight:500;color:rgba(175,169,236,.9);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Why you see a score, not a Knee Age</div>
-      <div style="font-size:13px;color:rgba(247,243,237,.7);line-height:1.6">Knee Age compares your joint biology to an adult baseline. Because your joints are still developing, a direct age comparison does not make clinical sense. Your Joint Health Score (0–100, higher is better) shows how well your five joint health drivers are working — and where to focus. The habits you build now are the single biggest investment you can make in your long-term joint health.</div>
+      <div style="font-size:13px;color:rgba(247,243,237,.7);line-height:1.6">Because your joints are still developing, we show you a Joint Health Score rather than a Knee Age. Your score helps you understand where you stand today — and even a lower score is valuable information. Building good habits now protects your joints for life. Share this with friends and family and encourage them to find out their score too.</div>
     </div>` : `
-    <div class="res-eyebrow">Your Knee Age result</div>
+    <div class="res-eyebrow">Well done — you have found out your Knee Age</div>
     <div class="res-age-big" style="color:${status.heroColor}">${kneeAge}</div>
     <div class="res-age-lbl">Knee Age</div>
     <div class="res-compare">
@@ -878,9 +878,9 @@ function showResult(){
     <div class="identity">${status.identity}</div>
 
     <button class="share-btn" id="shareBtn" onclick="copyShare('${shareText.replace(/'/g,"\\'")}')">
-      🔥 Challenge a friend — show them their Knee Age
+      ${isTeen ? '📩 Share your score with friends & family' : '🔥 Challenge a friend — show them their Knee Age'}
     </button>
-    <div style="font-size:12px;color:var(--muted);margin-top:-14px;margin-bottom:22px">Send this to someone. See who has younger knees.</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:-14px;margin-bottom:22px">${isTeen ? 'Send the quiz link to a friend, parent, or coach — see how their joints compare.' : 'Send this to someone. See who has younger knees.'}</div>
 
     ${!isTeen?`<div class="compare-wrap">
       <div class="compare-title">Compared to others who've taken this test</div>
@@ -951,7 +951,7 @@ function showResult(){
       <p class="cta-sub">The OrthoLongevity™ programme is designed for adults 18 and over. When you turn 18, your full Knee Age result, personalised plan, and programme access will be ready for you. Join the waitlist now.</p>
       <div style="background:rgba(127,119,221,.1);border:1px solid rgba(127,119,221,.25);border-radius:12px;padding:14px 16px;margin-bottom:14px;text-align:left;font-size:13px;color:rgba(247,243,237,.75);line-height:1.6">
         <div style="font-weight:500;color:rgba(175,169,236,.9);margin-bottom:4px">In the meantime:</div>
-        The five drivers on your result page are exactly the same ones adults work on. Strength training, sleep, nutrition, and managing sport load well now will compound across decades. Share your score with a parent or coach — they can take the full Knee Age test.
+        The five drivers on your result page are exactly the same ones adults work on. Strength training, sleep, nutrition, and managing sport load well now will compound across decades. Share the quiz link with friends and family — encourage them to find out their Knee Age or Joint Health Score too.
       </div>
       <button class="cta-primary" style="background:rgba(127,119,221,.8)" onclick="window.open('https://ortholongevity.ai','_blank')">Join the early access list →</button>
       <div class="cta-secondary">Be first in the world to access the full app</div>
