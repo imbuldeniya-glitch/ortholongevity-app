@@ -11,7 +11,7 @@ export default async function handler(req) {
   const err = (msg) => new Response(JSON.stringify({ success: false, msg }), { status: 200, headers: corsHeaders });
   try {
     const body = await req.json().catch(() => ({}));
-    const SHEETDB_URL = process.env.SHEETDB_URL;
+    const SHEETDB_URL = process.env.SUPPLEMENTARY_SHEETDB_URL;
     if (!SHEETDB_URL) return err('SHEETDB_URL not configured');
     const row = {
       timestamp: body.timestamp || new Date().toISOString(),
