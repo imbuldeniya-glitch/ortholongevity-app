@@ -30,7 +30,8 @@ export default async function handler(req) {
     const rangeHeader = res.headers.get('content-range') || '';
     const total = parseInt(rangeHeader.split('/')[1] || '30', 10);
     // Add 30 as baseline (tests before Supabase was live)
-    const displayCount = total + 30;
+    const displayCount = total + 1030;
+
 
     return new Response(JSON.stringify({ count: displayCount }), { status: 200, headers: corsHeaders });
 
