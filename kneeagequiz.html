@@ -180,6 +180,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .soc-arr{margin-left:auto;color:var(--teal-l);font-size:13px;flex-shrink:0}
 .disc{font-size:11px;color:var(--muted);opacity:.45;text-align:center;margin-top:16px;line-height:1.6;padding:0 6px}
 
+/* SUPPLEMENTARY PANEL */
+.supp-pill{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px;font-family:var(--fb);font-size:12px;color:rgba(247,243,237,.75);cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.supp-pill:hover{border-color:rgba(29,158,117,.5);background:rgba(29,158,117,.07);transform:translateY(-1px)}
+.supp-pill.sel{border-color:var(--teal);background:rgba(29,158,117,.15);color:var(--cream)}
+.supp-submit{display:block;width:100%;background:var(--teal);color:var(--w);border:none;border-radius:100px;padding:14px 28px;font-family:var(--fb);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .15s,opacity .2s}
+.supp-submit:hover:not(:disabled){background:#159060;transform:translateY(-1px)}
+.supp-submit:disabled{opacity:.35;cursor:not-allowed}
+.supp-thank{text-align:center;padding:24px 0}
+.supp-thank-title{font-family:var(--fd);font-size:18px;font-weight:700;color:var(--cream);margin-bottom:6px}
+.supp-thank-sub{font-size:13px;color:rgba(247,243,237,.55);line-height:1.5}
+
 @media(max-width:480px){
   body{padding:10px}
   .hook{padding:36px 12px 28px}
@@ -1069,6 +1080,81 @@ function showResult(){
           <div class="soc-arr">→</div>
         </a>
       </div>
+
+      <!-- SUPPLEMENTARY PANEL -->
+      <div id="suppPanel" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px 18px;margin-top:16px;margin-bottom:8px">
+        <div style="font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-l);margin-bottom:6px">Help shape OrthoLongevity™</div>
+        <div style="font-family:var(--fd);font-size:16px;font-weight:700;color:var(--cream);margin-bottom:4px">Four quick questions</div>
+        <div style="font-size:13px;color:rgba(247,243,237,.55);line-height:1.5;margin-bottom:18px">Your answers help us build something better. Takes 15 seconds.</div>
+
+        <!-- Q1: Referral source -->
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:500;color:rgba(247,243,237,.8);margin-bottom:8px">How did you hear about this?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" id="supp_referral">
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">Word of mouth / friend / family</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">YouTube</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">Instagram</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">TikTok</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">Facebook</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">LinkedIn</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">Internet search</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">Other professional referral</button>
+            <button class="supp-pill" onclick="suppSel('referral_source',this)">Other</button>
+          </div>
+        </div>
+
+        <!-- Q2: Region -->
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:500;color:rgba(247,243,237,.8);margin-bottom:8px">Where are you based?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" id="supp_region">
+            <button class="supp-pill" onclick="suppSel('region',this)">London</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Rest of UK</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Ireland</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Europe</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">USA</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Canada</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Australia and New Zealand</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Middle East</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Asia</button>
+            <button class="supp-pill" onclick="suppSel('region',this)">Rest of World</button>
+          </div>
+        </div>
+
+        <!-- Q3: Prior advice -->
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:500;color:rgba(247,243,237,.8);margin-bottom:8px">Have you ever sought professional advice about your joint health?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" id="supp_prior_advice">
+            <button class="supp-pill" onclick="suppSel('prior_advice',this)">Yes</button>
+            <button class="supp-pill" onclick="suppSel('prior_advice',this)">No</button>
+            <button class="supp-pill" onclick="suppSel('prior_advice',this)">Not yet but planning to</button>
+          </div>
+        </div>
+
+        <!-- Q4: Willingness to pay -->
+        <div style="margin-bottom:16px">
+          <div style="font-size:12px;font-weight:500;color:rgba(247,243,237,.8);margin-bottom:8px">Would you pay for a personalised joint health programme?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" id="supp_willingness_to_pay">
+            <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">Yes definitely</button>
+            <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">Possibly</button>
+            <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">Not sure</button>
+            <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">No</button>
+          </div>
+        </div>
+
+        <!-- Q5: Genomics interest -->
+        <div style="margin-bottom:18px">
+          <div style="font-size:12px;font-weight:500;color:rgba(247,243,237,.8);margin-bottom:8px">Would you be interested in a genomic risk assessment as part of your OrthoLongevity™ programme — understanding how your genetics influence your joint health and injury risk?</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px" id="supp_genomics_interest">
+            <button class="supp-pill" onclick="suppSel('genomics_interest',this)">Yes definitely</button>
+            <button class="supp-pill" onclick="suppSel('genomics_interest',this)">Possibly</button>
+            <button class="supp-pill" onclick="suppSel('genomics_interest',this)">Not sure</button>
+            <button class="supp-pill" onclick="suppSel('genomics_interest',this)">No</button>
+          </div>
+        </div>
+
+        <button id="suppSubmit" class="supp-submit" onclick="submitSupp()" disabled>Submit →</button>
+        <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;cursor:pointer" onclick="document.getElementById('suppPanel').style.display='none'">Skip</div>
+      </div>
     </div>
     <p class="disc">This tool provides general insight into lifestyle factors related to knee health. It does not diagnose or predict medical conditions. The OrthoLongevity™ face-to-face and digital programmes are designed for adults aged 18 and over. For medical advice, please consult a qualified healthcare professional. OrthoLongevity™ · ortholongevity.ai</p>
   `;
@@ -1240,6 +1326,40 @@ function showShareModal(whatsappText){
     });
   };
   bg.addEventListener('click',e=>{if(e.target===bg)bg.remove();});
+}
+
+// ── Supplementary panel ──────────────────────────────────────────────────
+const suppData={};
+function suppSel(field,btn){
+  const wrap=btn.parentElement;
+  wrap.querySelectorAll('.supp-pill').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  suppData[field]=btn.textContent.trim();
+  const needed=['referral_source','region','prior_advice','willingness_to_pay','genomics_interest'];
+  const filled=needed.filter(k=>suppData[k]);
+  const sub=document.getElementById('suppSubmit');
+  if(sub) sub.disabled=filled.length<needed.length;
+}
+async function submitSupp(){
+  const btn=document.getElementById('suppSubmit');
+  if(btn){btn.disabled=true;btn.textContent='Sending…';}
+  try{
+    await fetch('/api/supplementary',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        timestamp:new Date().toISOString(),
+        email:userEmail||'',
+        referral_source:suppData.referral_source||'',
+        region:suppData.region||'',
+        prior_advice:suppData.prior_advice||'',
+        willingness_to_pay:suppData.willingness_to_pay||'',
+        genomics_interest:suppData.genomics_interest||''
+      })
+    });
+  }catch(e){}
+  const panel=document.getElementById('suppPanel');
+  if(panel) panel.innerHTML='<div class="supp-thank"><div class="supp-thank-title">Thank you</div><div class="supp-thank-sub">Your answers help us build something better.</div></div>';
 }
 
 // ── Counter (Supabase optional) ───────────────────────────────────────────
