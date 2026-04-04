@@ -31,7 +31,6 @@ export default async function handler(req) {
     const total = parseInt(rangeHeader.split('/')[1] || '30', 10);
     // Add 30 as baseline (tests before Supabase was live)
     const displayCount = total + 1000;
-git add api/counter.js && git commit -m "fix counter baseline to +1000" && git push origin main
 
 
     return new Response(JSON.stringify({ count: displayCount }), { status: 200, headers: corsHeaders });
