@@ -81,8 +81,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .pbtn[data-v="4"].sel,.pbtn[data-v="5"].sel,.pbtn[data-v="6"].sel{background:rgba(224,154,58,.25);border-color:var(--amber)}
 .pbtn[data-v="7"].sel,.pbtn[data-v="8"].sel,.pbtn[data-v="9"].sel,.pbtn[data-v="10"].sel{background:rgba(224,85,85,.25);border-color:var(--red)}
 .pain-lbls{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:5px}
-.nxt-wrap{margin-top:20px;text-align:right}
-.nxt-btn{background:var(--teal);color:var(--w);border:none;border-radius:100px;padding:13px 28px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:pointer;transition:background .2s,transform .15s;opacity:.35;pointer-events:none}
+.nxt-wrap{margin-top:20px;display:flex;justify-content:space-between;align-items:center}
+.back-btn{background:none;border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:13px 24px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:pointer;transition:background .2s,border-color .2s,transform .15s;color:var(--muted)}
+.back-btn:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04);transform:translateY(-1px);color:var(--cream)}
+.nxt-btn{background:var(--teal);color:var(--w);border:none;border-radius:100px;padding:13px 28px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:pointer;transition:background .2s,transform .15s;opacity:.35;pointer-events:none;margin-left:auto}
 .nxt-btn.on{opacity:1;pointer-events:all}
 .nxt-btn.on:hover{background:#159060;transform:translateY(-1px)}
 
@@ -752,7 +754,7 @@ function renderQ(){
     h+=`</div><div class="pain-lbls"><span>No pain</span><span>Severe</span></div>`;
   }
   const hasAns=answers[q.id]!==undefined,isSl=q.type==='slider';
-  h+=`<div class="nxt-wrap"><button class="nxt-btn${(hasAns||isSl)?' on':''}" id="nb" onclick="nextQ()">Continue →</button></div>`;
+  h+=`<div class="nxt-wrap">${qIdx>0?'<button class="back-btn" onclick="prevQ()">← Back</button>':''}<button class="nxt-btn${(hasAns||isSl)?' on':''}" id="nb" onclick="nextQ()">Continue →</button></div>`;
   card.innerHTML=h;
   container.appendChild(card);
   window._cq=q;
@@ -781,10 +783,22 @@ function nextQ(){
   if(q.type==='pain'&&answers[q.id]===undefined)return;
   qIdx++;renderQ();
 }
+function prevQ(){
+  if(qIdx>0){qIdx--;renderQ();}
+}
 
 // ── Result ────────────────────────────────────────────────────────────────────
 function showResult(){
   const R_data = calc(answers);
+  // Store completed email in localStorage
+  const completedEmail = answers._email || userEmail || '';
+  if(completedEmail){
+    try{
+      const done = JSON.parse(localStorage.getItem('kneeage_completed_emails')||'[]');
+      if(!done.includes(completedEmail.toLowerCase())) done.push(completedEmail.toLowerCase());
+      localStorage.setItem('kneeage_completed_emails',JSON.stringify(done));
+    }catch(e){}
+  }
   incrementCounter({
     email: answers._email || userEmail ||'',
     age: R_data.age,
@@ -1279,6 +1293,13 @@ function showEmailGate(){
   },200);
 }
 
+function isEmailCompleted(email){
+  try{
+    const done = JSON.parse(localStorage.getItem('kneeage_completed_emails')||'[]');
+    return done.includes(email.toLowerCase());
+  }catch(e){return false;}
+}
+
 function submitEmail(){
   const inp = document.getElementById('emailInput');
   if(!inp) return;
@@ -1288,9 +1309,23 @@ function submitEmail(){
     inp.placeholder='Please enter a valid email';
     return;
   }
+  if(isEmailCompleted(val)){
+    showEmailBlockedMessage();
+    return;
+  }
   userEmail = val;
   sendToKit(val);
   startQuizFromGate();
+}
+
+function showEmailBlockedMessage(){
+  document.getElementById('app').innerHTML=`
+    <div style="padding-top:48px;text-align:center;animation:fu .4s ease both">
+      <div style="font-size:36px;margin-bottom:18px">✓</div>
+      <div style="font-family:var(--fd);font-size:24px;font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:12px">You have already completed<br/>this assessment.</div>
+      <div style="font-size:14px;color:rgba(247,243,237,.6);line-height:1.6;max-width:360px;margin:0 auto 28px">To take it again please use a different email address.</div>
+      <button onclick="showHook()" style="background:none;border:1px solid rgba(255,255,255,.15);border-radius:100px;padding:13px 28px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:pointer;color:var(--muted);transition:background .2s,border-color .2s">← Go back</button>
+    </div>`;
 }
 
 function skipEmail(){
@@ -1350,6 +1385,10 @@ setTimeout(()=>{
   if(btn){
     btn.onclick = function(){
       userEmail = window._prefilledEmail || '';
+      if(userEmail && isEmailCompleted(userEmail)){
+        showEmailBlockedMessage();
+        return;
+      }
       answers._email = userEmail;
       phase='quiz'; qIdx=0;
       document.getElementById('app').innerHTML=`
