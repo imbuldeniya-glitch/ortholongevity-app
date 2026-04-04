@@ -482,26 +482,26 @@ function getStatus(diff,isTeen,jhs,age){
       identity:"Some areas need work. Your joints are still developing — acting now has the greatest impact.",badge:'Below average for your age'};
   }
   const kAge=age+diff;
-  if(diff<=-8) return {color:'#27a96c',heroColor:'#27a96c',
-    statusLine:`You've got the knees of a ${kAge}-year-old.`,
-    reaction:"Most people your age aren't even close to this.",
-    identity:"You're protecting your joints better than almost anyone your age.",badge:'Elite joint health'};
-  if(diff<=-3) return {color:'#27a96c',heroColor:'#5dcaa5',
-    statusLine:`You've got the knees of a ${kAge}-year-old.`,
-    reaction:"Your habits are working. There's still room to push that gap wider.",
-    identity:"Your biology is working in your favour. A few more changes and you're in elite territory.",badge:'Above average'};
-  if(diff<=3)  return {color:'#e09a3a',heroColor:'#e09a3a',
-    statusLine:'Your knees are ageing at roughly your rate.',
-    reaction:'This is where most people sit — and where decline quietly begins.',
-    identity:"You're on track — but the people who act here stay out of the surgeon's office.",badge:'Average — where decline starts'};
-  if(diff<=8)  return {color:'#e05555',heroColor:'#e05555',
-    statusLine:'Your knees are ageing faster than you.',
-    reaction:"Most people don't realise this until it's too late. You do.",
-    identity:"Your current habits may be accelerating joint wear. Most of these factors are in your control.",badge:'High-risk trajectory'};
+  if(diff<=-4) return {color:'#27a96c',heroColor:'#27a96c',
+    statusLine:`You have the joints of a ${kAge}-year-old.`,
+    reaction:'Outstanding. You are in the top tier — and the data backs it up.',
+    identity:'This result reflects everything working together: your strength, your nutrition, your sleep, your weight, your posture, and how well your biology is responding. Genetics play a role too — if joint health runs in your family, you may have a natural advantage — but results like this are never just luck. They are built. Keep strength training consistently, eat to support your biology, manage stress, sleep well, and monitor your knee age as you get older. Muscle mass and bone density change with age even in people who look after themselves. The OrthoLongevity™ app — currently in development — is being built to help people like you track your score over time, catch early dips before they become trends, and keep your joints in this tier for as long as possible. Nobody else in the world has access to it yet. You are among the first people on earth to receive a Knee Age score. You will be first in line when it launches. If you know someone who should find out their Knee Age, send them to ortholongevity.ai — it takes 60 seconds and could change how they think about their health for good.',badge:'Elite joint health'};
+  if(diff<=-1) return {color:'#27a96c',heroColor:'#5dcaa5',
+    statusLine:`You have the joints of a ${kAge}-year-old.`,
+    reaction:'Really good result. Your habits are making a measurable difference.',
+    identity:'You are ahead of your age and that is genuinely encouraging. Your nutrition, movement, sleep, and body composition are all contributing to a younger biological joint age. Genetic factors may also be working in your favour. To push into elite territory, focus on progressive strength training, reducing inflammatory load through diet, optimising sleep, managing stress, and keeping your weight in a healthy range. Small consistent improvements across these areas compound over time. The OrthoLongevity™ app — in development now — will give you a personalised roadmap to push your score further and protect it as your body changes with age. Nobody in the world has this yet. You are already on the list. Share ortholongevity.ai with someone you care about — a partner, a parent, a friend who trains hard or sits too long. Knowing your Knee Age is the first step. Most people never take it.',badge:'Above average'};
+  if(diff<=0) return {color:'#e09a3a',heroColor:'#e09a3a',
+    statusLine:'Your knees are ageing in line with your chronological age.',
+    reaction:'A solid baseline — and a great starting point for real improvement.',
+    identity:'This is where most people sit, and there is plenty to build on. The biology beneath the surface — cartilage, muscle mass, bone density, hormonal balance — changes quietly over time, but it responds well to the right inputs. Strength training, anti-inflammatory nutrition, better sleep, stress management, good posture, weight management, and understanding your genetic risk factors are all levers that can move your score younger. You are in exactly the right position to make changes that show up in your next result. The OrthoLongevity™ app is being built to guide you through exactly this — a personalised, structured programme targeting the specific drivers behind your score. Nobody in the world has access to it yet. You will be first. In the meantime, share ortholongevity.ai with someone who should know their score. The earlier people find out, the more they can do about it — and that is the whole point. For free guidance now, visit my YouTube channel and Substack.',badge:'Average'};
+  if(diff<=4) return {color:'#e05555',heroColor:'#e05555',
+    statusLine:'Your joints are ageing slightly ahead of your chronological age.',
+    reaction:'Encouraging news — this is very addressable with the right approach.',
+    identity:'A knee age a few years ahead of your actual age is common and importantly it is reversible. Many of the factors driving this score — strength, muscle mass, nutrition, inflammation, sleep quality, stress, posture, body weight, and genetic predisposition — can be improved with a structured approach. Addressing even two or three of them consistently can shift your knee age meaningfully in the right direction. The OrthoLongevity™ app — currently in development — is being designed specifically to help people in your position build a personalised plan targeting your individual drivers and bring your knee age down. Nobody else in the world has access to this yet. You will be among the very first. The sooner you start, the faster the biology responds. Share ortholongevity.ai with someone who matters to you. Most people your age have no idea what their joints are doing. You do. That is already an advantage. For free guidance now, visit my YouTube channel and Substack — both cover strength, nutrition, sleep, and joint health in plain language.',badge:'Needs some adjustment'};
   return {color:'#e05555',heroColor:'#e05555',
-    statusLine:'Your knees are ageing significantly faster than you.',
-    reaction:'This is important information. The earlier you act, the more you can change.',
-    identity:"Your joint biology is under real pressure. The good news: lifestyle changes fast.",badge:'High-risk trajectory'};
+    statusLine:'Your joints are showing signs of accelerated ageing.',
+    reaction:'Important information — and finding out now is the most valuable first step.',
+    identity:'A knee age this far ahead of your chronological age is a clear signal — but it is not a fixed outcome. Many of the factors driving an older knee age are directly addressable: building strength and muscle mass, improving nutrition and reducing inflammation, managing weight, sleeping better, correcting posture, reducing stress, and understanding your genetic risk. The biology can change. That is not a promise. It is what the evidence shows and what I see in clinical practice every week. The OrthoLongevity™ app is being built specifically for people in your position — a structured, personalised programme targeting every driver behind your score, designed to bring your knee age down. Nobody in the world has access to it yet. You will be first. For free guidance right now, visit my YouTube channel and Substack — both cover every one of these areas in plain language, backed by evidence. Share ortholongevity.ai with someone who needs to hear this. Most people find out too late. You just found out at exactly the right time. If you have joint pain, stiffness, swelling, or symptoms that concern you, please do not wait. Book a consultation at ortholongevity.ai or speak to your GP or healthcare professional. This assessment is a wellness tool, not a medical check — but your symptoms deserve proper attention.',badge:'Needs attention'};
 }
 
 // Get improvable years (potential)
