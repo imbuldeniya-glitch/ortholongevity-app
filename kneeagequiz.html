@@ -860,7 +860,15 @@ function showResult(){
     <div style="background:rgba(127,119,221,.08);border:1px solid rgba(127,119,221,.2);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:left">
       <div style="font-size:12px;font-weight:500;color:rgba(175,169,236,.9);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Why you see a score, not a Knee Age</div>
       <div style="font-size:13px;color:rgba(247,243,237,.7);line-height:1.6">Because your joints are still developing, we show you a Joint Health Score rather than a Knee Age. Your score helps you understand where you stand today — and even a lower score is valuable information. Building good habits now protects your joints for life. Share this with friends and family and encourage them to find out their score too.</div>
-    </div>` : `
+    </div>
+    <div style="background:rgba(127,119,221,.08);border:1px solid rgba(127,119,221,.2);border-radius:12px;padding:14px 16px;margin-bottom:20px;text-align:left">
+      <div style="font-size:13px;color:rgba(247,243,237,.85);line-height:1.7">${jhs >= 70
+        ? 'Outstanding. Your joints are in excellent shape for your age. The habits you have already built — staying active, sleeping well, looking after your body — are exactly what keeps joints healthy for life. Keep going. Most people don\u2019t find this out until something goes wrong. You are ahead of the curve.'
+        : jhs >= 40
+        ? 'Good foundations. Your score shows your joints are healthy but there are areas where small changes now will make a big difference later. At your age, joints respond quickly to improvement. Focus on strength, sleep, and movement — the three drivers that matter most. You have time on your side.'
+        : 'This is useful information — and that is exactly what it is. A lower score at your age is not a problem. It is an early signal, and early signals are the best kind to get. Your joints are still developing and respond well to change. Building strength, improving sleep, and moving more regularly can shift your score significantly. You are in exactly the right place to start.<br><br><span style="font-size:12px;color:rgba(247,243,237,.6)">This assessment is a wellness tool, not a medical check. If you have joint pain or concerns, speak to your GP or a healthcare professional.</span>'}</div>
+    </div>
+    <div style="font-size:13px;color:rgba(247,243,237,.7);line-height:1.6;text-align:center;margin-bottom:20px">Know someone who should find out their score? Send them the link — it takes 60 seconds and could matter for life.</div>` : `
     <div class="res-eyebrow">Well done — you have found out your Knee Age</div>
     <div class="res-age-big" style="color:${status.heroColor}">${kneeAge}</div>
     <div class="res-age-lbl">Knee Age</div>
