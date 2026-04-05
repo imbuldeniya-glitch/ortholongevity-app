@@ -210,6 +210,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .share-btn-item:hover{background:rgba(255,255,255,.12)}
 .share-btn-item.primary{background:var(--teal);border-color:var(--teal)}
 .share-close{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-top:10px;font-family:var(--fb)}
+.scorecard-wrap{margin:24px 0;text-align:center}
+.scorecard-wrap canvas{display:block;width:100%;max-width:500px;height:auto;margin:0 auto;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.scorecard-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.scorecard-btns button{display:inline-flex;align-items:center;gap:8px;background:#1E4D3B;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:12px 18px;cursor:pointer;font-family:Georgia,serif;font-size:14px;color:#C9A84C;transition:background .2s,transform .1s}
+.scorecard-btns button:hover{background:#255d48}
+.scorecard-btns button:active{transform:scale(.97)}
 </style>
 </head>
 <body>
@@ -802,6 +808,167 @@ function prevQ(){
   if(qIdx>0){qIdx--;renderQ();}
 }
 
+// ── Score Card Canvas ─────────────────────────────────────────────────────────
+function generateScoreCard(mainValue, chronAge, tier, punchyLine){
+  const W=1080,H=1080;
+  const cvs=document.createElement('canvas');
+  cvs.width=W; cvs.height=H;
+  const ctx=cvs.getContext('2d');
+
+  // Tier colour map
+  const palettes={
+    elite:      {bg:'#1E4D3B',score:'#C9A84C',text:'#FFFFFF',badge:'#C9A84C'},
+    above:      {bg:'#1E4D3B',score:'#C9A84C',text:'#FFFFFF',badge:'#C9A84C'},
+    average:    {bg:'#2D6A4F',score:'#F9F5EE',text:'#FFFFFF',badge:'#F9F5EE'},
+    adjustment: {bg:'#C9A84C',score:'#1E4D3B',text:'#1C1C1C',badge:'#1E4D3B'},
+    attention:  {bg:'#8B2020',score:'#F9F5EE',text:'#FFFFFF',badge:'#F9F5EE'},
+    teen:       {bg:'#1E4D3B',score:'#C9A84C',text:'#FFFFFF',badge:'#C9A84C'}
+  };
+  const pal=palettes[tier]||palettes.average;
+  const isTeen=tier==='teen';
+  const gold='#C9A84C';
+
+  // Background
+  ctx.fillStyle=pal.bg;
+  ctx.fillRect(0,0,W,H);
+
+  // ── Top 15%: branding ──
+  ctx.textAlign='center';
+  ctx.fillStyle=gold;
+  ctx.font='36px Georgia, serif';
+  ctx.fillText('OrthoLongevity\u2122',W/2,100);
+  ctx.fillStyle=pal.text;
+  ctx.font='22px Georgia, serif';
+  ctx.fillText('Dr Arj Imbuldeniya',W/2,136);
+
+  // ── Middle: big number ──
+  ctx.fillStyle=pal.score;
+  ctx.font='bold 180px Georgia, serif';
+  ctx.textAlign='center';
+  if(isTeen){
+    ctx.fillText(String(mainValue),W/2,520);
+    ctx.font='60px Georgia, serif';
+    ctx.fillStyle=pal.text;
+    ctx.globalAlpha=0.6;
+    ctx.fillText('/100',W/2+ctx.measureText(String(mainValue)).width/2+10,520);
+    ctx.globalAlpha=1;
+  } else {
+    ctx.fillText(String(mainValue),W/2,520);
+  }
+
+  // ── Label below number ──
+  ctx.fillStyle=pal.text;
+  ctx.font='32px Georgia, serif';
+  if(isTeen){
+    ctx.fillText('Joint Health Score',W/2,570);
+  } else {
+    ctx.fillText('Knee Age',W/2,570);
+    // "I'm actually [age]"
+    ctx.font='28px -apple-system, Helvetica Neue, Arial, sans-serif';
+    ctx.globalAlpha=0.75;
+    ctx.fillText("I'm actually "+chronAge,W/2,614);
+    ctx.globalAlpha=1;
+  }
+
+  // ── Tier badge pill ──
+  const badgeLabels={elite:'ELITE',above:'ABOVE AVERAGE',average:'AVERAGE',adjustment:'NEEDS ADJUSTMENT',attention:'NEEDS ATTENTION',teen:'JOINT HEALTH'};
+  const badgeText=badgeLabels[tier]||'';
+  ctx.font='bold 28px -apple-system, Helvetica Neue, Arial, sans-serif';
+  const bm=ctx.measureText(badgeText);
+  const bw=bm.width+60, bh=52, bx=W/2-bw/2, by=isTeen?610:650;
+  ctx.fillStyle=pal.badge;
+  ctx.globalAlpha=0.18;
+  ctx.beginPath();
+  const br=bh/2;
+  ctx.moveTo(bx+br,by);ctx.lineTo(bx+bw-br,by);ctx.arcTo(bx+bw,by,bx+bw,by+br,br);ctx.arcTo(bx+bw,by+bh,bx+bw-br,by+bh,br);ctx.lineTo(bx+br,by+bh);ctx.arcTo(bx,by+bh,bx,by+bh-br,br);ctx.arcTo(bx,by,bx+br,by,br);ctx.closePath();ctx.fill();
+  ctx.globalAlpha=1;
+  ctx.fillStyle=pal.badge;
+  ctx.textAlign='center';
+  ctx.fillText(badgeText,W/2,by+35);
+
+  // ── Punchy line (italic Georgia, max 60 chars, word-wrapped) ──
+  const line=punchyLine&&punchyLine.length>60?punchyLine.slice(0,57)+'…':punchyLine||'';
+  ctx.font='italic 26px Georgia, serif';
+  ctx.fillStyle=pal.text;
+  ctx.globalAlpha=0.85;
+  const pWords=line.split(' ');
+  let pLine='',pLines=[],pMax=W-160;
+  for(const w of pWords){
+    const t=pLine+w+' ';
+    if(ctx.measureText(t).width>pMax&&pLine){pLines.push(pLine.trim());pLine=w+' ';}
+    else pLine=t;
+  }
+  if(pLine)pLines.push(pLine.trim());
+  const pStartY=isTeen?690:730;
+  pLines.forEach((l,i)=>ctx.fillText(l,W/2,pStartY+i*36));
+  ctx.globalAlpha=1;
+
+  // ── Bottom strip ──
+  ctx.font='20px -apple-system, Helvetica Neue, Arial, sans-serif';
+  ctx.fillStyle=pal.text;
+  ctx.globalAlpha=0.7;
+  ctx.textAlign='left';
+  ctx.fillText('Biology first. Surgery last.',60,H-50);
+  ctx.textAlign='right';
+  ctx.fillStyle=gold;
+  ctx.globalAlpha=1;
+  ctx.fillText('ortholongevity.ai',W-60,H-50);
+
+  return cvs;
+}
+
+function insertScoreCard(container, isTeen, mainValue, chronAge, tier, punchyLine){
+  // Determine tier key from diff-based status badge
+  const tierKey = tier;
+
+  const cvs = generateScoreCard(mainValue, chronAge, tierKey, punchyLine);
+
+  // Caption text
+  const caption = isTeen
+    ? 'My Joint Health Score is '+mainValue+'/100. Can you beat it? \u2192 ortholongevity.ai'
+    : 'My Knee Age is '+mainValue+'. I\u2019m actually '+chronAge+'. What\u2019s yours? Take the free test \u2192 ortholongevity.ai';
+
+  const wrap=document.createElement('div');
+  wrap.className='scorecard-wrap';
+  wrap.appendChild(cvs);
+
+  const btns=document.createElement('div');
+  btns.className='scorecard-btns';
+
+  // Download
+  const dlBtn=document.createElement('button');
+  dlBtn.textContent='\u2B07 Download image';
+  dlBtn.onclick=()=>{
+    const a=document.createElement('a');
+    a.href=cvs.toDataURL('image/png');
+    a.download='my-knee-age-scorecard.png';
+    a.click();
+  };
+  btns.appendChild(dlBtn);
+
+  // Copy caption
+  const cpBtn=document.createElement('button');
+  cpBtn.textContent='\uD83D\uDCCB Copy caption';
+  cpBtn.onclick=()=>{
+    navigator.clipboard.writeText(caption).then(()=>{
+      cpBtn.textContent='\u2713 Copied!';
+      setTimeout(()=>{cpBtn.textContent='\uD83D\uDCCB Copy caption';},2000);
+    });
+  };
+  btns.appendChild(cpBtn);
+
+  // WhatsApp
+  const waBtn=document.createElement('button');
+  waBtn.textContent='\uD83D\uDCAC WhatsApp';
+  waBtn.onclick=()=>{
+    window.open('https://wa.me/?text='+encodeURIComponent(caption),'_blank');
+  };
+  btns.appendChild(waBtn);
+
+  wrap.appendChild(btns);
+  container.appendChild(wrap);
+}
+
 // ── Result ────────────────────────────────────────────────────────────────────
 function showResult(){
   const R_data = calc(answers);
@@ -966,6 +1133,8 @@ function showResult(){
       ${isTeen ? '📩 Share your score with friends & family' : '🔥 Challenge a friend — show them their Knee Age'}
     </button>
     <div style="font-size:12px;color:var(--muted);margin-top:-14px;margin-bottom:22px">${isTeen ? 'Send the quiz link to a friend, parent, or coach — see how their joints compare.' : 'Send this to someone. See who has younger knees.'}</div>
+
+    <div id="scorecardSlot"></div>
 
     ${!isTeen?`<div class="compare-wrap">
       <div class="compare-title">Compared to others who've taken this test</div>
@@ -1152,6 +1321,27 @@ function showResult(){
   `;
   document.getElementById('app').innerHTML='';
   document.getElementById('app').appendChild(card);
+
+  // Insert inline score card
+  const scSlot=document.getElementById('scorecardSlot');
+  if(scSlot){
+    // Determine tier key
+    let tierKey='average';
+    if(isTeen) tierKey='teen';
+    else if(diff<=-4) tierKey='elite';
+    else if(diff<=-1) tierKey='above';
+    else if(diff<=0) tierKey='average';
+    else if(diff<=4) tierKey='adjustment';
+    else tierKey='attention';
+
+    const punchyLine=status.reaction.length<=60?status.reaction:status.statusLine;
+    if(isTeen){
+      insertScoreCard(scSlot, true, jhs, null, 'teen', punchyLine);
+    } else {
+      insertScoreCard(scSlot, false, kneeAge, age, tierKey, punchyLine);
+    }
+  }
+
   setTimeout(()=>{
     card.querySelectorAll('.driver-fill').forEach(el=>{
       const w=el.style.width;el.style.width='0%';
