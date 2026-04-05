@@ -212,10 +212,17 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .share-close{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-top:10px;font-family:var(--fb)}
 .scorecard-wrap{margin:24px 0;text-align:center}
 .scorecard-wrap canvas{display:block;width:100%;max-width:500px;height:auto;margin:0 auto;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
-.scorecard-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
-.scorecard-btns button{display:inline-flex;align-items:center;gap:8px;background:#1E4D3B;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:12px 18px;cursor:pointer;font-family:Georgia,serif;font-size:14px;color:#C9A84C;transition:background .2s,transform .1s}
-.scorecard-btns button:hover{background:#255d48}
-.scorecard-btns button:active{transform:scale(.97)}
+.sc-share-primary{display:block;width:100%;margin-top:14px;padding:16px 20px;background:#1E4D3B;border:1px solid rgba(201,168,76,.3);border-radius:14px;cursor:pointer;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#C9A84C;transition:background .2s,transform .1s;text-align:center}
+.sc-share-primary:hover{background:#255d48}
+.sc-share-primary:active{transform:scale(.97)}
+.sc-fallback-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.sc-fallback-btns button{display:inline-flex;align-items:center;gap:8px;background:#1E4D3B;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:12px 18px;cursor:pointer;font-family:Georgia,serif;font-size:14px;color:#C9A84C;transition:background .2s,transform .1s}
+.sc-fallback-btns button:hover{background:#255d48}
+.sc-fallback-btns button:active{transform:scale(.97)}
+.sc-secondary{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
+.sc-secondary button{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(201,168,76,.35);border-radius:10px;padding:9px 16px;cursor:pointer;font-family:Georgia,serif;font-size:13px;color:#C9A84C;transition:background .2s,transform .1s}
+.sc-secondary button:hover{background:rgba(201,168,76,.08)}
+.sc-secondary button:active{transform:scale(.97)}
 </style>
 </head>
 <body>
@@ -503,12 +510,13 @@ function getStatus(diff,isTeen,jhs,age){
       identity:"Some areas need work. Your joints are still developing — acting now has the greatest impact.",badge:'Below average for your age'};
   }
   const kAge=age+diff;
+  const _an=n=>/^(8|11|18)/.test(String(n))?'an':'a';
   if(diff<=-4) return {color:'#27a96c',heroColor:'#27a96c',
-    statusLine:`You have the joints of a ${kAge}-year-old.`,
+    statusLine:`You have the joints of ${_an(kAge)} ${kAge}-year-old.`,
     reaction:'Outstanding. Your joints are biologically younger than your age — and that is built, not luck.',
     identity:'Your strength, nutrition, sleep, and biology are all working together. This result puts you ahead of most people your age by years. The goal now is to protect it — because muscle mass, bone density, and cartilage all change with age even in people who look after themselves. The OrthoLongevity™ app is being built to track your score over time, catch early dips before they become trends, and keep you in this tier for as long as possible. You are among the first people on earth to receive a Knee Age score. You will be first in line when it launches. Share ortholongevity.ai with someone you care about — it takes 60 seconds and might be the most useful thing they do this year.',badge:'Elite joint health'};
   if(diff<=-1) return {color:'#27a96c',heroColor:'#5dcaa5',
-    statusLine:`You have the joints of a ${kAge}-year-old.`,
+    statusLine:`You have the joints of ${_an(kAge)} ${kAge}-year-old.`,
     reaction:'Good result. Your habits are making a measurable difference.',
     identity:'You are ahead of your age and your biology is working in your favour. Nutrition, movement, sleep, and body composition are all contributing to a younger joint age. To push into elite territory, progressive strength training and reducing inflammatory load are your two highest-leverage moves. Small consistent improvements compound over time. The OrthoLongevity™ app will give you a personalised roadmap to push your score further and protect it as you age. You are already on the list. Share ortholongevity.ai with someone you care about — knowing your Knee Age is the first step. Most people never take it.',badge:'Above average'};
   if(diff<=0) return {color:'#e09a3a',heroColor:'#e09a3a',
@@ -918,54 +926,102 @@ function generateScoreCard(mainValue, chronAge, tier, punchyLine){
 }
 
 function insertScoreCard(container, isTeen, mainValue, chronAge, tier, punchyLine){
-  // Determine tier key from diff-based status badge
-  const tierKey = tier;
+  const cvs = generateScoreCard(mainValue, chronAge, tier, punchyLine);
 
-  const cvs = generateScoreCard(mainValue, chronAge, tierKey, punchyLine);
-
-  // Caption text
   const caption = isTeen
     ? 'My Joint Health Score is '+mainValue+'/100. Can you beat it? \u2192 ortholongevity.ai'
-    : 'My Knee Age is '+mainValue+'. I\u2019m actually '+chronAge+'. What\u2019s yours? Take the free test \u2192 ortholongevity.ai';
+    : 'My Knee Age is '+mainValue+'. I\u2019m actually '+chronAge+'. What\u2019s yours? Take the free 60-second test \u2192 ortholongevity.ai';
 
   const wrap=document.createElement('div');
   wrap.className='scorecard-wrap';
   wrap.appendChild(cvs);
 
-  const btns=document.createElement('div');
-  btns.className='scorecard-btns';
-
-  // Download
-  const dlBtn=document.createElement('button');
-  dlBtn.textContent='\u2B07 Download image';
-  dlBtn.onclick=()=>{
+  // Helper: download canvas as PNG
+  function triggerDownload(){
     const a=document.createElement('a');
     a.href=cvs.toDataURL('image/png');
-    a.download='my-knee-age-scorecard.png';
+    a.download='my-knee-age.png';
     a.click();
-  };
-  btns.appendChild(dlBtn);
+  }
 
-  // Copy caption
-  const cpBtn=document.createElement('button');
-  cpBtn.textContent='\uD83D\uDCCB Copy caption';
-  cpBtn.onclick=()=>{
-    navigator.clipboard.writeText(caption).then(()=>{
-      cpBtn.textContent='\u2713 Copied!';
-      setTimeout(()=>{cpBtn.textContent='\uD83D\uDCCB Copy caption';},2000);
+  // Helper: get canvas as File via toBlob
+  function getCanvasFile(){
+    return new Promise(resolve=>{
+      cvs.toBlob(blob=>{
+        resolve(new File([blob],'my-knee-age.png',{type:'image/png'}));
+      },'image/png');
     });
-  };
-  btns.appendChild(cpBtn);
+  }
 
-  // WhatsApp
-  const waBtn=document.createElement('button');
-  waBtn.textContent='\uD83D\uDCAC WhatsApp';
-  waBtn.onclick=()=>{
-    window.open('https://wa.me/?text='+encodeURIComponent(caption),'_blank');
-  };
-  btns.appendChild(waBtn);
+  // Check Web Share API with file support
+  const canNativeShare=(()=>{
+    try{
+      if(!navigator.canShare) return false;
+      const f=new File([new Blob([''],{type:'image/png'})],'test.png',{type:'image/png'});
+      return navigator.canShare({files:[f]});
+    }catch(e){return false;}
+  })();
 
-  wrap.appendChild(btns);
+  if(canNativeShare){
+    // PRIMARY: native share sheet (mobile)
+    const shareBtn=document.createElement('button');
+    shareBtn.className='sc-share-primary';
+    shareBtn.textContent='Share your score card';
+    shareBtn.onclick=async()=>{
+      try{
+        const file=await getCanvasFile();
+        await navigator.share({
+          title:'My Knee Age \u2014 OrthoLongevity\u2122',
+          text:caption,
+          files:[file]
+        });
+      }catch(e){
+        // User cancelled or error — silently ignore
+      }
+    };
+    wrap.appendChild(shareBtn);
+  } else {
+    // FALLBACK: desktop buttons
+    const fb=document.createElement('div');
+    fb.className='sc-fallback-btns';
+
+    const dlBtn=document.createElement('button');
+    dlBtn.textContent='\u2B07 Download image';
+    dlBtn.onclick=triggerDownload;
+    fb.appendChild(dlBtn);
+
+    const cpBtn=document.createElement('button');
+    cpBtn.textContent='\uD83D\uDCCB Copy caption';
+    cpBtn.onclick=()=>{
+      navigator.clipboard.writeText(caption).then(()=>{
+        cpBtn.textContent='\u2713 Copied!';
+        setTimeout(()=>{cpBtn.textContent='\uD83D\uDCCB Copy caption';},2000);
+      });
+    };
+    fb.appendChild(cpBtn);
+
+    const waBtn=document.createElement('button');
+    waBtn.textContent='\uD83D\uDCAC WhatsApp';
+    waBtn.onclick=()=>{window.open('https://wa.me/?text='+encodeURIComponent(caption),'_blank');};
+    fb.appendChild(waBtn);
+
+    wrap.appendChild(fb);
+  }
+
+  // SECONDARY: always-visible download row
+  const sec=document.createElement('div');
+  sec.className='sc-secondary';
+  const secDl=document.createElement('button');
+  secDl.textContent='\u2B07 Download image';
+  secDl.onclick=triggerDownload;
+  sec.appendChild(secDl);
+  wrap.appendChild(sec);
+
+  const tip=document.createElement('div');
+  tip.style.cssText='font-size:11px;color:rgba(247,243,237,.45);text-align:center;margin-top:6px';
+  tip.textContent='Downloaded image can be posted to Instagram or TikTok';
+  wrap.appendChild(tip);
+
   container.appendChild(wrap);
 }
 
@@ -1067,6 +1123,8 @@ function showResult(){
     <div style="font-size:15px;color:rgba(247,243,237,.85);font-weight:500;margin:4px 0 10px">${status.reaction}</div>
     <div class="identity">${status.identity}</div>
 
+    <div id="scorecardSlot"></div>
+
     <div id="suppPanel" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 14px;margin-bottom:20px">
       <div style="font-family:var(--fd);font-size:15px;font-weight:700;color:var(--cream);margin-bottom:4px">One last thing — help us build this for you</div>
       <div style="font-size:12px;color:rgba(247,243,237,.5);line-height:1.5;margin-bottom:14px">Four quick questions. Completely optional. But genuinely useful — your answers directly shape how we personalise the OrthoLongevity™ app for people like you. Early registrants who complete this will receive priority access and our best founding member rate when we launch.</div>
@@ -1133,8 +1191,6 @@ function showResult(){
       ${isTeen ? '📩 Share your score with friends & family' : '🔥 Challenge a friend — show them their Knee Age'}
     </button>
     <div style="font-size:12px;color:var(--muted);margin-top:-14px;margin-bottom:22px">${isTeen ? 'Send the quiz link to a friend, parent, or coach — see how their joints compare.' : 'Send this to someone. See who has younger knees.'}</div>
-
-    <div id="scorecardSlot"></div>
 
     ${!isTeen?`<div class="compare-wrap">
       <div class="compare-title">Compared to others who've taken this test</div>
