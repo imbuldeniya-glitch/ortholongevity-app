@@ -1323,7 +1323,7 @@ function suppSel(field,btn){
   wrap.querySelectorAll('.supp-pill').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
   suppData[field]=btn.textContent.trim();
-  const needed=['referral_source','region','prior_advice','willingness_to_pay','genomics_interest'];
+  const needed=['referral_source','region','prior_advice','willingness_to_pay'];
   const filled=needed.filter(k=>suppData[k]);
   const sub=document.getElementById('suppSubmit');
   if(sub) sub.disabled=filled.length<needed.length;
