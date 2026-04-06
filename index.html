@@ -609,10 +609,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('a[href="#email-capture"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
-      const el = document.getElementById('email-capture');
+      const el = document.querySelector('#waitlist, #email-form, .kit-form, [data-form], input[type=email]');
       if(el){
-        const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
-        window.scrollTo({top, behavior:'smooth'});
+        const elRect = el.getBoundingClientRect();
+        const elHeight = elRect.height;
+        const windowHeight = window.innerHeight;
+        const top = elRect.top + window.pageYOffset - (windowHeight / 2) + (elHeight / 2);
+        window.scrollTo({top: top, behavior:'smooth'});
       }
     });
   });
