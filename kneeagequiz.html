@@ -1349,9 +1349,20 @@ function showResult(){
 
     <div id="scorecardSlot"></div>
 
-    <div id="suppPanel" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 14px;margin-bottom:20px">
-      <div style="font-family:var(--fd);font-size:15px;font-weight:700;color:var(--cream);margin-bottom:4px">One last thing — help us build this for you</div>
-      <div style="font-size:12px;color:rgba(247,243,237,.5);line-height:1.5;margin-bottom:14px">Four quick questions. Completely optional. But genuinely useful — your answers directly shape how we personalise the OrthoLongevity™ app for people like you. Early registrants who complete this will receive priority access and our best founding member rate when we launch.</div>
+    <div id="shareHub" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.25);border-radius:14px;padding:20px 16px;margin-bottom:20px;text-align:center">
+      <div style="font-family:var(--fd);font-size:clamp(18px,4.5vw,22px);font-weight:700;color:#C9A84C;margin-bottom:14px;line-height:1.3">Send your score to a friend — see who has younger knees 🔥</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto">
+        <button onclick="downloadScoreCardPNG()" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 14px;background:#C9A84C;color:#1E4D3B;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fd)">📲 Download my score card</button>
+        <button onclick="shareWhatsApp()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">💬 WhatsApp</button>
+        <button id="copyLinkBtn" onclick="copyShareLink()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">🔗 Copy link</button>
+        <button onclick="shareFacebook()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">📘 Facebook</button>
+        <button onclick="shareLinkedIn()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">💼 LinkedIn</button>
+      </div>
+    </div>
+
+    <div id="suppPanel" style="background:#1E4D3B;border:2px solid #C9A84C;border-radius:14px;padding:18px 14px;margin-bottom:20px">
+      <div style="font-family:var(--fd);font-size:clamp(16px,4vw,20px);font-weight:700;color:#C9A84C;margin-bottom:8px;text-align:center;line-height:1.3">🔒 FOUNDING MEMBER ACCESS — CLAIM YOURS NOW</div>
+      <div style="font-size:13px;color:rgba(247,243,237,.8);line-height:1.6;margin-bottom:14px;text-align:center">Four quick questions. 60 seconds. Complete these and you will be locked in as a founding member of OrthoLongevity™ — our lowest ever price, priority access before public launch, and benefits never available again once we open more widely. Most people skip this. Founding members don't.</div>
       <div style="margin-bottom:12px">
         <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">How did you hear about this?</div>
         <div style="display:flex;flex-wrap:wrap;gap:5px" id="supp_referral">
@@ -1407,14 +1418,9 @@ function showResult(){
           <button class="supp-pill" onclick="suppSel('genomics_interest',this)">No</button>
         </div>
       </div>
-      <button id="suppSubmit" class="supp-submit" onclick="submitSupp()" disabled>Submit and secure my founding member rate</button>
+      <button id="suppSubmit" class="supp-submit" onclick="submitSupp()" disabled style="background:#C9A84C;color:#1E4D3B;font-weight:700">Claim my founding member rate →</button>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px;cursor:pointer" onclick="document.getElementById('suppPanel').style.display='none'">Skip for now</div>
     </div>
-
-    <button class="share-btn" id="shareBtn" onclick="copyShare('${shareText.replace(/'/g,"\\'")}')">
-      ${isTeen ? '📩 Share your score with friends & family' : '🔥 Challenge a friend — show them their Knee Age'}
-    </button>
-    <div style="font-size:12px;color:var(--muted);margin-top:-14px;margin-bottom:22px">${isTeen ? 'Send the quiz link to a friend, parent, or coach — see how their joints compare.' : 'Send this to someone. See who has younger knees.'}</div>
 
     ${!isTeen?`<div class="compare-wrap">
       <div class="compare-title">Compared to others who've taken this test</div>
@@ -1625,6 +1631,147 @@ function showResult(){
 function copyShare(txt){
   // Show share modal with canvas card
   showShareModal(txt);
+}
+
+// ── SHARE HUB FUNCTIONS ─────────────────────────────────────────────────
+
+function shareWhatsApp(){
+  const R=calc(answers);
+  const {isTeen,age,kneeAge,jhs}=R;
+  const ka=isTeen?jhs:kneeAge;
+  const msg=encodeURIComponent('I just found out my Knee Age is '+ka+'. I\u2019m '+age+'. Find out yours \u2014 it takes 60 seconds \u2192 ortholongevity.ai');
+  window.open('https://wa.me/?text='+msg,'_blank');
+}
+
+function copyShareLink(){
+  const txt='Find out your Knee Age \u2014 mine might surprise you. ortholongevity.ai';
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn=document.getElementById('copyLinkBtn');
+    if(btn){btn.textContent='\u2713 Copied!';setTimeout(()=>{btn.textContent='\uD83D\uDD17 Copy link';},2000);}
+  });
+}
+
+function shareFacebook(){
+  window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('https://ortholongevity.ai'),'_blank','width=600,height=400');
+}
+
+function shareLinkedIn(){
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent('https://ortholongevity.ai'),'_blank','width=600,height=400');
+}
+
+// ── SCORE CARD CANVAS GENERATOR (1080x1080) ─────────────────────────────
+
+function downloadScoreCardPNG(){
+  const R=calc(answers);
+  const {isTeen,age,kneeAge,jhs,diff,domains}=R;
+  const tierKey=getAdultTierKey(diff);
+  const status=getStatus(diff,isTeen,jhs,age);
+  const ageGap=Math.abs(diff);
+
+  const W=1080,H=1080;
+  const cvs=document.createElement('canvas');
+  cvs.width=W;cvs.height=H;
+  const ctx=cvs.getContext('2d');
+
+  // Tier-based background
+  const bgColors={elite:'#1E4D3B',above:'#1E4D3B',average:'#2A6B52',adjust:'#C97A2A',attention:'#B94040'};
+  const bg=bgColors[tierKey]||'#1E4D3B';
+  ctx.fillStyle=bg;
+  ctx.fillRect(0,0,W,H);
+
+  // Gold border
+  ctx.strokeStyle='#C9A84C';
+  ctx.lineWidth=6;
+  ctx.strokeRect(3,3,W-6,H-6);
+
+  // Top third — OrthoLongevity™ branding
+  ctx.font='bold 48px Georgia, serif';
+  ctx.fillStyle='#C9A84C';
+  ctx.textAlign='center';
+  ctx.fillText('OrthoLongevity\u2122',W/2,100);
+
+  // "KNEE AGE™" label above number
+  ctx.font='bold 28px Georgia, serif';
+  ctx.fillStyle='#C9A84C';
+  ctx.textAlign='center';
+  ctx.fillText('KNEE AGE\u2122',W/2,300);
+
+  // Large Knee Age number
+  const mainNum=isTeen?String(jhs):String(kneeAge);
+  ctx.font='bold 240px Georgia, serif';
+  ctx.fillStyle='#FFFFFF';
+  ctx.textAlign='center';
+  ctx.fillText(mainNum,W/2,530);
+
+  // "You are [age]" below
+  ctx.font='32px Georgia, serif';
+  ctx.fillStyle='#F5F0E6';
+  ctx.fillText('You are '+age,W/2,590);
+
+  // Tier badge — gold rounded rectangle
+  const tierLabels={elite:'Elite',above:'Above Average',average:'Average',adjust:'Needs Adjustment',attention:'Needs Attention'};
+  const tierLabel=tierLabels[tierKey]||'Average';
+  ctx.font='bold 26px Georgia, serif';
+  const badgeW=ctx.measureText(tierLabel).width+60;
+  const badgeX=(W-badgeW)/2;
+  const badgeY=620;
+  const badgeH=50;
+  const br=25;
+  ctx.fillStyle='#C9A84C';
+  ctx.beginPath();
+  ctx.moveTo(badgeX+br,badgeY);ctx.lineTo(badgeX+badgeW-br,badgeY);
+  ctx.arcTo(badgeX+badgeW,badgeY,badgeX+badgeW,badgeY+br,br);
+  ctx.lineTo(badgeX+badgeW,badgeY+badgeH-br);
+  ctx.arcTo(badgeX+badgeW,badgeY+badgeH,badgeX+badgeW-br,badgeY+badgeH,br);
+  ctx.lineTo(badgeX+br,badgeY+badgeH);
+  ctx.arcTo(badgeX,badgeY+badgeH,badgeX,badgeY+badgeH-br,br);
+  ctx.lineTo(badgeX,badgeY+br);
+  ctx.arcTo(badgeX,badgeY,badgeX+br,badgeY,br);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle=bg;
+  ctx.textAlign='center';
+  ctx.fillText(tierLabel,W/2,badgeY+35);
+
+  // Tier copy line
+  const tierCopy={
+    elite:'My joints are '+ageGap+' years younger than they should be.',
+    above:'Ahead of my age \u2014 and improving.',
+    average:'Right at average. Now I know what to change.',
+    adjust:'My joints are ageing faster than they should. Finding out was step one.',
+    attention:'This was a wake-up call. Exactly the right time to find out.'
+  };
+  const copyLine=tierCopy[tierKey]||tierCopy.average;
+  ctx.font='italic 26px Georgia, serif';
+  ctx.fillStyle='#F5F0E6';
+  ctx.textAlign='center';
+  // Word wrap the copy line
+  const copyWords=copyLine.split(' ');
+  let cLine='',cLines=[],cMaxW=W-120;
+  for(const w of copyWords){
+    const t=cLine+w+' ';
+    if(ctx.measureText(t).width>cMaxW&&cLine){cLines.push(cLine.trim());cLine=w+' ';}
+    else cLine=t;
+  }
+  if(cLine)cLines.push(cLine.trim());
+  const cStartY=720;
+  cLines.forEach((l,i)=>ctx.fillText(l,W/2,cStartY+i*36));
+
+  // Bottom — CTA
+  const bottomY=cStartY+cLines.length*36+60;
+  ctx.font='32px Georgia, serif';
+  ctx.fillStyle='#F5F0E6';
+  ctx.fillText('What\u2019s your Knee Age?',W/2,bottomY);
+
+  ctx.font='bold 34px Georgia, serif';
+  ctx.fillStyle='#C9A84C';
+  ctx.fillText('ortholongevity.ai',W/2,bottomY+50);
+
+  // Trigger download
+  const a=document.createElement('a');
+  a.href=cvs.toDataURL('image/png');
+  a.download='knee-age-score.png';
+  a.click();
 }
 
 function showShareModal(whatsappText){
