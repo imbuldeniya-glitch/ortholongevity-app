@@ -210,19 +210,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .share-btn-item:hover{background:rgba(255,255,255,.12)}
 .share-btn-item.primary{background:var(--teal);border-color:var(--teal)}
 .share-close{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;margin-top:10px;font-family:var(--fb)}
-.scorecard-wrap{margin:24px 0;text-align:center}
-.scorecard-wrap canvas{display:block;width:100%;max-width:500px;height:auto;margin:0 auto;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
-.sc-share-primary{display:block;width:100%;margin-top:14px;padding:16px 20px;background:#1E4D3B;border:1px solid rgba(201,168,76,.3);border-radius:14px;cursor:pointer;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#C9A84C;transition:background .2s,transform .1s;text-align:center}
-.sc-share-primary:hover{background:#255d48}
-.sc-share-primary:active{transform:scale(.97)}
-.sc-fallback-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
-.sc-fallback-btns button{display:inline-flex;align-items:center;gap:8px;background:#1E4D3B;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:12px 18px;cursor:pointer;font-family:Georgia,serif;font-size:14px;color:#C9A84C;transition:background .2s,transform .1s}
-.sc-fallback-btns button:hover{background:#255d48}
-.sc-fallback-btns button:active{transform:scale(.97)}
-.sc-secondary{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
-.sc-secondary button{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(201,168,76,.35);border-radius:10px;padding:9px 16px;cursor:pointer;font-family:Georgia,serif;font-size:13px;color:#C9A84C;transition:background .2s,transform .1s}
-.sc-secondary button:hover{background:rgba(201,168,76,.08)}
-.sc-secondary button:active{transform:scale(.97)}
+.scorecard-section{margin:2rem 0;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.scorecard-section canvas{width:100%;max-width:500px;height:auto;border-radius:16px;display:block;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.share-cta-box{width:100%;max-width:500px;border-radius:14px;padding:1.25rem 1.5rem;text-align:center;font-family:Georgia,serif;border:0.5px solid rgba(201,168,76,0.35);background:rgba(201,168,76,0.1)}
+.share-cta-headline{font-size:1.05rem;font-weight:bold;color:#C9A84C;line-height:1.4;margin-bottom:0.4rem}
+.share-cta-sub{font-size:0.8rem;font-style:italic;color:rgba(255,255,255,0.45)}
+.share-primary-btn{width:100%;max-width:500px;background:#C9A84C;color:#1E4D3B;font-family:Georgia,serif;font-size:1.1rem;font-weight:bold;padding:1rem;border-radius:12px;border:none;cursor:pointer;display:block}
+.share-primary-sub{font-family:Georgia,serif;font-size:0.78rem;font-style:italic;color:rgba(255,255,255,0.45);text-align:center;margin-top:0.35rem}
+.share-more-toggle{font-family:Georgia,serif;font-size:0.82rem;color:rgba(201,168,76,0.7);cursor:pointer;text-align:center;text-decoration:underline;background:none;border:none;margin-top:0.5rem}
+.share-more-options{display:none;flex-direction:column;align-items:center;gap:0.6rem;width:100%;max-width:500px}
+.share-more-options.open{display:flex}
+.share-secondary-btn{width:100%;max-width:500px;background:transparent;color:#C9A84C;font-family:Georgia,serif;font-size:0.9rem;padding:0.6rem 1rem;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);cursor:pointer}
+.share-tip{font-family:Georgia,serif;font-size:0.75rem;font-style:italic;color:rgba(255,255,255,0.35);text-align:center;max-width:500px;line-height:1.5}
+.share-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1E4D3B;color:#C9A84C;font-family:Georgia,serif;font-size:0.85rem;padding:0.6rem 1.2rem;border-radius:8px;border:0.5px solid rgba(201,168,76,0.4);z-index:9999;text-align:center}
+.paed-disclaimer{width:100%;max-width:500px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:0.75rem 1rem;font-family:Georgia,serif;font-size:0.78rem;font-style:italic;color:rgba(255,255,255,0.4);text-align:center;line-height:1.5}
 </style>
 </head>
 <body>
@@ -818,212 +819,434 @@ function prevQ(){
 }
 
 // ── Score Card Canvas ─────────────────────────────────────────────────────────
-function generateScoreCard(mainValue, chronAge, tier, punchyLine){
-  const W=1080,H=1080;
-  const cvs=document.createElement('canvas');
-  cvs.width=W; cvs.height=H;
-  const ctx=cvs.getContext('2d');
+// ── TIER CONFIG ──────────────────────────────────
 
-  // Tier colour map
-  const palettes={
-    elite:      {bg:'#1E4D3B',score:'#C9A84C',text:'#FFFFFF',badge:'#C9A84C'},
-    above:      {bg:'#1E4D3B',score:'#C9A84C',text:'#FFFFFF',badge:'#C9A84C'},
-    average:    {bg:'#2D6A4F',score:'#F9F5EE',text:'#FFFFFF',badge:'#F9F5EE'},
-    adjustment: {bg:'#C9A84C',score:'#1E4D3B',text:'#1C1C1C',badge:'#1E4D3B'},
-    attention:  {bg:'#8B2020',score:'#F9F5EE',text:'#FFFFFF',badge:'#F9F5EE'},
-    teen:       {bg:'#1E4D3B',score:'#C9A84C',text:'#FFFFFF',badge:'#C9A84C'}
-  };
-  const pal=palettes[tier]||palettes.average;
-  const isTeen=tier==='teen';
-  const gold='#C9A84C';
-
-  // Background
-  ctx.fillStyle=pal.bg;
-  ctx.fillRect(0,0,W,H);
-
-  // ── Top 15%: branding ──
-  ctx.textAlign='center';
-  ctx.fillStyle=gold;
-  ctx.font='36px Georgia, serif';
-  ctx.fillText('OrthoLongevity\u2122',W/2,100);
-  ctx.fillStyle=pal.text;
-  ctx.font='22px Georgia, serif';
-  ctx.fillText('Dr Arj Imbuldeniya',W/2,136);
-
-  // ── Middle: big number ──
-  ctx.fillStyle=pal.score;
-  ctx.font='bold 180px Georgia, serif';
-  ctx.textAlign='center';
-  if(isTeen){
-    ctx.fillText(String(mainValue),W/2,520);
-    ctx.font='60px Georgia, serif';
-    ctx.fillStyle=pal.text;
-    ctx.globalAlpha=0.6;
-    ctx.fillText('/100',W/2+ctx.measureText(String(mainValue)).width/2+10,520);
-    ctx.globalAlpha=1;
-  } else {
-    ctx.fillText(String(mainValue),W/2,520);
+const ADULT_TIERS = {
+  elite: {
+    label: 'ELITE', bg: '#1E4D3B', accent: '#C9A84C',
+    badgeBg: '#C9A84C', badgeText: '#1E4D3B',
+    textPrimary: '#C9A84C', textSecondary: 'rgba(249,245,238,0.7)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: "You\u2019re in the top 10%. Challenge your friends and family \u2014 can they beat your Knee Age?",
+    prompt: 'Top 10% of all scores. Who in your life needs to see this?'
+  },
+  above: {
+    label: 'ABOVE AVERAGE', bg: '#0D3D3A', accent: '#7ECEC4',
+    badgeBg: '#7ECEC4', badgeText: '#0D3D3A',
+    textPrimary: '#7ECEC4', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Your knees are younger than most people your age. Find out if your friends can say the same.',
+    prompt: 'Your knees are younger than most. Can your friends beat your score?'
+  },
+  average: {
+    label: 'AVERAGE', bg: '#1C2F3A', accent: '#F9F5EE',
+    badgeBg: 'rgba(249,245,238,0.15)', badgeText: '#F9F5EE',
+    textPrimary: '#F9F5EE', textSecondary: 'rgba(249,245,238,0.6)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Most people score here. Send this to someone you care about \u2014 their result might surprise you.',
+    prompt: 'Most people score here. Are your family doing better or worse?'
+  },
+  adjust: {
+    label: 'NEEDS ADJUSTMENT', bg: '#2D1F00', accent: '#E8A020',
+    badgeBg: 'rgba(232,160,32,0.2)', badgeText: '#E8A020',
+    textPrimary: '#E8A020', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Your joints need attention. So might someone else\u2019s in your life. Share this with them.',
+    prompt: 'Your joints need attention \u2014 and so might someone else\u2019s.'
+  },
+  attention: {
+    label: 'NEEDS ATTENTION', bg: '#2D0A0A', accent: '#E8856A',
+    badgeBg: 'rgba(232,133,106,0.2)', badgeText: '#E8856A',
+    textPrimary: '#E8856A', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'The earlier you know, the more you can do. This could be the most important thing you share this year.',
+    prompt: 'The earlier you know, the more you can do. Send this to someone you love.'
   }
+};
 
-  // ── Label below number ──
-  ctx.fillStyle=pal.text;
-  ctx.font='32px Georgia, serif';
-  if(isTeen){
-    ctx.fillText('Joint Health Score',W/2,570);
-  } else {
-    ctx.fillText('Knee Age',W/2,570);
-    // "I'm actually [age]"
-    ctx.font='28px -apple-system, Helvetica Neue, Arial, sans-serif';
-    ctx.globalAlpha=0.75;
-    ctx.fillText("I'm actually "+chronAge,W/2,614);
-    ctx.globalAlpha=1;
+const PAED_TIERS = {
+  peak: {
+    label: 'PEAK CONDITION', bg: '#1A5C3A', accent: '#F0C040',
+    badgeBg: '#F0C040', badgeText: '#1A5C3A',
+    textPrimary: '#F0C040', textSecondary: 'rgba(249,245,238,0.7)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Top of the class. Can your teammates beat this?',
+    prompt: 'Top of the class. Challenge your friends.'
+  },
+  strong: {
+    label: 'STRONG FOUNDATION', bg: '#0A4A4A', accent: '#7ECEC4',
+    badgeBg: '#7ECEC4', badgeText: '#0A4A4A',
+    textPrimary: '#7ECEC4', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Better than most. Challenge your friends.',
+    prompt: 'Better than most. See how your friends compare.'
+  },
+  build: {
+    label: 'ROOM TO BUILD', bg: '#0D2B5E', accent: '#7EB8E8',
+    badgeBg: 'rgba(126,184,232,0.2)', badgeText: '#7EB8E8',
+    textPrimary: '#7EB8E8', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'You\u2019ve got potential. See how your friends compare.',
+    prompt: 'You\u2019ve got potential. Is your mate in better shape?'
+  },
+  train: {
+    label: 'TIME TO TRAIN', bg: '#3D2000', accent: '#E8900A',
+    badgeBg: 'rgba(232,144,10,0.2)', badgeText: '#E8900A',
+    textPrimary: '#E8900A', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Your body is telling you something. Is your mate in better shape?',
+    prompt: 'Your body is telling you something. Time to act.'
+  },
+  concern: {
+    label: 'NEEDS ATTENTION', bg: '#1A1A2E', accent: '#E87060',
+    badgeBg: 'rgba(232,112,96,0.2)', badgeText: '#E87060',
+    textPrimary: '#E87060', textSecondary: 'rgba(249,245,238,0.65)',
+    trackFill: 'rgba(255,255,255,0.08)',
+    cta: 'Early warning is early advantage. Share this with a parent or someone who needs to know.',
+    prompt: 'Early warning is early advantage. Talk to someone you trust.'
   }
+};
 
-  // ── Tier badge pill ──
-  const badgeLabels={elite:'ELITE',above:'ABOVE AVERAGE',average:'AVERAGE',adjustment:'NEEDS ADJUSTMENT',attention:'NEEDS ATTENTION',teen:'JOINT HEALTH'};
-  const badgeText=badgeLabels[tier]||'';
-  ctx.font='bold 28px -apple-system, Helvetica Neue, Arial, sans-serif';
-  const bm=ctx.measureText(badgeText);
-  const bw=bm.width+60, bh=52, bx=W/2-bw/2, by=isTeen?610:650;
-  ctx.fillStyle=pal.badge;
-  ctx.globalAlpha=0.18;
-  ctx.beginPath();
-  const br=bh/2;
-  ctx.moveTo(bx+br,by);ctx.lineTo(bx+bw-br,by);ctx.arcTo(bx+bw,by,bx+bw,by+br,br);ctx.arcTo(bx+bw,by+bh,bx+bw-br,by+bh,br);ctx.lineTo(bx+br,by+bh);ctx.arcTo(bx,by+bh,bx,by+bh-br,br);ctx.arcTo(bx,by,bx+br,by,br);ctx.closePath();ctx.fill();
-  ctx.globalAlpha=1;
-  ctx.fillStyle=pal.badge;
-  ctx.textAlign='center';
-  ctx.fillText(badgeText,W/2,by+35);
-
-  // ── Punchy line (italic Georgia, max 60 chars, word-wrapped) ──
-  const line=punchyLine&&punchyLine.length>60?punchyLine.slice(0,57)+'…':punchyLine||'';
-  ctx.font='italic 26px Georgia, serif';
-  ctx.fillStyle=pal.text;
-  ctx.globalAlpha=0.85;
-  const pWords=line.split(' ');
-  let pLine='',pLines=[],pMax=W-160;
-  for(const w of pWords){
-    const t=pLine+w+' ';
-    if(ctx.measureText(t).width>pMax&&pLine){pLines.push(pLine.trim());pLine=w+' ';}
-    else pLine=t;
-  }
-  if(pLine)pLines.push(pLine.trim());
-  const pStartY=isTeen?690:730;
-  pLines.forEach((l,i)=>ctx.fillText(l,W/2,pStartY+i*36));
-  ctx.globalAlpha=1;
-
-  // ── Bottom strip ──
-  ctx.font='20px -apple-system, Helvetica Neue, Arial, sans-serif';
-  ctx.fillStyle=pal.text;
-  ctx.globalAlpha=0.7;
-  ctx.textAlign='left';
-  ctx.fillText('Biology first. Surgery last.',60,H-50);
-  ctx.textAlign='right';
-  ctx.fillStyle=gold;
-  ctx.globalAlpha=1;
-  ctx.fillText('ortholongevity.ai',W-60,H-50);
-
-  return cvs;
+function getPaedTierKey(score) {
+  if (score >= 85) return 'peak';
+  if (score >= 70) return 'strong';
+  if (score >= 55) return 'build';
+  if (score >= 40) return 'train';
+  return 'concern';
 }
 
-function insertScoreCard(container, isTeen, mainValue, chronAge, tier, punchyLine){
-  const cvs = generateScoreCard(mainValue, chronAge, tier, punchyLine);
+function getAdultTierKey(delta) {
+  if (delta <= -4) return 'elite';
+  if (delta < 0)   return 'above';
+  if (delta <= 0)  return 'average';
+  if (delta <= 4)  return 'adjust';
+  return 'attention';
+}
 
-  const caption = isTeen
-    ? 'My Joint Health Score is '+mainValue+'/100. Can you beat it? \u2192 ortholongevity.ai'
-    : 'My Knee Age is '+mainValue+'. I\u2019m actually '+chronAge+'. What\u2019s yours? Take the free 60-second test \u2192 ortholongevity.ai';
+// ── CANVAS HELPERS ───────────────────────────────
 
-  const wrap=document.createElement('div');
-  wrap.className='scorecard-wrap';
-  wrap.appendChild(cvs);
+function scDivider(ctx, y) {
+  ctx.beginPath(); ctx.moveTo(80, y); ctx.lineTo(1000, y);
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 0.5; ctx.stroke();
+}
 
-  // Helper: download canvas as PNG
-  function triggerDownload(){
-    const a=document.createElement('a');
-    a.href=cvs.toDataURL('image/png');
-    a.download='my-knee-age.png';
-    a.click();
-  }
+function scRoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r); ctx.lineTo(x+w,y+h-r);
+  ctx.arcTo(x+w,y+h,x+w-r,y+h,r); ctx.lineTo(x+r,y+h);
+  ctx.arcTo(x,y+h,x,y+h-r,r); ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
+}
 
-  // Helper: get canvas as File via toBlob
-  function getCanvasFile(){
-    return new Promise(resolve=>{
-      cvs.toBlob(blob=>{
-        resolve(new File([blob],'my-knee-age.png',{type:'image/png'}));
-      },'image/png');
-    });
-  }
+function scDots(ctx, accentHex) {
+  ctx.fillStyle = accentHex + '11';
+  for (let x=40; x<1080; x+=40)
+    for (let y=40; y<1080; y+=40) {
+      ctx.beginPath(); ctx.arc(x,y,1.2,0,Math.PI*2); ctx.fill();
+    }
+}
 
-  // Check Web Share API with file support
-  const canNativeShare=(()=>{
-    try{
-      if(!navigator.canShare) return false;
-      const f=new File([new Blob([''],{type:'image/png'})],'test.png',{type:'image/png'});
-      return navigator.canShare({files:[f]});
-    }catch(e){return false;}
-  })();
+function scWrapText(ctx, text, x, y, maxW, lineH) {
+  const words = text.split(' ');
+  let line = '', cy = y;
+  words.forEach((word, i) => {
+    const test = line + word + ' ';
+    if (ctx.measureText(test).width > maxW && line !== '') {
+      ctx.fillText(line.trim(), x, cy); cy += lineH; line = word + ' ';
+    } else { line = test; }
+    if (i === words.length - 1) ctx.fillText(line.trim(), x, cy);
+  });
+}
 
-  if(canNativeShare){
-    // PRIMARY: native share sheet (mobile)
-    const shareBtn=document.createElement('button');
-    shareBtn.className='sc-share-primary';
-    shareBtn.textContent='Share your score card';
-    shareBtn.onclick=async()=>{
-      try{
-        const file=await getCanvasFile();
-        await navigator.share({
-          title:'My Knee Age \u2014 OrthoLongevity\u2122',
-          text:caption,
-          files:[file]
-        });
-      }catch(e){
-        // User cancelled or error — silently ignore
+function scBadge(ctx, label, tier, y) {
+  ctx.font = 'bold 19px Georgia, serif';
+  const badgeW = Math.max(240, ctx.measureText(label).width + 70);
+  const badgeX = 540 - badgeW / 2;
+  scRoundRect(ctx, badgeX, y, badgeW, 48, 24);
+  ctx.fillStyle = tier.badgeBg; ctx.fill();
+  ctx.fillStyle = tier.badgeText;
+  ctx.textAlign = 'center';
+  ctx.fillText(label, 540, y + 31);
+}
+
+function scPillarBars(ctx, pillarsData, tier, startY) {
+  const barGap=52, barX=340, barW=580, barH=9;
+  pillarsData.forEach((p, i) => {
+    const rowY = startY + i * barGap;
+    ctx.textAlign='left'; ctx.fillStyle=tier.textSecondary;
+    ctx.font='20px Georgia, serif'; ctx.fillText(p.label, 80, rowY);
+    scRoundRect(ctx, barX, rowY-barH+2, barW, barH, 4);
+    ctx.fillStyle=tier.trackFill; ctx.fill();
+    const fillW = Math.max(8, (p.value/100)*barW);
+    scRoundRect(ctx, barX, rowY-barH+2, fillW, barH, 4);
+    ctx.fillStyle=tier.accent; ctx.fill();
+    ctx.textAlign='right'; ctx.fillStyle=tier.accent;
+    ctx.font='bold 20px Georgia, serif';
+    ctx.fillText(p.value+'%', 1000, rowY);
+  });
+}
+
+// ── ADULT CARD ───────────────────────────────────
+
+function buildAdultCard(kneeAge, age, tierKey, domains) {
+  const tier = ADULT_TIERS[tierKey] || ADULT_TIERS.average;
+  const canvas = document.createElement('canvas');
+  canvas.width=1080; canvas.height=1080;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle=tier.bg; ctx.fillRect(0,0,1080,1080);
+  scDots(ctx, tier.accent);
+
+  ctx.textAlign='center';
+  ctx.fillStyle=tier.accent; ctx.font='bold 38px Georgia, serif';
+  ctx.fillText('OrthoLongevity\u2122', 540, 72);
+  ctx.fillStyle=tier.textSecondary; ctx.font='21px Georgia, serif';
+  ctx.fillText('Dr Arj Imbuldeniya \u00B7 Consultant Knee & Hip Surgeon', 540, 110);
+
+  scDivider(ctx, 138);
+
+  ctx.fillStyle=tier.textSecondary; ctx.font='italic 30px Georgia, serif';
+  ctx.fillText('Your Knee Age is', 540, 200);
+  ctx.fillStyle=tier.textPrimary; ctx.font='bold 210px Georgia, serif';
+  ctx.fillText(String(kneeAge), 540, 425);
+  ctx.fillStyle=tier.textSecondary; ctx.font='29px Georgia, serif';
+  ctx.fillText('You are actually '+age, 540, 482);
+
+  scBadge(ctx, tier.label, tier, 512);
+  scDivider(ctx, 590);
+
+  const pillarsData = [
+    {label:'Muscle Strength',      value:domains.strength},
+    {label:'Metabolic Health',     value:domains.bio},
+    {label:'Movement & Load',      value:domains.move},
+    {label:'Recovery Capacity',    value:domains.injury},
+    {label:'Joint Resilience',     value:domains.genetic}
+  ];
+  scPillarBars(ctx, pillarsData, tier, 628);
+
+  scDivider(ctx, 900);
+  ctx.textAlign='center'; ctx.fillStyle=tier.textSecondary;
+  ctx.font='italic 23px Georgia, serif';
+  scWrapText(ctx, tier.prompt, 540, 932, 820, 30);
+  scDivider(ctx, 992);
+
+  ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='19px Georgia, serif';
+  ctx.textAlign='left'; ctx.fillText('Biology first. Surgery last.', 80, 1032);
+  ctx.fillStyle=tier.accent; ctx.textAlign='right';
+  ctx.fillText('ortholongevity.ai', 1000, 1032);
+
+  return canvas;
+}
+
+// ── PAEDIATRIC CARD ──────────────────────────────
+
+function buildPaedCard(score, domains) {
+  const tierKey = getPaedTierKey(score);
+  const tier = PAED_TIERS[tierKey];
+  const canvas = document.createElement('canvas');
+  canvas.width=1080; canvas.height=1080;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle=tier.bg; ctx.fillRect(0,0,1080,1080);
+  scDots(ctx, tier.accent);
+
+  ctx.textAlign='center';
+  ctx.fillStyle=tier.accent; ctx.font='bold 36px Georgia, serif';
+  ctx.fillText('OrthoLongevity\u2122', 540, 70);
+  ctx.fillStyle=tier.textSecondary; ctx.font='21px Georgia, serif';
+  ctx.fillText('Joint Health Assessment \u00B7 Ages 13\u201317', 540, 108);
+
+  scDivider(ctx, 136);
+
+  ctx.fillStyle=tier.textSecondary; ctx.font='italic 30px Georgia, serif';
+  ctx.fillText('Your Joint Health Score', 540, 198);
+  ctx.fillStyle=tier.textPrimary; ctx.font='bold 210px Georgia, serif';
+  ctx.fillText(String(score), 540, 415);
+  ctx.fillStyle=tier.textSecondary; ctx.font='28px Georgia, serif';
+  ctx.fillText('out of 100', 540, 468);
+
+  scBadge(ctx, tier.label, tier, 498);
+  scDivider(ctx, 578);
+
+  const pillarsData = [
+    {label:'Muscle Power',           value:domains.strength},
+    {label:'Metabolic Health',       value:domains.bio},
+    {label:'Movement & Flexibility', value:domains.move},
+    {label:'Recovery Speed',         value:domains.injury},
+    {label:'Joint Resilience',       value:domains.genetic}
+  ];
+  scPillarBars(ctx, pillarsData, tier, 618);
+
+  scDivider(ctx, 890);
+  ctx.textAlign='center'; ctx.fillStyle=tier.textSecondary;
+  ctx.font='italic 23px Georgia, serif';
+  scWrapText(ctx, tier.prompt, 540, 922, 820, 30);
+  scDivider(ctx, 982);
+
+  ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='19px Georgia, serif';
+  ctx.textAlign='left'; ctx.fillText('Biology first. Surgery last.', 80, 1022);
+  ctx.fillStyle=tier.accent; ctx.textAlign='right';
+  ctx.fillText('ortholongevity.ai', 1000, 1022);
+
+  return canvas;
+}
+
+// ── CAPTIONS ─────────────────────────────────────
+
+function getAdultCaption(kneeAge, age, domains) {
+  const top = Object.entries({
+    'Muscle Strength': domains.strength,
+    'Metabolic Health': domains.bio,
+    'Movement & Load': domains.move,
+    'Recovery Capacity': domains.injury,
+    'Joint Resilience': domains.genetic
+  }).sort((a,b) => b[1] - a[1])[0];
+
+  return 'My Knee Age is '+kneeAge+'. I\u2019m actually '+age+'.'+
+    '\nTop score: '+top[0]+' '+top[1]+'%.'+
+    '\n\nWhat\u2019s yours? Free 60-second test \u2192 ortholongevity.ai'+
+    '\n\nSend this to someone whose knees you\u2019ve been quietly worried about.';
+}
+
+function getPaedCaption(score) {
+  return 'My Joint Health Score is '+score+'/100.'+
+    '\n\nCan you beat it?'+
+    '\n\nFree test \u2192 ortholongevity.ai'+
+    '\n\nChallenge your friends and see who has the healthiest joints.';
+}
+
+// ── SHARE SYSTEM ─────────────────────────────────
+
+function scTriggerDownload(canvas, filename) {
+  const a = document.createElement('a');
+  a.download = filename || 'my-knee-age-scorecard.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+function scShowToast(msg) {
+  const old = document.querySelector('.share-toast');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'share-toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(function(){ el.remove(); }, 4000);
+}
+
+async function scShareCard(canvas, caption, filename) {
+  if (navigator.canShare) {
+    canvas.toBlob(async function(blob) {
+      const file = new File([blob], filename||'my-knee-age.png', {type:'image/png'});
+      try {
+        await navigator.share({title:'My Knee Age \u2014 OrthoLongevity\u2122', text:caption, files:[file]});
+      } catch(e) {
+        if (e.name !== 'AbortError') {
+          scTriggerDownload(canvas, filename);
+          scShowToast('Image saved \u2014 attach it to WhatsApp or Snapchat manually');
+        }
       }
-    };
-    wrap.appendChild(shareBtn);
+    }, 'image/png');
   } else {
-    // FALLBACK: desktop buttons
-    const fb=document.createElement('div');
-    fb.className='sc-fallback-btns';
+    scTriggerDownload(canvas, filename);
+    scShowToast('Image saved to Downloads \u2014 attach it manually to WhatsApp or Snapchat');
+  }
+}
 
-    const dlBtn=document.createElement('button');
-    dlBtn.textContent='\u2B07 Download image';
-    dlBtn.onclick=triggerDownload;
-    fb.appendChild(dlBtn);
+// ── INSERT SCORE CARD INTO PAGE ──────────────────
 
-    const cpBtn=document.createElement('button');
-    cpBtn.textContent='\uD83D\uDCCB Copy caption';
-    cpBtn.onclick=()=>{
-      navigator.clipboard.writeText(caption).then(()=>{
-        cpBtn.textContent='\u2713 Copied!';
-        setTimeout(()=>{cpBtn.textContent='\uD83D\uDCCB Copy caption';},2000);
-      });
-    };
-    fb.appendChild(cpBtn);
+function insertScoreCard(container, isTeen, mainValue, chronAge, tierKey, domains) {
+  const isPaed = isTeen;
+  const filename = isPaed ? 'my-joint-score.png' : 'my-knee-age.png';
+  let canvas, caption, tierConfig;
 
-    const waBtn=document.createElement('button');
-    waBtn.textContent='\uD83D\uDCAC WhatsApp';
-    waBtn.onclick=()=>{window.open('https://wa.me/?text='+encodeURIComponent(caption),'_blank');};
-    fb.appendChild(waBtn);
-
-    wrap.appendChild(fb);
+  if (isPaed) {
+    const ptk = getPaedTierKey(mainValue);
+    tierConfig = PAED_TIERS[ptk];
+    canvas = buildPaedCard(mainValue, domains);
+    caption = getPaedCaption(mainValue);
+  } else {
+    tierConfig = ADULT_TIERS[tierKey] || ADULT_TIERS.average;
+    canvas = buildAdultCard(mainValue, chronAge, tierKey, domains);
+    caption = getAdultCaption(mainValue, chronAge, domains);
   }
 
-  // SECONDARY: always-visible download row
-  const sec=document.createElement('div');
-  sec.className='sc-secondary';
-  const secDl=document.createElement('button');
-  secDl.textContent='\u2B07 Download image';
-  secDl.onclick=triggerDownload;
-  sec.appendChild(secDl);
-  wrap.appendChild(sec);
+  const section = document.createElement('div');
+  section.className = 'scorecard-section';
+  section.appendChild(canvas);
 
-  const tip=document.createElement('div');
-  tip.style.cssText='font-size:11px;color:rgba(247,243,237,.45);text-align:center;margin-top:6px';
-  tip.textContent='Downloaded image can be posted to Instagram or TikTok';
-  wrap.appendChild(tip);
+  const ctaBox = document.createElement('div');
+  ctaBox.className = 'share-cta-box';
+  ctaBox.innerHTML =
+    '<div class="share-cta-headline">'+tierConfig.cta+'</div>'+
+    '<div class="share-cta-sub">Free 60-second test \u00B7 ortholongevity.ai</div>';
+  section.appendChild(ctaBox);
 
-  container.appendChild(wrap);
+  const primaryBtn = document.createElement('button');
+  primaryBtn.className = 'share-primary-btn';
+  primaryBtn.textContent = 'Send your score card to friends';
+  primaryBtn.onclick = function(){ scShareCard(canvas, caption, filename); };
+  section.appendChild(primaryBtn);
+
+  const primarySub = document.createElement('p');
+  primarySub.className = 'share-primary-sub';
+  primarySub.textContent = 'Opens WhatsApp, Snapchat, Instagram & more \u2014 no screenshot needed';
+  section.appendChild(primarySub);
+
+  const moreToggle = document.createElement('button');
+  moreToggle.className = 'share-more-toggle';
+  moreToggle.textContent = 'More ways to share \u2193';
+  const moreOptions = document.createElement('div');
+  moreOptions.className = 'share-more-options';
+  moreToggle.onclick = function(){
+    moreOptions.classList.toggle('open');
+    moreToggle.textContent = moreOptions.classList.contains('open')
+      ? 'Less options \u2191' : 'More ways to share \u2193';
+  };
+  section.appendChild(moreToggle);
+
+  const dlBtn = document.createElement('button');
+  dlBtn.className = 'share-secondary-btn';
+  dlBtn.textContent = '\u2193 Download image to phone';
+  dlBtn.onclick = function(){
+    scTriggerDownload(canvas, filename);
+    scShowToast('Saved \u2014 find it in your camera roll to post to Instagram or Snapchat');
+  };
+  moreOptions.appendChild(dlBtn);
+
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'share-secondary-btn';
+  copyBtn.textContent = '\u29C9 Copy caption';
+  copyBtn.onclick = function(){
+    navigator.clipboard.writeText(caption).then(function(){
+      scShowToast('Caption copied \u2014 paste into WhatsApp, Instagram or TikTok');
+    });
+  };
+  moreOptions.appendChild(copyBtn);
+
+  const waBtn = document.createElement('button');
+  waBtn.className = 'share-secondary-btn';
+  waBtn.textContent = '\uD83D\uDCAC Send via WhatsApp';
+  waBtn.onclick = function(){
+    window.open('https://wa.me/?text='+encodeURIComponent(caption), '_blank');
+  };
+  moreOptions.appendChild(waBtn);
+
+  const tip = document.createElement('p');
+  tip.className = 'share-tip';
+  tip.textContent = 'For Snapchat and Instagram Stories: download the image first, then attach from your camera roll.';
+  moreOptions.appendChild(tip);
+  section.appendChild(moreOptions);
+
+  if (isPaed) {
+    const disclaimer = document.createElement('p');
+    disclaimer.className = 'paed-disclaimer';
+    disclaimer.textContent = 'For general wellness only. Please discuss your result with a parent or healthcare professional.';
+    section.appendChild(disclaimer);
+  }
+
+  container.appendChild(section);
 }
 
 // ── Result ────────────────────────────────────────────────────────────────────
@@ -1383,19 +1606,11 @@ function showResult(){
   const scSlot=document.getElementById('scorecardSlot');
   if(scSlot){
     // Determine tier key
-    let tierKey='average';
-    if(isTeen) tierKey='teen';
-    else if(diff<=-4) tierKey='elite';
-    else if(diff<=-1) tierKey='above';
-    else if(diff<=0) tierKey='average';
-    else if(diff<=4) tierKey='adjustment';
-    else tierKey='attention';
-
-    const punchyLine=status.reaction.length<=60?status.reaction:status.statusLine;
+    const tierKey = getAdultTierKey(diff);
     if(isTeen){
-      insertScoreCard(scSlot, true, jhs, null, 'teen', punchyLine);
+      insertScoreCard(scSlot, true, jhs, null, null, domains);
     } else {
-      insertScoreCard(scSlot, false, kneeAge, age, tierKey, punchyLine);
+      insertScoreCard(scSlot, false, kneeAge, age, tierKey, domains);
     }
   }
 
