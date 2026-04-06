@@ -605,6 +605,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if(input) input.addEventListener('keydown', e => {
     if(e.key === 'Enter') submitEmail();
   });
+
+  document.querySelectorAll('a[href="#email-capture"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.getElementById('email-capture');
+      if(el){
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({top, behavior:'smooth'});
+      }
+    });
+  });
 });
 </script>
 
