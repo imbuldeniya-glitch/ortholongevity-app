@@ -328,7 +328,7 @@ const QS = [
      {v:'peri',       ic:'🌊',lb:'Perimenopausal — irregular periods or symptoms',nt:'Hot flushes, sleep changes, mood changes',sc:68},
      {v:'post_nat',   ic:'🍂',lb:'Post-menopausal — natural',sc:55},
      {v:'post_early', ic:'⚠️',lb:'Early or surgical menopause — before age 45',nt:'Higher joint risk category',sc:28},
-     {v:'hrt',        ic:'💊',lb:'Post-menopausal, currently on HRT',nt:'HRT has a protective effect on cartilage',sc:72},
+     {v:'hrt',        ic:'💊',lb:'Perimenopausal or post-menopausal, currently on HRT',nt:'HRT (hormone replacement therapy) has a protective effect on cartilage in perimenopausal and post-menopausal women',sc:72},
      {v:'unsure',     ic:'❓',lb:'Not sure / prefer not to say',sc:75}
    ]},
 
@@ -550,7 +550,7 @@ function getMenoPanel(s){
     peri:{ic:'🌊',lbl:'Perimenopausal joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Oestrogen fluctuation directly affects cartilage. Strength training and protein are your biggest levers now.',cta:null},
     post_nat:{ic:'🍂',lbl:'Post-menopausal joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Sustained oestrogen loss accelerates cartilage wear. Strength training is the single most effective response.',cta:null},
     post_early:{ic:'⚠️',lbl:'Early or surgical menopause — elevated joint risk',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'The highest-risk hormonal category for joints. Acting early makes the biggest difference.',cta:'Book a 360 Assessment at Lanserhof Mayfair'},
-    hrt:{ic:'💊',lbl:'HRT and joint health',c:'#27a96c',bg:'rgba(29,158,117,.08)',bdr:'rgba(29,158,117,.3)',body:'HRT protects cartilage \u2014 that\'s in your result. Strength training alongside it maximises the benefit.',cta:null},
+    hrt:{ic:'💊',lbl:'HRT and joint health',c:'#27a96c',bg:'rgba(29,158,117,.08)',bdr:'rgba(29,158,117,.3)',body:'HRT protects cartilage in perimenopausal and post-menopausal women \u2014 that\'s in your result. Strength training alongside it maximises the benefit.',cta:null},
   };
   return P[s]||null;
 }
