@@ -1308,12 +1308,12 @@ function showResult(){
 
   // Share text
   const shareText = isTeen
-    ? `My joint health score is ${jhs}/100 — how do your joints compare? Share yours → ortholongevity.ai`
+    ? `My joint health score is ${jhs}/100 — how do your joints compare? Share yours → kneeage.com`
     : diff<=-3
-      ? `I'm ${age}. I've got the knees of a ${kneeAge}-year-old. Test yours → ortholongevity.ai`
+      ? `I'm ${age}. I've got the knees of a ${kneeAge}-year-old. Test yours → kneeage.com`
       : diff<=3
-        ? `I'm ${age}. My Knee Age is ${kneeAge}. Just found out — test yours → ortholongevity.ai`
-        : `I'm ${age}. My Knee Age is ${kneeAge}. I'm fixing this → ortholongevity.ai`
+        ? `I'm ${age}. My Knee Age is ${kneeAge}. Just found out — test yours → kneeage.com`
+        : `I'm ${age}. My Knee Age is ${kneeAge}. I'm fixing this → kneeage.com`
 
   // Hero section
   const heroHTML = isTeen ? `
@@ -1886,7 +1886,7 @@ function showShareModal(whatsappText){
   // Bottom CTA
   ctx.font='500 20px DM Sans, Arial';
   ctx.fillStyle='#1d9e75';
-  ctx.fillText('Test yours → ortholongevity.ai', W/2, H-60);
+  ctx.fillText('Test yours → kneeage.com', W/2, H-60);
 
   ctx.font='400 16px DM Sans, Arial';
   ctx.fillStyle='rgba(247,243,237,.3)';
@@ -1922,7 +1922,7 @@ function showShareModal(whatsappText){
     });
   };
   bg.querySelector('#cpBtn').onclick=()=>{
-    navigator.clipboard.writeText('https://ortholongevity.ai').then(()=>{
+    navigator.clipboard.writeText('https://kneeage.com').then(()=>{
       bg.querySelector('#cpBtn').textContent='✓ Copied!';
       setTimeout(()=>{bg.querySelector('#cpBtn').textContent='🔗 Copy link';},2000);
     });
