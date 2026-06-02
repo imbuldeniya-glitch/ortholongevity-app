@@ -235,6 +235,43 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(15,45,30,.95
 .practice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:768px){.practice-grid{grid-template-columns:1fr}}
 
+/* PRIME ASSESSMENT */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.prime{padding:84px 24px;background:var(--forest);border-top:1px solid rgba(201,168,76,.14)}
+.prime-inner{max-width:1100px;margin:0 auto}
+.prime-head{text-align:center;margin-bottom:54px}
+.prime-h{font-family:var(--fd);font-size:clamp(30px,4.2vw,46px);font-weight:700;color:var(--cream);line-height:1.12}
+.prime-h-gold{color:var(--gold)}
+.prime-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;list-style:none;padding:0;margin:0}
+.prime-col{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 18px;border-right:1px solid rgba(201,168,76,.16)}
+.prime-col:last-child{border-right:none}
+.prime-letter{font-family:var(--fd);font-weight:700;font-size:clamp(64px,8vw,116px);line-height:1;color:var(--gold);margin-bottom:10px;display:block}
+.prime-name{font-family:var(--fd);font-size:19px;font-weight:700;color:var(--cream);margin-bottom:8px}
+.prime-desc{font-size:13px;line-height:1.55;color:rgba(247,243,237,.6);max-width:170px}
+.prime-foot{text-align:center;margin-top:46px;font-size:13px;letter-spacing:.03em;color:var(--muted)}
+@media(max-width:900px){
+  .prime-grid{grid-template-columns:repeat(3,1fr);gap:30px 0}
+  .prime-col:nth-child(3n),.prime-col:last-child{border-right:none}
+}
+@media(max-width:560px){
+  .prime{padding:60px 20px}
+  .prime-head{margin-bottom:34px}
+  .prime-grid{grid-template-columns:1fr;gap:0}
+  .prime-col{flex-direction:row;align-items:center;text-align:left;gap:18px;padding:18px 4px;border-right:none;border-top:1px solid rgba(201,168,76,.14)}
+  .prime-col:first-child{border-top:none}
+  .prime-letter{font-size:54px;width:50px;flex-shrink:0;margin-bottom:0;text-align:center}
+  .prime-name{margin-bottom:3px;font-size:18px}
+  .prime-desc{max-width:none}
+}
+@media(prefers-reduced-motion:no-preference){
+  .prime.anim-ready .prime-col{opacity:0;transform:translateY(18px)}
+  .prime.anim-ready.revealed .prime-col{opacity:1;transform:none;transition:opacity .4s ease,transform .4s ease}
+  .prime.anim-ready.revealed .prime-col:nth-child(2){transition-delay:80ms}
+  .prime.anim-ready.revealed .prime-col:nth-child(3){transition-delay:160ms}
+  .prime.anim-ready.revealed .prime-col:nth-child(4){transition-delay:240ms}
+  .prime.anim-ready.revealed .prime-col:nth-child(5){transition-delay:320ms}
+}
+
 /* STATS BAR */
 .stats-bar{background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:20px 24px}
 .stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0}
@@ -448,6 +485,63 @@ document.getElementById('nav-links').addEventListener('click',function(e){
   </div>
 </div>
 
+
+<!-- PRIME ASSESSMENT -->
+<section class="prime" id="prime" aria-labelledby="prime-h">
+  <div class="prime-inner">
+    <div class="prime-head">
+      <h2 class="prime-h" id="prime-h">Five domains. One score.<br/><span class="prime-h-gold">Your Knee Age&trade;.</span></h2>
+      <p class="sr-only">PRIME is the five-domain assessment behind your Knee Age: Power, Risk, Injury, Movement, and Endocrine &amp; Metabolic.</p>
+    </div>
+    <ol class="prime-grid">
+      <li class="prime-col">
+        <span class="prime-letter" aria-hidden="true">P</span>
+        <h3 class="prime-name">Power</h3>
+        <p class="prime-desc">Strength and force capacity</p>
+      </li>
+      <li class="prime-col">
+        <span class="prime-letter" aria-hidden="true">R</span>
+        <h3 class="prime-name">Risk</h3>
+        <p class="prime-desc">Genetic and genomic risk</p>
+      </li>
+      <li class="prime-col">
+        <span class="prime-letter" aria-hidden="true">I</span>
+        <h3 class="prime-name">Injury</h3>
+        <p class="prime-desc">Injury and load history</p>
+      </li>
+      <li class="prime-col">
+        <span class="prime-letter" aria-hidden="true">M</span>
+        <h3 class="prime-name">Movement</h3>
+        <p class="prime-desc">Range, mechanics, posture and function</p>
+      </li>
+      <li class="prime-col">
+        <span class="prime-letter" aria-hidden="true">E</span>
+        <h3 class="prime-name">Endocrine &amp; Metabolic</h3>
+        <p class="prime-desc">Hormones, metabolism and inflammation</p>
+      </li>
+    </ol>
+    <p class="prime-foot">PRIME measures. Knee Age scores. R.E.P.A.I.R.&trade; treats.</p>
+  </div>
+</section>
+<script>
+(function(){
+  var sec=document.getElementById('prime');
+  if(!sec) return;
+  if(!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  sec.classList.add('anim-ready');
+  var done=false;
+  function reveal(){ if(done) return; done=true; sec.classList.add('revealed'); window.removeEventListener('scroll',onScroll); }
+  function inView(){ var r=sec.getBoundingClientRect(); var h=window.innerHeight||document.documentElement.clientHeight; return r.top < h*0.85 && r.bottom > 0; }
+  function onScroll(){ if(inView()) reveal(); }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ reveal(); io.disconnect(); } }); },{threshold:0.15});
+    io.observe(sec);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  if(inView()) reveal();
+  setTimeout(reveal,1600); /* safety net: content is never left hidden */
+})();
+</script>
 
 <!-- WHERE WE PRACTISE -->
 <div style="background:var(--forest);padding:60px 24px 48px">

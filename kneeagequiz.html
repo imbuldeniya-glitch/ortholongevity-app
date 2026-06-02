@@ -241,6 +241,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .share-secondary-btn{width:100%;max-width:500px;background:transparent;color:#C9A84C;font-family:Georgia,serif;font-size:0.9rem;padding:0.6rem 1rem;border-radius:10px;border:0.5px solid rgba(201,168,76,0.4);cursor:pointer}
 .share-tip{font-family:Georgia,serif;font-size:0.75rem;font-style:italic;color:rgba(255,255,255,0.35);text-align:center;max-width:500px;line-height:1.5}
 .share-toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1E4D3B;color:#C9A84C;font-family:Georgia,serif;font-size:0.85rem;padding:0.6rem 1.2rem;border-radius:8px;border:0.5px solid rgba(201,168,76,0.4);z-index:9999;text-align:center}
+/* PRIME BREAKDOWN (results) */
+.prime-breakdown{text-align:left;margin:6px 0 22px;padding-top:22px;border-top:1px solid rgba(255,255,255,.08)}
+.pb-h{font-family:var(--fd);font-size:clamp(20px,4.5vw,26px);font-weight:700;color:var(--cream);margin-bottom:2px}
+.pb-sub{font-size:13px;color:rgba(247,243,237,.55);margin-bottom:20px}
+.pb-row{margin-bottom:16px}
+.pb-meta{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.pb-letter{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--gold);line-height:1;width:18px;flex-shrink:0;text-align:center}
+.pb-name{font-size:14px;font-weight:600;color:var(--cream);flex:1;display:flex;align-items:center;gap:7px}
+.pb-score{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--teal-l)}
+.pb-score-max{font-size:10px;color:var(--muted);font-weight:400}
+.pb-track{position:relative;height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.pb-fill{height:100%;border-radius:99px;transition:width .6s ease}
+.pb-desc{font-size:12px;color:rgba(247,243,237,.5);margin-top:5px}
+.pb-track-risk{overflow:visible}
+.pb-marker{position:absolute;top:-3px;width:3px;height:15px;border-radius:2px;background:var(--cream);box-shadow:0 0 0 2px rgba(15,45,30,.65);transform:translateX(-50%)}
+.pb-scale{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.pb-info{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;border:1px solid rgba(247,243,237,.3);background:none;color:rgba(247,243,237,.6);font-size:10px;font-style:italic;font-family:Georgia,serif;cursor:help;padding:0;line-height:1}
+.pb-band{border:1px solid;border-radius:12px;padding:14px 16px;margin:2px 0 18px;background:rgba(255,255,255,.03)}
+.pb-band-head{font-family:var(--fd);font-size:15px;font-weight:700;margin-bottom:6px}
+.pb-band-msg{font-size:13px;color:rgba(247,243,237,.75);line-height:1.6;margin-bottom:13px}
+.pb-band-cta{display:inline-block;font-size:13px;font-weight:600;font-family:var(--fb);text-decoration:none;background:var(--gold);color:#173d2c;padding:9px 16px;border-radius:8px}
+.pb-band-cta-soft{background:none;color:var(--teal-l);border:1px solid rgba(93,202,165,.4);padding:8px 15px}
+.pb-consult{font-size:13px;color:rgba(247,243,237,.6);line-height:1.6;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+.pb-consult a{color:var(--gold);text-decoration:underline;font-weight:600}
 .paed-disclaimer{width:100%;max-width:500px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:0.75rem 1rem;font-family:Georgia,serif;font-size:0.78rem;font-style:italic;color:rgba(255,255,255,0.4);text-align:center;line-height:1.5}
 </style>
 </head>
@@ -603,6 +627,74 @@ function getTopActions(domains,pain){
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function dInfo(k){return DRIVERS.find(d=>d.key===k);}
+
+// ── PRIME breakdown (results) ───────────────────────────────────────────────
+function buildPrimeBreakdown(domains){
+  var CONSULT='https://www.ortholongevity.co.uk/book-an-appointment/';
+  var GRAD_H='linear-gradient(90deg,#1d9e75,#5dcaa5,#c9a84c)';      // health: teal -> mint -> gold (higher = healthier)
+  var GRAD_R='linear-gradient(90deg,#5dcaa5,#c9a84c,#c0703a)';      // risk: mint/gold -> terracotta (higher = more risk)
+  var TIP='Based on family history. Genomic risk scoring coming soon.';
+  function fillStyle(v,grad){
+    var w=Math.max(3,Math.min(100,Math.round(v)));
+    var size=Math.round(10000/w);
+    return 'width:'+w+'%;background:'+grad+';background-size:'+size+'% 100%;background-position:left center;background-repeat:no-repeat';
+  }
+  function healthRow(letter,name,desc,v){
+    return '<div class="pb-row">'
+      +'<div class="pb-meta"><span class="pb-letter" aria-hidden="true">'+letter+'</span>'
+      +'<span class="pb-name">'+name+'</span>'
+      +'<span class="pb-score">'+Math.round(v)+'<span class="pb-score-max">/100</span></span></div>'
+      +'<div class="pb-track"><div class="pb-fill" style="'+fillStyle(v,GRAD_H)+'"></div></div>'
+      +'<div class="pb-desc">'+desc+'</div></div>';
+  }
+  var P=domains.strength||0, I=domains.injury||0, M=domains.move||0, E=domains.bio||0;
+  var genetic=(domains.genetic==null?65:domains.genetic);
+  var risk=Math.max(0,Math.min(100,100-genetic));               // displayed value: 100 - stored genetic
+  var riskWord=risk<=33?'Low':risk<=66?'Moderate':'High';
+  var band;
+  if(risk<=33){
+    band={key:'low',col:'#5dcaa5',head:'Low genetic risk',
+      msg:'Your family history is working in your favour. That’s one advantage banked — keep your other four domains strong to hold onto it.',
+      cta:'See your full PRIME profile',href:null};
+  } else if(risk<=66){
+    band={key:'mod',col:'#c9a84c',head:'Moderate genetic risk',
+      msg:'A family history like yours doesn’t decide the outcome — it moves the timeline forward. The advantage is in acting earlier, not harder.',
+      cta:'Book a consultation',href:CONSULT};
+  } else {
+    band={key:'high',col:'#c0703a',head:'High genetic risk',
+      msg:'A strong family history raises urgency, not inevitability. The patients who do best are the ones who start before symptoms force the decision.',
+      cta:'Book a consultation',href:CONSULT};
+  }
+  // Inverted Risk bar: high value = high risk, with explicit Low/Moderate/High scale + marker
+  var markerPos=Math.max(3,Math.min(100,risk));
+  var riskRow='<div class="pb-row pb-row-risk">'
+    +'<div class="pb-meta"><span class="pb-letter" aria-hidden="true">R</span>'
+    +'<span class="pb-name">Risk <button type="button" class="pb-info" aria-label="'+TIP+'" title="'+TIP+'">i</button></span>'
+    +'<span class="pb-score" style="color:'+band.col+'">'+riskWord+'</span></div>'
+    +'<div class="pb-track pb-track-risk" title="'+TIP+'"><div class="pb-fill" style="'+fillStyle(risk,GRAD_R)+'"></div>'
+    +'<span class="pb-marker" style="left:'+markerPos+'%"></span></div>'
+    +'<div class="pb-scale"><span>Low</span><span>Moderate</span><span>High</span></div>'
+    +'<div class="pb-desc">Genetic Risk — higher reads as higher risk (the opposite of the bars above)</div></div>';
+  // Risk-band message + calibrated next step
+  var bandCta = band.href
+    ? '<a class="pb-band-cta" href="'+band.href+'" target="_blank" rel="noopener">'+band.cta+' →</a>'
+    : '<a class="pb-band-cta pb-band-cta-soft" href="#primeBreakdown" onclick="var el=document.getElementById(\'primeBreakdown\');if(el)el.scrollIntoView({behavior:\'smooth\'});return false;">'+band.cta+' ↓</a>';
+  var bandBlock='<div class="pb-band" style="border-color:'+band.col+'40">'
+    +'<div class="pb-band-head" style="color:'+band.col+'">'+band.head+'</div>'
+    +'<div class="pb-band-msg">'+band.msg+'</div>'+bandCta+'</div>';
+
+  return '<div class="prime-breakdown" id="primeBreakdown">'
+    +'<div class="pb-h">Your PRIME breakdown</div>'
+    +'<div class="pb-sub">The five domains behind your Knee Age.</div>'
+    + healthRow('P','Power','Strength and force capacity',P)
+    + riskRow
+    + bandBlock
+    + healthRow('I','Injury','Injury and load history',I)
+    + healthRow('M','Movement','Range, mechanics, posture and function',M)
+    + healthRow('E','Endocrine &amp; Metabolic','Hormones, metabolism and inflammation',E)
+    + '<div class="pb-consult">Want a clinician to interpret your PRIME profile? <a href="'+CONSULT+'" target="_blank" rel="noopener">Book a consultation →</a></div>'
+    + '</div>';
+}
 
 function showHook(){
   document.getElementById('app').innerHTML=`
@@ -1364,6 +1456,8 @@ function showResult(){
     <div class="status-line" style="color:${status.color}">${status.statusLine}</div>
     <div style="font-size:15px;color:rgba(247,243,237,.85);font-weight:500;margin:4px 0 10px">${status.reaction}</div>
     <div class="identity">${status.identity}</div>
+
+    ${isTeen ? '' : buildPrimeBreakdown(domains)}
 
     <div id="scorecardSlot"></div>
 
