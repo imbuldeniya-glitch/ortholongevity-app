@@ -1202,6 +1202,91 @@ function buildPaedCard(score, domains) {
   return canvas;
 }
 
+// ── PRIME SOCIAL SHARE CARD (Knee Age, adults) ───────────────
+// Brand palette only. Leads with the age GAP. PRIME bars wired to real
+// domains{}; Risk bar inverted (100 - genetic). fmt: 'square' | 'story'.
+function buildPrimeShareCard(kneeAge, age, domains, fmt){
+  fmt = fmt || 'square';
+  var W=1080, H = fmt==='story' ? 1920 : 1080;
+  var FOREST='#0f2d1e', GOLD='#c9a84c', CREAM='#f7f3ed', MINT='#5dcaa5', TEAL='#1d9e75', TERRA='#c0703a';
+  var SEC='rgba(247,243,237,0.62)';
+  var clip100=function(v){ return Math.max(0, Math.min(100, Math.round(v==null?0:v))); };
+  var cvs=document.createElement('canvas'); cvs.width=W; cvs.height=H;
+  var ctx=cvs.getContext('2d'); var cx=W/2;
+
+  // Background + subtle gold dot texture + thin gold frame
+  ctx.fillStyle=FOREST; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=GOLD+'10';
+  for(var dx=44; dx<W; dx+=44) for(var dy=44; dy<H; dy+=44){ ctx.beginPath(); ctx.arc(dx,dy,1.1,0,Math.PI*2); ctx.fill(); }
+  ctx.strokeStyle='rgba(201,168,76,0.35)'; ctx.lineWidth=3; ctx.strokeRect(20,20,W-40,H-40);
+
+  // Anchors per format
+  var A = fmt==='story'
+    ? {l1:360, big:540, l3:660, fitW:960, bigStart:124, l1px:46, kne:790, kpx:34, div1:880, bars:1010, gap:104, barH:14, div2:1500, lock1:1580, lock2:1632, cta:1770, ctapx:30}
+    : {l1:212, big:328, l3:402, fitW:920, bigStart:96,  l1px:42, kne:478, kpx:29, div1:528, bars:602,  gap:58,  barH:12, div2:872,  lock1:922,  lock2:962,  cta:1024, ctapx:26};
+
+  function divider(y){ ctx.strokeStyle='rgba(201,168,76,0.22)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(140,y); ctx.lineTo(W-140,y); ctx.stroke(); }
+  function fitFont(text,weight,maxW,startPx){ var px=startPx; ctx.font=weight+' '+px+'px Georgia, serif'; while(ctx.measureText(text).width>maxW && px>40){ px-=2; ctx.font=weight+' '+px+'px Georgia, serif'; } return px; }
+
+  // HERO — the gap is the headline
+  var diff=kneeAge-age;
+  var l1, big, l3;
+  if(diff>0){ l1='My knees are'; big=Math.abs(diff)+(Math.abs(diff)===1?' year older':' years older'); l3='than me'; }
+  else if(diff<0){ l1='My knees are'; big=Math.abs(diff)+(Math.abs(diff)===1?' year younger':' years younger'); l3='than me'; }
+  else { l1='My knees'; big='match my age'; l3=''; }
+
+  ctx.textAlign='center';
+  ctx.fillStyle=CREAM; ctx.font='italic '+A.l1px+'px Georgia, serif'; ctx.fillText(l1, cx, A.l1);
+  var bigPx=fitFont(big,'bold',A.fitW,A.bigStart);
+  ctx.fillStyle=GOLD; ctx.font='bold '+bigPx+'px Georgia, serif'; ctx.fillText(big, cx, A.big);
+  if(l3){ ctx.fillStyle=CREAM; ctx.font='italic '+A.l1px+'px Georgia, serif'; ctx.fillText(l3, cx, A.l3); }
+
+  // Knee Age X · Actual age Y
+  ctx.fillStyle=SEC; ctx.font=A.kpx+'px Georgia, serif';
+  ctx.fillText('Knee Age '+kneeAge+'   ·   Actual age '+age, cx, A.kne);
+
+  divider(A.div1);
+
+  // PRIME bars — same colours/direction as the results screen
+  var rows=[
+    {ltr:'P', name:'Power',                 v:clip100(domains.strength),            kind:'health'},
+    {ltr:'R', name:'Risk',                  v:clip100(100-(domains.genetic==null?65:domains.genetic)), kind:'risk'},
+    {ltr:'I', name:'Injury',                v:clip100(domains.injury),              kind:'health'},
+    {ltr:'M', name:'Movement',              v:clip100(domains.move),                kind:'health'},
+    {ltr:'E', name:'Endocrine & Metabolic', v:clip100(domains.bio),                 kind:'health'}
+  ];
+  var x0=92, letterW=42, barX=372, barW=556, valX=W-92, barH=A.barH;
+  rows.forEach(function(r,i){
+    var rowY=A.bars + i*A.gap;
+    ctx.textAlign='left';
+    ctx.font='bold 30px Georgia, serif'; ctx.fillStyle=GOLD; ctx.fillText(r.ltr, x0, rowY);
+    ctx.font='23px Georgia, serif'; ctx.fillStyle='rgba(247,243,237,0.82)'; ctx.fillText(r.name, x0+letterW, rowY);
+    var by=rowY-barH-1;
+    scRoundRect(ctx,barX,by,barW,barH,barH/2); ctx.fillStyle='rgba(255,255,255,0.09)'; ctx.fill();
+    var grad=ctx.createLinearGradient(barX,0,barX+barW,0);
+    if(r.kind==='risk'){ grad.addColorStop(0,MINT); grad.addColorStop(0.5,GOLD); grad.addColorStop(1,TERRA); }
+    else { grad.addColorStop(0,TEAL); grad.addColorStop(0.5,MINT); grad.addColorStop(1,GOLD); }
+    var fw=Math.max(barH, (r.v/100)*barW);
+    ctx.save(); scRoundRect(ctx,barX,by,fw,barH,barH/2); ctx.clip(); ctx.fillStyle=grad; ctx.fillRect(barX,by,barW,barH); ctx.restore();
+    ctx.textAlign='right'; ctx.font='bold 24px Georgia, serif';
+    if(r.kind==='risk'){ var w=r.v<=33?'Low':r.v<=66?'Moderate':'High'; ctx.fillStyle=(r.v<=33?MINT:r.v<=66?GOLD:TERRA); ctx.fillText(w, valX, rowY); }
+    else { ctx.fillStyle=GOLD; ctx.fillText(String(r.v), valX, rowY); }
+  });
+
+  divider(A.div2);
+
+  // Brand lockup
+  ctx.textAlign='center';
+  ctx.fillStyle=GOLD; ctx.font='bold 33px Georgia, serif'; ctx.fillText('OrthoLongevity™', cx, A.lock1);
+  ctx.fillStyle=SEC; ctx.font='20px Georgia, serif'; ctx.fillText('Dr Arj Imbuldeniya · Consultant Orthopaedic Knee & Hip Surgeon', cx, A.lock2);
+
+  // CTA
+  ctx.fillStyle=GOLD; ctx.font='bold '+A.ctapx+'px Georgia, serif';
+  ctx.fillText('Find your Knee Age free in 60 seconds — kneeage.com', cx, A.cta);
+
+  return cvs;
+}
+
 // ── CAPTIONS ─────────────────────────────────────
 
 function getAdultCaption(kneeAge, age, domains) {
@@ -1278,7 +1363,7 @@ function insertScoreCard(container, isTeen, mainValue, chronAge, tierKey, domain
     caption = getPaedCaption(mainValue);
   } else {
     tierConfig = ADULT_TIERS[tierKey] || ADULT_TIERS.average;
-    canvas = buildAdultCard(mainValue, chronAge, tierKey, domains);
+    canvas = buildPrimeShareCard(mainValue, chronAge, domains, 'square');
     caption = getAdultCaption(mainValue, chronAge, domains);
   }
 
@@ -1324,6 +1409,18 @@ function insertScoreCard(container, isTeen, mainValue, chronAge, tierKey, domain
     scShowToast('Saved \u2014 find it in your camera roll to post to Instagram or Snapchat');
   };
   moreOptions.appendChild(dlBtn);
+
+  if (!isPaed) {
+    const storyBtn = document.createElement('button');
+    storyBtn.className = 'share-secondary-btn';
+    storyBtn.textContent = '\u2193 Download Stories version (vertical)';
+    storyBtn.onclick = function(){
+      const sc = buildPrimeShareCard(mainValue, chronAge, domains, 'story');
+      scTriggerDownload(sc, 'my-knee-age-story.png');
+      scShowToast('Vertical card saved \u2014 add it to your Instagram or Facebook Story');
+    };
+    moreOptions.appendChild(storyBtn);
+  }
 
   const copyBtn = document.createElement('button');
   copyBtn.className = 'share-secondary-btn';
@@ -1776,6 +1873,7 @@ function shareLinkedIn(){
 function downloadScoreCardPNG(){
   const R=calc(answers);
   const {isTeen,age,kneeAge,jhs,diff,domains}=R;
+  if(!isTeen){ scTriggerDownload(buildPrimeShareCard(kneeAge,age,domains,'square'),'my-knee-age.png'); return; }
   const tierKey=getAdultTierKey(diff);
   const status=getStatus(diff,isTeen,jhs,age);
   const ageGap=Math.abs(diff);
