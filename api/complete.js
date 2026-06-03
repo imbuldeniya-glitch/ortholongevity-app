@@ -21,8 +21,10 @@ export default async function handler(req) {
       ageGap = '',
       answers = {},
       pillarScores = {},
-      domains = {}
+      domains = {},
+      attribution = {}
     } = body;
+    const attr = attribution || {};
     const SHEETDB_URL = process.env.SHEETDB_URL;
     if (!SHEETDB_URL) return err('SHEETDB_URL not configured');
     const getBio = function() { if (pillarScores.biology !== undefined) return pillarScores.biology; if (pillarScores.bio !== undefined) return pillarScores.bio; if (domains.bio !== undefined) return domains.bio; return ''; };
@@ -58,6 +60,11 @@ export default async function handler(req) {
       pillar_strength: String(getStrength()),
       pillar_injury: String(getInjury()),
       pillar_geneti: String(getGenetic()),
+      utm_source: String(attr.utm_source || ''),
+      utm_medium: String(attr.utm_medium || ''),
+      utm_campaign: String(attr.utm_campaign || ''),
+      utm_content: String(attr.utm_content || ''),
+      referrer: String(attr.referrer || ''),
     };
     const sheetRes = await fetch(SHEETDB_URL, {
       method: 'POST',
@@ -84,6 +91,11 @@ export default async function handler(req) {
             knee_age: kneeAge ? parseInt(kneeAge) : null,
             score: score ? parseInt(score) : null,
             is_teen: !!isTeen,
+            utm_source: attr.utm_source || null,
+            utm_medium: attr.utm_medium || null,
+            utm_campaign: attr.utm_campaign || null,
+            utm_content: attr.utm_content || null,
+            referrer: attr.referrer || null,
           }),
         });
       } catch (e) {

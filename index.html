@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="/analytics.js"></script>
 <title>Knee Age Test — Know Your Knee Age in 60 Seconds | OrthoLongevity™</title>
 <meta name="description" content="Find your Knee Age in 60 seconds with the world's first surgeon-led joint longevity assessment, created by Consultant Orthopaedic Surgeon Dr Arj Imbuldeniya."/>
 <link rel="canonical" href="https://www.kneeage.com/"/>
@@ -922,11 +923,12 @@ async function submitEmail(){
   btn.disabled = true;
   input.disabled = true;
 
+  if(window.kaTrack) kaTrack('email_captured', { point: 'landing-page' });
   try {
     await fetch('/api/subscribe', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, tags: ['knee-age-quiz', 'landing-page'] })
+      body: JSON.stringify({ email, tags: ['knee-age-quiz', 'landing-page'], attribution: window.KA_getAttribution ? window.KA_getAttribution() : null })
     });
   } catch(e) {}
 

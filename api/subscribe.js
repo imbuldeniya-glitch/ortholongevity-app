@@ -24,6 +24,7 @@ export default async function handler(req) {
   try {
     const body = await req.json().catch(() => ({}));
     const { email, tags, kneeAge, score } = body;
+    const attr = body.attribution || {};
 
     if (!email || !email.includes('@')) return ok();
 
@@ -42,9 +43,14 @@ export default async function handler(req) {
               api_key: KIT_API_KEY,
               email,
               fields: {
-                knee_age:   kneeAge ? String(kneeAge) : '',
-                knee_score: score   ? String(score)   : '',
-                source:     'knee-age-quiz',
+                knee_age:     kneeAge ? String(kneeAge) : '',
+                knee_score:   score   ? String(score)   : '',
+                source:       'knee-age-quiz',
+                utm_source:   attr.utm_source   || '',
+                utm_medium:   attr.utm_medium   || '',
+                utm_campaign: attr.utm_campaign || '',
+                utm_content:  attr.utm_content  || '',
+                referrer:     attr.referrer     || '',
               },
               tags: tags || ['knee-age-quiz'],
             }),

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="/analytics.js"></script>
 <link rel="canonical" href="https://www.kneeage.com/kneeagequiz.html"/>
 <title>Knee Age Quiz — Know Your Knee Age in 60 Seconds | OrthoLongevity™</title>
 <meta name="description" content="Take the free 60-second Knee Age quiz from Consultant Orthopaedic Surgeon Dr Arj Imbuldeniya and find out how old your knees really are."/>
@@ -922,6 +923,7 @@ function nextQ(){
   const q=window._cq;
   if(q.type==='options'&&answers[q.id]===undefined)return;
   if(q.type==='pain'&&answers[q.id]===undefined)return;
+  if(!window.__kaQuizStarted){ window.__kaQuizStarted=true; if(window.kaTrack) kaTrack('quiz_start',{}); }
   qIdx++;renderQ();
 }
 function prevQ(){
@@ -2186,10 +2188,13 @@ async function loadCounter(){
 
 async function incrementCounter(resultData){
   try {
+    var rd = resultData||{};
+    if(window.KA_getAttribution){ rd.attribution = window.KA_getAttribution(); }   // tie completion to source
+    if(window.kaTrack){ kaTrack('quiz_complete',{ knee_age: rd.kneeAge||'', age: rd.age||'', score: rd.score||'', is_teen: !!rd.isTeen }); }
     fetch('/api/complete',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(resultData||{})
+      body:JSON.stringify(rd)
     }).catch(()=>{});
   } catch(e){}
 }
@@ -2253,6 +2258,7 @@ function submitEmail(){
     return;
   }
   userEmail = val;
+  if(window.kaTrack) kaTrack('email_captured',{ point:'quiz-gate' });
   sendToKit(val);
   startQuizFromGate();
 }
@@ -2284,7 +2290,8 @@ function sendToKit(email, kneeAge, score){
       email,
       tags:['knee-age-quiz-completed'],
       kneeAge: kneeAge||'',
-      score: score||''
+      score: score||'',
+      attribution: window.KA_getAttribution ? window.KA_getAttribution() : null   // tie email to source
     })
   }).catch(()=>{});
 }
