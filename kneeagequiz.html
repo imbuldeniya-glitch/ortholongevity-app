@@ -1548,6 +1548,7 @@ function showResult(){
       <span class="res-compare-age">${age}</span>
     </div>`;
 
+  window.__kaResult = { kneeAge: isTeen ? null : kneeAge, score: jhs };
   const card=document.createElement('div');
   card.className='res-card';
   card.innerHTML=`
@@ -1556,6 +1557,19 @@ function showResult(){
     <div style="font-size:15px;color:rgba(247,243,237,.85);font-weight:500;margin:4px 0 10px">${status.reaction}</div>
     <div class="identity">${status.identity}</div>
 
+    ${isTeen ? '' : `
+    <div id="primeLocked" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:24px 18px;margin-bottom:20px;text-align:center">
+      <div style="font-family:var(--fd);font-size:clamp(19px,4.5vw,24px);font-weight:700;color:var(--cream);margin-bottom:8px">Unlock your full result</div>
+      <div style="font-size:14px;color:rgba(247,243,237,.65);line-height:1.6;max-width:380px;margin:0 auto 18px">Enter your email to unlock your full PRIME breakdown and score-card.</div>
+      <div style="max-width:420px;margin:0 auto;text-align:left">
+        <label for="unlockEmail" style="display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase">Your email address</label>
+        <input type="email" id="unlockEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')unlockResult()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--cream);font-family:var(--fb);outline:none;margin-bottom:10px"/>
+        <button onclick="unlockResult()" style="width:100%;background:var(--gold);color:#173d2c;border:none;border-radius:100px;padding:15px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer">Unlock my PRIME breakdown →</button>
+        <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Your result is emailed to you so you can save it. No spam. Unsubscribe any time.</div>
+      </div>
+    </div>`}
+
+    <div id="primeUnlocked"${isTeen ? '' : ' style="display:none"'}>
     ${isTeen ? '' : buildPrimeBreakdown(domains)}
 
     <div id="scorecardSlot"></div>
@@ -1570,6 +1584,7 @@ function showResult(){
         <button onclick="shareLinkedIn()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">💼 LinkedIn</button>
       </div>
     </div>
+    </div><!-- /primeUnlocked -->
 
     <div id="suppPanel" style="background:#1E4D3B;border:2px solid #C9A84C;border-radius:14px;padding:18px 14px;margin-bottom:20px">
       <div style="font-family:var(--fd);font-size:clamp(16px,4vw,20px);font-weight:700;color:#C9A84C;margin-bottom:8px;text-align:center;line-height:1.3">🔒 FOUNDING MEMBER ACCESS — CLAIM YOURS NOW</div>
@@ -2197,6 +2212,21 @@ async function incrementCounter(resultData){
       body:JSON.stringify(rd)
     }).catch(()=>{});
   } catch(e){}
+}
+
+// ── Result unlock — email reveals the full PRIME breakdown + score-card ──────
+function unlockResult(){
+  var inp=document.getElementById('unlockEmail'); if(!inp) return;
+  var val=(inp.value||'').trim();
+  if(!val || val.indexOf('@')<0){ inp.style.borderColor='rgba(224,85,85,.6)'; inp.placeholder='Please enter a valid email'; return; }
+  var R=window.__kaResult||{};
+  if(window.kaTrack) kaTrack('email_captured',{ point:'result-unlock' });
+  // Tie email -> result -> source in Kit (sendToKit already carries UTM/source from Spec 1)
+  try{ userEmail=val; sendToKit(val, R.kneeAge, R.score); }catch(e){}
+  var locked=document.getElementById('primeLocked');
+  var unlocked=document.getElementById('primeUnlocked');
+  if(locked) locked.style.display='none';
+  if(unlocked){ unlocked.style.display='block'; unlocked.scrollIntoView({behavior:'smooth',block:'start'}); }
 }
 
 // ── Email gate ──────────────────────────────────────────────────────────────
