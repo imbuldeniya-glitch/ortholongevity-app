@@ -3,4 +3,35 @@ Allow: /
 Disallow: /confirmed
 Disallow: /confirmed.html
 
+# AI search & answer engines — explicitly welcome
+User-agent: GPTBot
+Allow: /
+Disallow: /confirmed.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /confirmed.html
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /confirmed.html
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /confirmed.html
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /confirmed.html
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /confirmed.html
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
 Sitemap: https://www.kneeage.com/sitemap.xml

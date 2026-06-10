@@ -1,4 +1,13 @@
 {
+  "redirects": [
+    { "source": "/quiz", "destination": "/kneeagequiz.html", "permanent": true },
+    { "source": "/test", "destination": "/kneeagequiz.html", "permanent": true },
+    { "source": "/start", "destination": "/kneeagequiz.html", "permanent": true },
+    { "source": "/knee-age", "destination": "/kneeagequiz.html", "permanent": true },
+    { "source": "/knee-age-test", "destination": "/kneeagequiz.html", "permanent": true },
+    { "source": "/knee-age-quiz", "destination": "/kneeagequiz.html", "permanent": true },
+    { "source": "/assessment", "destination": "/kneeagequiz.html", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/confirmed", "destination": "/confirmed.html" },
     { "source": "/articles/:slug", "destination": "/articles/:slug.html" },
