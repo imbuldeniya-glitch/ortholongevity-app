@@ -15,7 +15,7 @@
    They are deliberately left off here so no banner is needed today.
    ============================================================================ */
 window.KA_ANALYTICS_CONFIG = {
-  GA4_MEASUREMENT_ID: '',   // e.g. 'G-XXXXXXXXXX'  ← paste to activate GA4 (cookieless)
+  GA4_MEASUREMENT_ID: 'G-M4G3F0VQGN',   // kneeage.com web stream (property: ice ortho - GA4)
   PLAUSIBLE_DOMAIN:   '',   // e.g. 'kneeage.com'   ← paste to activate Plausible (cookieless)
   META_PIXEL_ID:      '',   // OPTIONAL / LATER — leave blank. Needs consent banner before enabling.
   TIKTOK_PIXEL_ID:    ''    // OPTIONAL / LATER — leave blank. Needs consent banner before enabling.
