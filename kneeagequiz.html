@@ -339,9 +339,9 @@ const QS = [
    sub:'Hormonal profile and joint biology differ between sexes — this calibrates your result.',
    reward:null,
    opts:[
-     {v:'male',  ic:'♂',lb:'Male',sc:0},
-     {v:'female',ic:'♀',lb:'Female',sc:0},
-     {v:'other', ic:'◯',lb:'Prefer not to say',nt:'Population-average norms used',sc:0}
+     {v:'male',  lb:'Male',sc:0},
+     {v:'female',lb:'Female',sc:0},
+     {v:'other', lb:'Prefer not to say',nt:'Population-average norms used',sc:0}
    ]},
 
   // Biological input
@@ -350,11 +350,11 @@ const QS = [
    sub:'Excess weight puts direct pressure on knee joints — and also drives inflammation that accelerates joint wear from the inside.',
    reward:'This factor strongly influences knee ageing.',
    opts:[
-     {v:'very_lean',ic:'📉',lb:'Very lean, or aware that my muscle or bone strength may be low',nt:'Including those who are naturally very slim, or who feel they may lack muscle or physical resilience',sc:35},
-     {v:'healthy',  ic:'✅',lb:'Healthy weight, no health concerns',sc:100},
-     {v:'over_mild',ic:'📊',lb:'Slightly overweight, broadly healthy',sc:65},
-     {v:'over_mod', ic:'📈',lb:'Moderately overweight, or blood sugar concerns',sc:35},
-     {v:'obese',    ic:'⚠️',lb:'Significantly overweight, or type 2 diabetes',sc:10}
+     {v:'very_lean',lb:'Very lean, or aware that my muscle or bone strength may be low',nt:'Including those who are naturally very slim, or who feel they may lack muscle or physical resilience',sc:35},
+     {v:'healthy',  lb:'Healthy weight, no health concerns',sc:100},
+     {v:'over_mild',lb:'Slightly overweight, broadly healthy',sc:65},
+     {v:'over_mod', lb:'Moderately overweight, or blood sugar concerns',sc:35},
+     {v:'obese',    lb:'Significantly overweight, or type 2 diabetes',sc:10}
    ]},
 
   {id:'nutrition',type:'options',domain:'bio',
@@ -362,14 +362,14 @@ const QS = [
    sub:'What you eat affects how much inflammation your joints deal with every day — even if your weight is healthy.',
    reward:null,
    opts:[
-     {v:'anti',     ic:'🥗',lb:'Mostly whole foods — fish, veg, olive oil',sc:100},
-     {v:'balanced', ic:'⚖️',lb:'Broadly balanced — some good, some not',sc:65},
-     {v:'processed',ic:'🍟',lb:'Mostly convenience or processed food',sc:20},
-     {v:'vegan_wf', ic:'🌱',lb:'Vegan — whole food, high protein (legumes, tofu, tempeh, seeds)',sc:90},
-     {v:'vegan_lp', ic:'🌿',lb:'Vegan — processed or low protein',sc:35},
-     {v:'veg_bal',  ic:'🥚',lb:'Vegetarian — balanced, adequate protein',sc:85},
-     {v:'veg_dairy',ic:'🧀',lb:'Vegetarian — high dairy, low protein variety',sc:55},
-     {v:'unsure',   ic:'❓',lb:'Not sure / varies a lot',sc:50}
+     {v:'anti',     lb:'Mostly whole foods — fish, veg, olive oil',sc:100},
+     {v:'balanced', lb:'Broadly balanced — some good, some not',sc:65},
+     {v:'processed',lb:'Mostly convenience or processed food',sc:20},
+     {v:'vegan_wf', lb:'Vegan — whole food, high protein (legumes, tofu, tempeh, seeds)',sc:90},
+     {v:'vegan_lp', lb:'Vegan — processed or low protein',sc:35},
+     {v:'veg_bal',  lb:'Vegetarian — balanced, adequate protein',sc:85},
+     {v:'veg_dairy',lb:'Vegetarian — high dairy, low protein variety',sc:55},
+     {v:'unsure',   lb:'Not sure / varies a lot',sc:50}
    ]},
 
   {id:'sleep',type:'options',domain:'bio',
@@ -377,9 +377,9 @@ const QS = [
    sub:'Joints repair themselves during sleep. Poor sleep raises inflammation markers that accelerate joint wear — independently of everything else.',
    reward:'You\'re doing better than average here.',
    opts:[
-     {v:'good',ic:'😴',lb:'7–9 hours most nights',sc:100},
-     {v:'ok',  ic:'🌙',lb:'6–7 hours',sc:58},
-     {v:'poor',ic:'⚠️',lb:'Under 6 hours most nights',sc:12}
+     {v:'good',lb:'7–9 hours most nights',sc:100},
+     {v:'ok',  lb:'6–7 hours',sc:58},
+     {v:'poor',lb:'Under 6 hours most nights',sc:12}
    ]},
 
   // Teen hormonal (female 13–17)
@@ -389,11 +389,11 @@ const QS = [
    sub:'In active young women, irregular or absent periods can be a sign that the body isn\'t getting enough energy to support both training and normal function — which affects joint and bone health.',
    reward:null,
    opts:[
-     {v:'regular',    ic:'✅',lb:'Regular periods',sc:100},
-     {v:'irregular',  ic:'🌊',lb:'Irregular periods',sc:65},
-     {v:'absent',     ic:'⚠️',lb:'Absent periods for 3+ months',nt:'Worth discussing with your doctor',sc:30},
-     {v:'not_started',ic:'📅',lb:"Periods haven't started yet",sc:85},
-     {v:'unsure',     ic:'❓',lb:'Prefer not to say',sc:75}
+     {v:'regular',    lb:'Regular periods',sc:100},
+     {v:'irregular',  lb:'Irregular periods',sc:65},
+     {v:'absent',     lb:'Absent periods for 3+ months',nt:'Worth discussing with your doctor',sc:30},
+     {v:'not_started',lb:"Periods haven't started yet",sc:85},
+     {v:'unsure',     lb:'Prefer not to say',sc:75}
    ]},
 
   // Menopause (female 40+)
@@ -403,12 +403,12 @@ const QS = [
    sub:'The hormonal changes around menopause directly affect the joints. Oestrogen protects cartilage — when it falls, joint wear typically accelerates.',
    reward:null,
    opts:[
-     {v:'pre',        ic:'✅',lb:'Pre-menopausal — regular periods',sc:100},
-     {v:'peri',       ic:'🌊',lb:'Perimenopausal — irregular periods or symptoms',nt:'Hot flushes, sleep changes, mood changes',sc:68},
-     {v:'post_nat',   ic:'🍂',lb:'Post-menopausal — natural',sc:55},
-     {v:'post_early', ic:'⚠️',lb:'Early or surgical menopause — before age 45',nt:'Higher joint risk category',sc:28},
-     {v:'hrt',        ic:'💊',lb:'Perimenopausal or post-menopausal, currently on HRT',nt:'HRT (hormone replacement therapy) has a protective effect on cartilage in perimenopausal and post-menopausal women',sc:72},
-     {v:'unsure',     ic:'❓',lb:'Not sure / prefer not to say',sc:75}
+     {v:'pre',        lb:'Pre-menopausal — regular periods',sc:100},
+     {v:'peri',       lb:'Perimenopausal — irregular periods or symptoms',nt:'Hot flushes, sleep changes, mood changes',sc:68},
+     {v:'post_nat',   lb:'Post-menopausal — natural',sc:55},
+     {v:'post_early', lb:'Early or surgical menopause — before age 45',nt:'Higher joint risk category',sc:28},
+     {v:'hrt',        lb:'Perimenopausal or post-menopausal, currently on HRT',nt:'HRT (hormone replacement therapy) has a protective effect on cartilage in perimenopausal and post-menopausal women',sc:72},
+     {v:'unsure',     lb:'Not sure / prefer not to say',sc:75}
    ]},
 
   // Movement
@@ -417,10 +417,10 @@ const QS = [
    sub:'Stiffness in the morning is one of the earliest signs that joint biology is changing. It\'s not inevitable — and it\'s modifiable.',
    reward:'This is one of the most telling signs of joint health.',
    opts:[
-     {v:'none',    ic:'✅',lb:'No stiffness',sc:100},
-     {v:'mild',    ic:'🌅',lb:'Mild stiffness — resolves within 30 minutes',sc:65},
-     {v:'moderate',ic:'🔒',lb:'Noticeable stiffness most mornings',sc:35},
-     {v:'severe',  ic:'⚠️',lb:'Significant restriction that affects daily life',sc:10}
+     {v:'none',    lb:'No stiffness',sc:100},
+     {v:'mild',    lb:'Mild stiffness — resolves within 30 minutes',sc:65},
+     {v:'moderate',lb:'Noticeable stiffness most mornings',sc:35},
+     {v:'severe',  lb:'Significant restriction that affects daily life',sc:10}
    ]},
 
   {id:'sitting',type:'options',domain:'move',
@@ -428,10 +428,10 @@ const QS = [
    sub:'Sitting for long periods reduces the fluid that keeps cartilage healthy — even if you exercise. Regular movement breaks matter.',
    reward:null,
    opts:[
-     {v:'active',   ic:'🔄',lb:'I move regularly throughout the day',sc:100},
-     {v:'moderate', ic:'⚖️',lb:'3–5 hours sitting, with breaks',sc:70},
-     {v:'sedentary',ic:'💻',lb:'6+ hours sitting most days',nt:'Desk work, driving, limited movement breaks',sc:28},
-     {v:'mostly',   ic:'🛋️',lb:'Mostly sedentary',sc:8}
+     {v:'active',   lb:'I move regularly throughout the day',sc:100},
+     {v:'moderate', lb:'3–5 hours sitting, with breaks',sc:70},
+     {v:'sedentary',lb:'6+ hours sitting most days',nt:'Desk work, driving, limited movement breaks',sc:28},
+     {v:'mostly',   lb:'Mostly sedentary',sc:8}
    ]},
 
   // Hypermobility
@@ -440,10 +440,10 @@ const QS = [
    sub:'Hypermobility puts extra demands on the muscles around the knee. Building strength is the primary way to protect hypermobile joints.',
    reward:null,
    opts:[
-     {v:'no',      ic:'✅',lb:'No — average flexibility or less',sc:100},
-     {v:'mild',    ic:'🤸',lb:'Slightly more flexible than average',sc:85},
-     {v:'moderate',ic:'⚡',lb:'Noticeably flexible — can hyperextend joints',sc:62},
-     {v:'high',    ic:'⚠️',lb:'Very flexible — joints sometimes feel unstable',nt:'Worth discussing with a clinician',sc:35}
+     {v:'no',      lb:'No — average flexibility or less',sc:100},
+     {v:'mild',    lb:'Slightly more flexible than average',sc:85},
+     {v:'moderate',lb:'Noticeably flexible — can hyperextend joints',sc:62},
+     {v:'high',    lb:'Very flexible — joints sometimes feel unstable',nt:'Worth discussing with a clinician',sc:35}
    ]},
 
   // Strength
@@ -452,11 +452,11 @@ const QS = [
    sub:'Strong muscles are the single biggest lever for protecting your knees — more than any supplement, injection, or treatment. This is the most important question in the test.',
    reward:'This is the biggest lever for improving Knee Age.',
    opts:[
-     {v:'regular',   ic:'🏋️',lb:'Strength training 3+ times per week',sc:100},
-     {v:'moderate',  ic:'🚴',lb:'Some resistance work 1–2 times per week',sc:65},
-     {v:'sport_only',ic:'⚽',lb:'Sport or PE only — no specific strength work',sc:45},
-     {v:'light',     ic:'🚶',lb:'Mostly walking or light activity',sc:32},
-     {v:'sedentary', ic:'🪑',lb:'Largely inactive',sc:8}
+     {v:'regular',   lb:'Strength training 3+ times per week',sc:100},
+     {v:'moderate',  lb:'Some resistance work 1–2 times per week',sc:65},
+     {v:'sport_only',lb:'Sport or PE only — no specific strength work',sc:45},
+     {v:'light',     lb:'Mostly walking or light activity',sc:32},
+     {v:'sedentary', lb:'Largely inactive',sc:8}
    ]},
 
   {id:'sit_stand',type:'options',domain:'strength',
@@ -464,11 +464,11 @@ const QS = [
    sub:'This simple test measures the muscle power that protects your knees. Try it now if you can.',
    reward:'You\'re building the muscular shield your knees need.',
    opts:[
-     {v:'high',  ic:'💪',lb:'15 or more',sc:100},
-     {v:'good',  ic:'✅',lb:'12–14',sc:75},
-     {v:'low',   ic:'📉',lb:'8–11',sc:40},
-     {v:'poor',  ic:'⚠️',lb:'Under 8, or needs arm support',sc:8},
-     {v:'unsure',ic:'❓',lb:"Haven't tried",sc:50}
+     {v:'high',  lb:'15 or more',sc:100},
+     {v:'good',  lb:'12–14',sc:75},
+     {v:'low',   lb:'8–11',sc:40},
+     {v:'poor',  lb:'Under 8, or needs arm support',sc:8},
+     {v:'unsure',lb:"Haven't tried",sc:50}
    ]},
 
   // Sport load (teens + active adults)
@@ -478,11 +478,11 @@ const QS = [
    sub:'For younger joints especially, doing too much without enough recovery is one of the most common causes of knee problems. More isn\'t always better.',
    reward:null,
    opts:[
-     {v:'balanced',ic:'✅',lb:'Regular training with 1–2 rest days per week',sc:100},
-     {v:'moderate',ic:'⚽',lb:'3–5 sessions per week',sc:80},
-     {v:'high',    ic:'🔥',lb:'6–7 sessions or twice daily',nt:'Overtraining risk if recovery is low',sc:45},
-     {v:'light',   ic:'🚶',lb:'1–2 sessions per week',sc:60},
-     {v:'none',    ic:'🪑',lb:'No sport or training currently',sc:40}
+     {v:'balanced',lb:'Regular training with 1–2 rest days per week',sc:100},
+     {v:'moderate',lb:'3–5 sessions per week',sc:80},
+     {v:'high',    lb:'6–7 sessions or twice daily',nt:'Overtraining risk if recovery is low',sc:45},
+     {v:'light',   lb:'1–2 sessions per week',sc:60},
+     {v:'none',    lb:'No sport or training currently',sc:40}
    ]},
 
   // Joint history
@@ -496,11 +496,11 @@ const QS = [
    sub:'Previous injuries change the mechanics and biology of the joint — sometimes for years. This is important context for your result.',
    reward:null,
    opts:[
-     {v:'none',       ic:'✅',lb:'No previous knee injury',sc:100},
-     {v:'minor',      ic:'🩹',lb:'Minor injury — sprain or bruising',sc:82},
-     {v:'significant',ic:'🔶',lb:'Significant injury, no surgery',nt:'Torn ligament, cartilage damage',sc:50},
-     {v:'surgery',    ic:'🏥',lb:'Previous knee surgery',sc:32},
-     {v:'multiple',   ic:'⚠️',lb:'Multiple injuries or recurring problems',sc:18}
+     {v:'none',       lb:'No previous knee injury',sc:100},
+     {v:'minor',      lb:'Minor injury — sprain or bruising',sc:82},
+     {v:'significant',lb:'Significant injury, no surgery',nt:'Torn ligament, cartilage damage',sc:50},
+     {v:'surgery',    lb:'Previous knee surgery',sc:32},
+     {v:'multiple',   lb:'Multiple injuries or recurring problems',sc:18}
    ]},
 
   // Family history context
@@ -509,10 +509,10 @@ const QS = [
    sub:'Genetics plays a meaningful role in joint health — about 40–60% of osteoarthritis risk is inherited. This doesn\'t determine your outcome, but it does change how urgently you should protect your joints.',
    reward:'This tells us how urgently to act — not what will happen.',
    opts:[
-     {v:'no',    ic:'✅',lb:'No family history of arthritis or joint replacement',sc:100},
-     {v:'late',  ic:'🧬',lb:'Yes — parent or sibling, after age 65',sc:60},
-     {v:'early', ic:'⚠️',lb:'Yes — parent or sibling before age 65',nt:'Higher inherited risk',sc:22},
-     {v:'unsure',ic:'❓',lb:"Not sure",sc:60}
+     {v:'no',    lb:'No family history of arthritis or joint replacement',sc:100},
+     {v:'late',  lb:'Yes — parent or sibling, after age 65',sc:60},
+     {v:'early', lb:'Yes — parent or sibling before age 65',nt:'Higher inherited risk',sc:22},
+     {v:'unsure',lb:"Not sure",sc:60}
    ]},
 ];
 
@@ -626,34 +626,34 @@ function getImproveable(domains){
 // ── Info panels ───────────────────────────────────────────────────────────────
 function getMenoPanel(s){
   const P={
-    peri:{ic:'🌊',lbl:'Perimenopausal joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Oestrogen fluctuation directly affects cartilage. Strength training and protein are your biggest levers now.',cta:null},
-    post_nat:{ic:'🍂',lbl:'Post-menopausal joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Sustained oestrogen loss accelerates cartilage wear. Strength training is the single most effective response.',cta:null},
-    post_early:{ic:'⚠️',lbl:'Early or surgical menopause — elevated joint risk',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'The highest-risk hormonal category for joints. Acting early makes the biggest difference.',cta:'Book a 360 Assessment at Lanserhof Mayfair'},
-    hrt:{ic:'💊',lbl:'HRT and joint health',c:'#27a96c',bg:'rgba(29,158,117,.08)',bdr:'rgba(29,158,117,.3)',body:'HRT protects cartilage in perimenopausal and post-menopausal women \u2014 that\'s in your result. Strength training alongside it maximises the benefit.',cta:null},
+    peri:{lbl:'Perimenopausal joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Oestrogen fluctuation directly affects cartilage. Strength training and protein are your biggest levers now.',cta:null},
+    post_nat:{lbl:'Post-menopausal joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Sustained oestrogen loss accelerates cartilage wear. Strength training is the single most effective response.',cta:null},
+    post_early:{lbl:'Early or surgical menopause — elevated joint risk',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'The highest-risk hormonal category for joints. Acting early makes the biggest difference.',cta:'Book a 360 Assessment at Lanserhof Mayfair'},
+    hrt:{lbl:'HRT and joint health',c:'#27a96c',bg:'rgba(29,158,117,.08)',bdr:'rgba(29,158,117,.3)',body:'HRT protects cartilage in perimenopausal and post-menopausal women \u2014 that\'s in your result. Strength training alongside it maximises the benefit.',cta:null},
   };
   return P[s]||null;
 }
 function getTeenHorPanel(s){
-  if(s==='absent')return{ic:'⚠️',lbl:'Absent periods — important to discuss with your doctor',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'Absent periods in active young women can signal that the body isn\'t getting enough energy to support training and normal function — affecting bone density and joint healing. Please speak to your doctor.',cta:'Speak to your doctor'};
-  if(s==='irregular')return{ic:'🌊',lbl:'Irregular periods and joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Irregular periods in active teenagers can be an early sign of energy imbalance. Worth monitoring and discussing with your doctor if you\'re in regular sport.',cta:null};
+  if(s==='absent')return{lbl:'Absent periods — important to discuss with your doctor',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'Absent periods in active young women can signal that the body isn\'t getting enough energy to support training and normal function — affecting bone density and joint healing. Please speak to your doctor.',cta:'Speak to your doctor'};
+  if(s==='irregular')return{lbl:'Irregular periods and joint health',c:'#e09a3a',bg:'rgba(186,117,23,.08)',bdr:'rgba(186,117,23,.3)',body:'Irregular periods in active teenagers can be an early sign of energy imbalance. Worth monitoring and discussing with your doctor if you\'re in regular sport.',cta:null};
   return null;
 }
 function getHyperPanel(s){
   if(s!=='high'&&s!=='moderate')return null;
-  return{ic:'🤸',lbl:'Hypermobility and your knees',c:'#7f77dd',bg:'rgba(127,119,221,.08)',bdr:'rgba(127,119,221,.3)',body:'Flexible joints need strong muscles to compensate for what ligaments can\'t provide. Strength training is your primary treatment.',cta:null};
+  return{lbl:'Hypermobility and your knees',c:'#7f77dd',bg:'rgba(127,119,221,.08)',bdr:'rgba(127,119,221,.3)',body:'Flexible joints need strong muscles to compensate for what ligaments can\'t provide. Strength training is your primary treatment.',cta:null};
 }
 function getFamilyPanel(r){
-  if(r==='early')return{ic:'⚠️',lbl:'Family history — elevated inherited risk',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'Higher inherited risk. Same pathway — more urgency. Start now, not when symptoms appear.',cta:null};
+  if(r==='early')return{lbl:'Family history — elevated inherited risk',c:'#e05555',bg:'rgba(226,75,74,.08)',bdr:'rgba(226,75,74,.3)',body:'Higher inherited risk. Same pathway — more urgency. Start now, not when symptoms appear.',cta:null};
   return null;
 }
 
 // ── Actions ───────────────────────────────────────────────────────────────────
 const ACTS={
-  bio:{ic:'🥗',title:'Improve your biological input',sub:'Sleep, nutrition, and weight influence how much inflammation your joints deal with every day. Getting these right is the foundation everything else builds on.',d:'bio'},
-  move:{ic:'🔄',title:'Move more, sit less',sub:'Regular movement keeps the fluid in your cartilage circulating. Break up sitting every 45 minutes — even a short walk or ten squats makes a difference.',d:'move'},
-  strength:{ic:'💪',title:'Build strength — this is the biggest lever',sub:'Strong muscles protect your knees more than any supplement or injection. Two sessions per week of progressive resistance training changes your joint trajectory.',d:'strength'},
-  injury:{ic:'🏥',title:'Previous injury or pain above 4 — get an assessment',sub:'Significant injury history or ongoing pain is worth a one-off clinical assessment before starting a new loading programme.',d:'injury'},
-  genetic:{ic:'🧬',title:'Family history — start earlier, not differently',sub:'If joint problems run in your family, the same steps protect your joints — just with more urgency. Start now rather than waiting for symptoms.',d:'genetic'},
+  bio:{title:'Improve your biological input',sub:'Sleep, nutrition, and weight influence how much inflammation your joints deal with every day. Getting these right is the foundation everything else builds on.',d:'bio'},
+  move:{title:'Move more, sit less',sub:'Regular movement keeps the fluid in your cartilage circulating. Break up sitting every 45 minutes — even a short walk or ten squats makes a difference.',d:'move'},
+  strength:{title:'Build strength — this is the biggest lever',sub:'Strong muscles protect your knees more than any supplement or injection. Two sessions per week of progressive resistance training changes your joint trajectory.',d:'strength'},
+  injury:{title:'Previous injury or pain above 4 — get an assessment',sub:'Significant injury history or ongoing pain is worth a one-off clinical assessment before starting a new loading programme.',d:'injury'},
+  genetic:{title:'Family history — start earlier, not differently',sub:'If joint problems run in your family, the same steps protect your joints — just with more urgency. Start now rather than waiting for symptoms.',d:'genetic'},
 };
 function getTopActions(domains,pain){
   return Object.entries(domains)
@@ -826,22 +826,22 @@ function showHook(){
         <div style="font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-l);margin-bottom:10px">By completing this assessment you unlock early access to</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(247,243,237,.7)">
-            <span style="font-size:14px">📊</span>Weekly Knee Age tracking
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M3 20h18"/><path d="M7 20v-7M12 20V5M17 20v-10"/></svg>Weekly Knee Age tracking
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(247,243,237,.7)">
-            <span style="font-size:14px">💪</span>Personalised strength plan
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>Personalised strength plan
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(247,243,237,.7)">
-            <span style="font-size:14px">💊</span>Nutrition & supplement guide
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M5 19C5 9.5 12.5 4 20 4c0 7.5-5.5 15-15 15z"/><path d="M5 19c3-5.5 7-9.5 11-12"/></svg>Nutrition & supplement guide
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(247,243,237,.7)">
-            <span style="font-size:14px">🏥</span>12-week OrthoLongevity™ programme
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>12-week OrthoLongevity™ programme
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(247,243,237,.7)">
-            <span style="font-size:14px">🔬</span>Biological therapies guide
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M12 3.5s6 6.3 6 10.7a6 6 0 0 1-12 0C6 9.8 12 3.5 12 3.5z"/></svg>Biological therapies guide
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(247,243,237,.7)">
-            <span style="font-size:14px">🤖</span>AI-powered joint insights
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><circle cx="5" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 11l10-5M7 13l10 5"/></svg>AI-powered joint insights
           </div>
         </div>
         <div style="margin-top:10px;font-size:11px;color:rgba(247,243,237,.4)">Early access · First to know · Before public launch</div>
@@ -850,7 +850,7 @@ function showHook(){
       <!-- WHY THESE QUESTIONS -->
       <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;margin-bottom:16px">
         <div style="font-size:12px;font-weight:500;color:var(--cream);margin-bottom:6px">Why these questions?</div>
-        <div style="font-size:12px;color:rgba(247,243,237,.55);line-height:1.7">Each question has been drawn from over two decades of orthopaedic practice and shaped by leading specialists across physiotherapy, osteopathy, exercise medicine, genetics, functional medicine, sleep science, nutrition, and sports science. The result is a straightforward assessment designed to inform and guide — giving you a clearer picture of your knee and joint health in under 60 seconds.</div>
+        <div style="font-size:12px;color:rgba(247,243,237,.55);line-height:1.7">Each question has been drawn from over two decades of orthopaedic practice and shaped by specialists across physiotherapy, osteopathy, exercise medicine, genetics, functional medicine, sleep science, nutrition, and sports science. The result is a straightforward assessment designed to inform and guide — giving you a clearer picture of your knee and joint health in under 60 seconds.</div>
       </div>
 
       <!-- WELLNESS DISCLAIMER -->
@@ -913,7 +913,6 @@ function renderQ(){
     q.opts.forEach(o=>{
       const s=answers[q.id]===o.v?' sel':'';
       h+=`<button class="opt${s}" onclick="selOpt(this,'${q.id}','${o.v}',${o.sc})">
-        <div class="opt-ic">${o.ic}</div>
         <div><div class="opt-lbl">${o.lb}</div>${o.nt?`<div class="opt-note">${o.nt}</div>`:''}</div>
       </button>`;
     });
@@ -1472,7 +1471,7 @@ function insertScoreCard(container, isTeen, mainValue, chronAge, tierKey, domain
 
   const waBtn = document.createElement('button');
   waBtn.className = 'share-secondary-btn';
-  waBtn.textContent = '\uD83D\uDCAC Send via WhatsApp';
+  waBtn.textContent = 'Send via WhatsApp';
   waBtn.onclick = function(){
     window.open('https://wa.me/?text='+encodeURIComponent(caption), '_blank');
   };
@@ -1611,19 +1610,19 @@ function showResult(){
     <div id="scorecardSlot"></div>
 
     <div id="shareHub" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.25);border-radius:14px;padding:20px 16px;margin-bottom:20px;text-align:center">
-      <div style="font-family:var(--fd);font-size:clamp(18px,4.5vw,22px);font-weight:700;color:#C9A84C;margin-bottom:14px;line-height:1.3">Send your score to a friend — see who has younger knees 🔥</div>
+      <div style="font-family:var(--fd);font-size:clamp(18px,4.5vw,22px);font-weight:700;color:#C9A84C;margin-bottom:14px;line-height:1.3">Send your score to a friend — see who has younger knees</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px;margin:0 auto">
-        <button onclick="downloadScoreCardPNG()" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 14px;background:#C9A84C;color:#1E4D3B;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fd)">📲 Download my score card</button>
-        <button onclick="shareWhatsApp()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">💬 WhatsApp</button>
-        <button id="copyLinkBtn" onclick="copyShareLink()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">🔗 Copy link</button>
-        <button onclick="shareFacebook()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">📘 Facebook</button>
-        <button onclick="shareLinkedIn()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">💼 LinkedIn</button>
+        <button onclick="downloadScoreCardPNG()" style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 14px;background:#C9A84C;color:#1E4D3B;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--fd)">↓ Download my score card</button>
+        <button onclick="shareWhatsApp()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">WhatsApp</button>
+        <button id="copyLinkBtn" onclick="copyShareLink()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">Copy link</button>
+        <button onclick="shareFacebook()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">Facebook</button>
+        <button onclick="shareLinkedIn()" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;background:rgba(255,255,255,.07);color:var(--cream);border:1px solid rgba(255,255,255,.12);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--fd)">LinkedIn</button>
       </div>
     </div>
     </div><!-- /primeUnlocked -->
 
     <div id="suppPanel" style="background:#1E4D3B;border:2px solid #C9A84C;border-radius:14px;padding:18px 14px;margin-bottom:20px">
-      <div style="font-family:var(--fd);font-size:clamp(16px,4vw,20px);font-weight:700;color:#C9A84C;margin-bottom:8px;text-align:center;line-height:1.3">🔒 FOUNDING MEMBER ACCESS — CLAIM YOURS NOW</div>
+      <div style="font-family:var(--fd);font-size:clamp(16px,4vw,20px);font-weight:700;color:#C9A84C;margin-bottom:8px;text-align:center;line-height:1.3">FOUNDING MEMBER ACCESS — CLAIM YOURS NOW</div>
       <div style="font-size:13px;color:rgba(247,243,237,.8);line-height:1.6;margin-bottom:14px;text-align:center">Four quick questions. 60 seconds. Complete these and you will be locked in as a founding member of OrthoLongevity™ — our lowest ever price, priority access before public launch, and benefits never available again once we open more widely. Most people skip this. Founding members don't.</div>
       <div style="margin-bottom:12px">
         <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">How did you hear about this?</div>
@@ -1721,7 +1720,7 @@ function showResult(){
 
     ${panels.filter(Boolean).map((p,i)=>`
       <div class="info-panel" style="background:${p.bg};border:1px solid ${p.bdr};margin-top:${i===0?'18px':'8px'}">
-        <div class="ip-hdr"><span class="ip-icon">${p.ic}</span><span class="ip-title" style="color:${p.c}">${p.lbl}</span></div>
+        <div class="ip-hdr"><span class="ip-title" style="color:${p.c}">${p.lbl}</span></div>
         <p class="ip-body">${p.body}</p>
         ${p.cta?`<span class="ip-cta" style="background:${p.bg};border:1px solid ${p.c}55;color:${p.c}">${p.cta}</span>`:''}
       </div>`).join('')}
@@ -1729,8 +1728,7 @@ function showResult(){
     <div class="actions-title">3 actions that will move the needle</div>
     ${actions.map(a=>{
       const d=dInfo(a.d);
-      return `<div class="act" style="background:${d.bg}">
-        <div class="act-ic" style="background:${d.pb}44;border:1px solid ${d.pbd}">${a.ic}</div>
+      return `<div class="act" style="background:${d.bg};border-left:3px solid ${d.pbd}">
         <div>
           <div class="act-title">${a.title}</div>
           <div class="act-sub">${a.sub}</div>
@@ -1778,45 +1776,37 @@ function showResult(){
 
       <!-- WHAT'S COMING -->
       <div style="background:rgba(29,158,117,.06);border:1px solid rgba(29,158,117,.15);border-radius:16px;padding:18px;margin-bottom:16px">
-        <div style="font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-l);margin-bottom:12px">🌍 World-first · What's coming in the full app</div>
+        <div style="font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-l);margin-bottom:12px">World-first · What's coming in the full app</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">📊</div>
             <strong style="color:var(--cream);font-size:12px">Weekly Knee Age tracking</strong><br/>
             Updated every 90 seconds a week
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">💪</div>
             <strong style="color:var(--cream);font-size:12px">Personalised strength plan</strong><br/>
             Built on your exact R.E.P.A.I.R.™ stage
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">💊</div>
             <strong style="color:var(--cream);font-size:12px">Nutrition & supplements</strong><br/>
             Evidence-based, dose-specific
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">🔬</div>
             <strong style="color:var(--cream);font-size:12px">Biological therapies guide</strong><br/>
             PRP, Arthrosamid, shockwave & more
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">🧬</div>
             <strong style="color:var(--cream);font-size:12px">Genomic risk layer</strong><br/>
             With Cromwell Hospital
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">🤖</div>
             <strong style="color:var(--cream);font-size:12px">AI-powered insights</strong><br/>
             Surgeon-governed predictive care
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">🖥️</div>
             <strong style="color:var(--cream);font-size:12px">Your health portal</strong><br/>
             MRI, bloods, all your tests in one place
           </div>
           <div style="font-size:12px;color:rgba(247,243,237,.75);line-height:1.5">
-            <div style="font-size:14px;margin-bottom:3px">🏥</div>
             <strong style="color:var(--cream);font-size:12px">12-week programme</strong><br/>
             Virtual or face-to-face at Lanserhof
           </div>
@@ -1842,7 +1832,7 @@ function showResult(){
         </a>
         <a href="https://www.ortholongevity.co.uk/book-an-appointment/" target="_blank"
            style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;text-decoration:none;transition:background .2s">
-          <div style="font-size:20px">📅</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg>
           <div>
             <div style="font-size:13px;font-weight:500;color:var(--cream)">Book at ortholongevity.co.uk</div>
             <div style="font-size:11px;color:var(--muted)">All clinical locations</div>
@@ -1855,11 +1845,11 @@ function showResult(){
       <div style="margin-bottom:8px">
         <div style="font-size:11px;color:var(--muted);text-align:center;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px">Follow the work</div>
         <a class="soc-link" href="https://substack.com/@drarj" target="_blank">
-          <div class="soc-ic">📖</div><div><div class="soc-name">The Ortholongevity Journal</div><div class="soc-desc">Weekly insights from a consultant surgeon</div></div>
+          <div class="soc-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h6a4 4 0 0 1 4 4v12a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v12a3 3 0 0 1 3-3h7z"/></svg></div><div><div class="soc-name">The Ortholongevity Journal</div><div class="soc-desc">Weekly insights from a consultant surgeon</div></div>
           <div class="soc-arr">→</div>
         </a>
         <a class="soc-link" href="https://www.youtube.com/@ortholongevity" target="_blank">
-          <div class="soc-ic">▶</div><div><div class="soc-name">OrthoLongevity on YouTube</div><div class="soc-desc">Evidence-based joint health videos</div></div>
+          <div class="soc-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6l10 6-10 6z"/></svg></div><div><div class="soc-name">OrthoLongevity on YouTube</div><div class="soc-desc">Evidence-based joint health videos</div></div>
           <div class="soc-arr">→</div>
         </a>
       </div>
@@ -1909,7 +1899,7 @@ function copyShareLink(){
   const txt='Find out your Knee Age \u2014 mine might surprise you. kneeage.com';
   navigator.clipboard.writeText(txt).then(()=>{
     const btn=document.getElementById('copyLinkBtn');
-    if(btn){btn.textContent='\u2713 Copied!';setTimeout(()=>{btn.textContent='\uD83D\uDD17 Copy link';},2000);}
+    if(btn){btn.textContent='\u2713 Copied!';setTimeout(()=>{btn.textContent='Copy link';},2000);}
   });
 }
 
@@ -2162,9 +2152,9 @@ function showShareModal(whatsappText){
       <div class="share-modal-title">Share your result</div>
       <div class="share-card-preview"></div>
       <div class="share-btns">
-        <button class="share-btn-item primary" id="dlBtn">⬇ Save image to share</button>
-        <button class="share-btn-item" id="waBtn">💬 Copy WhatsApp message</button>
-        <button class="share-btn-item" id="cpBtn">🔗 Copy link</button>
+        <button class="share-btn-item primary" id="dlBtn">↓ Save image to share</button>
+        <button class="share-btn-item" id="waBtn">Copy WhatsApp message</button>
+        <button class="share-btn-item" id="cpBtn">Copy link</button>
       </div>
       <button class="share-close" onclick="this.closest('.share-modal-bg').remove()">✕ Close</button>
     </div>`;
@@ -2180,13 +2170,13 @@ function showShareModal(whatsappText){
   bg.querySelector('#waBtn').onclick=()=>{
     navigator.clipboard.writeText(whatsappText).then(()=>{
       bg.querySelector('#waBtn').textContent='✓ Copied!';
-      setTimeout(()=>{bg.querySelector('#waBtn').textContent='💬 Copy WhatsApp message';},2000);
+      setTimeout(()=>{bg.querySelector('#waBtn').textContent='Copy WhatsApp message';},2000);
     });
   };
   bg.querySelector('#cpBtn').onclick=()=>{
     navigator.clipboard.writeText('https://kneeage.com').then(()=>{
       bg.querySelector('#cpBtn').textContent='✓ Copied!';
-      setTimeout(()=>{bg.querySelector('#cpBtn').textContent='🔗 Copy link';},2000);
+      setTimeout(()=>{bg.querySelector('#cpBtn').textContent='Copy link';},2000);
     });
   };
   bg.addEventListener('click',e=>{if(e.target===bg)bg.remove();});
