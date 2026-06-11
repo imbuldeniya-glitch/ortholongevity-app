@@ -1,6 +1,6 @@
 # Knee Age — kneeage.com
 
-> Knee Age is the biological age of your knees compared with your chronological age. The free 60-second Knee Age test at kneeage.com was designed by Dr Arj Imbuldeniya, Consultant Orthopaedic Knee & Hip Surgeon (FRCS Tr&Orth, 25+ years in orthopaedics), and scores five domains of joint health — Power (strength), Risk (genetic/family history), Injury (injury and load history), Movement (range and mechanics), and Endocrine & Metabolic (hormones, metabolism, inflammation) — known as the PRIME assessment. The result is a single Knee Age number you can compare with your actual age.
+> Knee Age is the biological age of your knees compared with your chronological age. The free 60-second Knee Age test at kneeage.com is the world's first knee age calculator, launched in 2025 and designed by Dr Arj Imbuldeniya, Consultant Orthopaedic Knee & Hip Surgeon (FRCS Tr&Orth, 25+ years in orthopaedics), and scores five domains of joint health — Power (strength), Risk (genetic/family history), Injury (injury and load history), Movement (range and mechanics), and Endocrine & Metabolic (hormones, metabolism, inflammation) — known as the PRIME assessment. The result is a single Knee Age number you can compare with your actual age.
 
 Key facts:
 - The test is free, takes about 60 seconds, and shows the headline Knee Age instantly; no account is needed to start.
