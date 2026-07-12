@@ -40,25 +40,27 @@ export function buildOgElement(kneeIn, ageIn) {
   );
 }
 
-// Decode the base64-embedded fonts once. No network fetch and no fs access, so
-// this works identically in edge and node — no self-fetch to be blocked by a
-// protected preview, and no file:// fetch that node can't do. On any unexpected
-// failure we return null and fall back to the built-in font, so the image is
-// NEVER empty.
-let _fontCache; // undefined = not built, null = use built-in, array = loaded
-function b64ToArrayBuffer(b64) {
-  const bin = atob(b64), len = bin.length, bytes = new Uint8Array(len);
-  for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
-  return bytes.buffer;
-}
-function loadFonts() {
+// Brand fonts are read from the BUNDLED asset via import.meta.url — no network
+// self-fetch, so a protected preview can't return an auth page in place of the
+// font (which would make Satori stream an empty image). Each font is validated
+// (woff magic + size); if anything is off we return null and render with the
+// built-in font, so the image is NEVER empty.
+let _fontCache; // undefined = not tried, null = use built-in, array = loaded
+async function loadFonts() {
   if (_fontCache !== undefined) return _fontCache;
+  const files = [
+    ['PlayfairDisplay-700.woff', 'Playfair Display', 700],
+    ['DMSans-400.woff', 'DM Sans', 400],
+    ['DMSans-700.woff', 'DM Sans', 700],
+  ];
   try {
-    _fontCache = [
-      { name: 'Playfair Display', data: b64ToArrayBuffer(FONTS_B64.playfair700), weight: 700, style: 'normal' },
-      { name: 'DM Sans', data: b64ToArrayBuffer(FONTS_B64.dmsans400), weight: 400, style: 'normal' },
-      { name: 'DM Sans', data: b64ToArrayBuffer(FONTS_B64.dmsans700), weight: 700, style: 'normal' },
-    ];
+    _fontCache = await Promise.all(files.map(async ([file, name, weight]) => {
+      const res = await fetch(new URL('../fonts/' + file, import.meta.url));
+      const data = await res.arrayBuffer();
+      const valid = data.byteLength > 2000 && new DataView(data).getUint32(0) === 0x774F4646; // 'wOFF'
+      if (!valid) throw new Error('invalid font ' + file);
+      return { name, data, weight, style: 'normal' };
+    }));
   } catch (e) {
     _fontCache = null; // built-in font fallback — never empty
   }
@@ -68,18 +70,15 @@ function loadFonts() {
 export default async function handler(req) {
   const url = new URL(req.url);
   const el = buildOgElement(url.searchParams.get('knee'), url.searchParams.get('age'));
-  const fonts = loadFonts();
+  const fonts = await loadFonts();
   const opts = { width: 1200, height: 630 };
   if (fonts) opts.fonts = fonts;
-  // Fully render before responding: yields a real Content-Length and removes any
-  // chance of a mid-stream failure after the 200 headers have flushed.
-  const buf = await new ImageResponse(el, opts).arrayBuffer();
-  return new Response(buf, {
+  const img = new ImageResponse(el, opts);
+  // Re-wrap the PNG stream so we control headers exactly (no duplicated
+  // cache-control). Modest cache until the DEPLOYED endpoint is confirmed
+  // non-empty; can be raised to immutable once verified live.
+  return new Response(img.body, {
     status: 200,
-    headers: {
-      'content-type': 'image/png',
-      'content-length': String(buf.byteLength),
-      'Cache-Control': 'public, immutable, no-transform, max-age=31536000',
-    },
+    headers: { 'content-type': 'image/png', 'Cache-Control': 'public, max-age=300, must-revalidate' },
   });
 }
