@@ -266,6 +266,30 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .pb-band-cta-soft{background:none;color:var(--teal-l);border:1px solid rgba(93,202,165,.4);padding:8px 15px}
 .pb-consult{font-size:13px;color:rgba(247,243,237,.6);line-height:1.6;margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
 .pb-consult a{color:var(--gold);text-decoration:underline;font-weight:600}
+/* Centre-zero diverging PRIME bars (years) */
+.pby-axis{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:2px 0 12px;padding:0 2px}
+.pby-row{margin-bottom:14px}
+.pby-meta{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.pby-letter{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--gold);width:15px;text-align:center;flex-shrink:0}
+.pby-name{font-size:13px;font-weight:600;color:var(--cream);flex:1}
+.pby-val{font-family:var(--fd);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.pby-unit{font-size:10px;color:var(--muted);font-weight:400}
+.pby-track{position:relative;display:flex;height:14px;border-radius:7px;background:rgba(255,255,255,.05)}
+.pby-half{width:50%;display:flex;align-items:center;overflow:hidden}
+.pby-half-neg{justify-content:flex-end}
+.pby-half-pos{justify-content:flex-start}
+.pby-fill{height:100%;min-width:2px;display:flex;align-items:center;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.pby-half-neg .pby-fill{border-radius:7px 3px 3px 7px}
+.pby-half-pos .pby-fill{border-radius:3px 7px 7px 3px}
+.pby-zero{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:rgba(255,255,255,.4);transform:translateX(-50%);border-radius:1px;z-index:2}
+.pby-cap{font-size:11px;font-weight:700;line-height:1;color:#fff}
+.pby-cap-l{margin-right:auto;padding-left:3px}
+.pby-cap-r{margin-left:auto;padding-right:3px}
+.pby-desc{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+.pby-opp{background:rgba(29,158,117,.08);border:1px solid rgba(29,158,117,.28);border-radius:14px;padding:16px;margin:20px 0 4px}
+.pby-opp-h{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-l);margin-bottom:8px}
+.pby-opp-body{font-size:14px;color:rgba(247,243,237,.9);line-height:1.65}
+.pby-opp-cta{display:inline-block;margin-top:12px;font-size:13px;font-weight:600;text-decoration:none;background:var(--gold);color:#173d2c;padding:9px 16px;border-radius:8px}
 .paed-disclaimer{width:100%;max-width:500px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:0.75rem 1rem;font-family:Georgia,serif;font-size:0.78rem;font-style:italic;color:rgba(255,255,255,0.4);text-align:center;line-height:1.5}
 </style>
 <script type="application/ld+json">
@@ -522,6 +546,11 @@ function visibleQs(a){ return QS.filter(q=>!q.conditional||q.conditional(a)); }
 let qIdx=0, answers={}, phase='hook';
 
 // ── Scoring ───────────────────────────────────────────────────────────────────
+// Calibration — SIGNED OFF BY DR ARJ, 12 July 2026. Change these two to recalibrate.
+const NEUTRAL = 65;            // neutral point (was 75)
+const K = 0.38;               // years-per-composite-point multiplier
+// PRIME weights (unchanged). Power heaviest at 32%. Keys are the app's domain keys.
+const PRIME_W = { strength:0.32, bio:0.22, move:0.16, injury:0.16, genetic:0.14 };
 function calc(a){
   const age=a.age||35, sex=a.sex||'other', isTeen=age<18;
   const menoBioMod=getMenoBio(a,sex,age), menoAgeMod=getMenoAge(a,sex,age);
@@ -537,16 +566,18 @@ function calc(a){
   const painRaw=a.pain!==undefined?a.pain:3;
   const injAdj=avg([clamp(100-painRaw*10),a.injury_s??80]);
   const genetic=a.family_s??65;
-  const composite=(bioAdj*.22+moveAdj*.16+strAdj*.32+injAdj*.16+genetic*.14);
-  const delta=Math.round((75-composite)*.38);
+  // Domain scores as displayed (rounded), so the per-domain years are exactly additive.
+  const domains={bio:Math.round(bioAdj),move:Math.round(moveAdj),strength:Math.round(strAdj),injury:Math.round(injAdj),genetic:Math.round(genetic)};
+  const composite=domains.strength*PRIME_W.strength+domains.bio*PRIME_W.bio+domains.move*PRIME_W.move+domains.injury*PRIME_W.injury+domains.genetic*PRIME_W.genetic;
+  const delta=Math.round((NEUTRAL-composite)*K);
   let kneeAge=isTeen?age:Math.round(age+delta+menoAgeMod);
-  if(!isTeen) kneeAge=Math.max(18,Math.min(kneeAge,90)); // floor at 18 for adults
-  // For teens floor at actual age (joints still developing)
+  if(!isTeen) kneeAge=Math.max(18,Math.min(kneeAge,90)); // clamp 18 to 90 for adults
+  // For teens pin to actual age (joints still developing)
   if(isTeen) kneeAge=age;
   const jhs=Math.round(composite);
   return {
-    isTeen,age,sex,kneeAge,jhs,diff:kneeAge-age,composite,
-    domains:{bio:Math.round(bioAdj),move:Math.round(moveAdj),strength:Math.round(strAdj),injury:Math.round(injAdj),genetic:Math.round(genetic)},
+    isTeen,age,sex,kneeAge,jhs,diff:kneeAge-age,composite,menoAgeMod,
+    domains,
     familyRisk:a.family||'unsure',painLevel:painRaw,
     menoStatus:a.menopause||null,teenHorStatus:a.teen_hormonal||null,hypermobile:a.hypermobility||null
   };
@@ -573,6 +604,95 @@ function getTeenHor(a,sex,age){
 }
 function avg(arr){return arr.reduce((a,b)=>a+b,0)/arr.length;}
 function clamp(v){return Math.max(0,Math.min(100,Math.round(v)));}
+
+// ── PRIME years engine (verified in scripts/prime_recalibration_check.js) ─────
+const PRIME_META={
+  strength:{letter:'P',name:'Power',                type:'modifiable'},
+  genetic: {letter:'R',name:'Risk',                 type:'genetic'},
+  injury:  {letter:'I',name:'Injury',              type:'symptom'},
+  move:    {letter:'M',name:'Movement',            type:'modifiable'},
+  bio:     {letter:'E',name:'Endocrine & Metabolic',type:'modifiable'},
+};
+const PRIME_ORDER=['strength','genetic','injury','move','bio']; // P R I M E
+const PRIME_MODIFIABLE=['strength','bio','move'];
+const PRIME_ACTION={
+  strength:'building strength around the joint, two focused sessions a week',
+  bio:'steadier blood sugar, better sleep and lowering your inflammatory load',
+  move:'restoring range and breaking up long hours of sitting',
+};
+// Round each year to 1dp, then distribute the rounding residual in 0.1 steps
+// (largest-remainder) so bars sum exactly to the integer gap while staying within
+// 0.1 of their true value. No faked lengths.
+function reconcileToGap(years,gap,ageClamped){
+  const disp={}; PRIME_ORDER.forEach(k=>disp[k]=Math.round(years[k]*10)/10);
+  if(ageClamped) return disp;
+  const sum=PRIME_ORDER.reduce((s,k)=>s+disp[k],0);
+  let steps=Math.round((gap-sum)*10);
+  if(steps!==0){
+    const rem=PRIME_ORDER.map(k=>({k,r:years[k]*10-Math.round(years[k]*10)}));
+    rem.sort((a,b)=>steps>0?b.r-a.r:a.r-b.r);
+    const dir=Math.sign(steps);
+    for(let n=Math.abs(steps),i=0;n>0;n--,i++){const k=rem[i%rem.length].k;disp[k]=Math.round((disp[k]+dir*0.1)*10)/10;}
+  }
+  return disp;
+}
+// Per-domain year contributions that sum to the displayed Knee Age gap.
+function computePrimeYears(domains,age,menoAgeMod,isTeen){
+  const composite=PRIME_ORDER.reduce((s,k)=>s+PRIME_W[k]*domains[k],0);
+  const deltaFloat=(NEUTRAL-composite)*K, delta=Math.round(deltaFloat);
+  const rawYears={}; PRIME_ORDER.forEach(k=>rawYears[k]=K*PRIME_W[k]*(NEUTRAL-domains[k]));
+  const rawSum=PRIME_ORDER.reduce((s,k)=>s+rawYears[k],0);
+  console.assert(Math.abs(rawSum-deltaFloat)<1e-9,'PRIME additivity: raw years must sum to delta',rawSum,deltaFloat);
+  const years=Object.assign({},rawYears); years.bio+=menoAgeMod; // fold meno into E
+  let kneeAge=isTeen?age:Math.max(18,Math.min(Math.round(age+delta+menoAgeMod),90));
+  const gap=kneeAge-age;
+  const ageClamped=!isTeen&&(age+delta+menoAgeMod)!==kneeAge;
+  const disp=reconcileToGap(years,gap,ageClamped);
+  const dispSum=+PRIME_ORDER.reduce((s,k)=>s+disp[k],0).toFixed(1);
+  console.assert(ageClamped||Math.abs(dispSum-gap)<0.05,'PRIME bars must sum to displayed gap',dispSum,gap);
+  return {years,disp,gap,kneeAge,delta,ageClamped};
+}
+function kneeAgeOf(domains,age,menoAgeMod){
+  const composite=PRIME_ORDER.reduce((s,k)=>s+PRIME_W[k]*domains[k],0);
+  const delta=Math.round((NEUTRAL-composite)*K);
+  return Math.max(18,Math.min(Math.round(age+delta+menoAgeMod),90));
+}
+// Real recompute: lift ONE domain's 0-100 score (capped 90), return years taken off.
+function fallFromLift(domains,age,menoAgeMod,key,lift){
+  const lifted=Object.assign({},domains); lifted[key]=Math.min(90,domains[key]+lift);
+  return kneeAgeOf(domains,age,menoAgeMod)-kneeAgeOf(lifted,age,menoAgeMod);
+}
+function projectRange(domains,age,menoAgeMod,key){
+  return {low:fallFromLift(domains,age,menoAgeMod,key,15),high:fallFromLift(domains,age,menoAgeMod,key,25)};
+}
+function biggestDriver(years){return PRIME_ORDER.reduce((a,b)=>years[b]>years[a]?b:a,PRIME_ORDER[0]);}
+function topModifiable(years){return PRIME_MODIFIABLE.reduce((a,b)=>years[b]>years[a]?b:a,PRIME_MODIFIABLE[0]);}
+function fmtYears(r){
+  const f=n=>n.toFixed(1).replace(/\.0$/,'');
+  return r.high<1?'around a year':f(r.low)+' to '+f(r.high)+' years';
+}
+// Branch opportunity copy by driver TYPE (verbatim, Dr Arj's voice, British English).
+function opportunityCopy(model){
+  const {years,gap,domains,age,menoAgeMod}=model;
+  const driver=biggestDriver(years), type=PRIME_META[driver].type, younger=gap<0;
+  if(younger){
+    const tm=topModifiable(years);
+    return {template:'push-further',driver,
+      text:'You are ahead of your age, which is the hard part done. If you want to push further, '+PRIME_ACTION[tm]+' is your highest-leverage move. The gains get smaller from here, but these are the ones that hold as you age.'};
+  }
+  if(type==='modifiable'){
+    const r=projectRange(domains,age,menoAgeMod,driver);
+    return {template:'modifiable',driver,range:r,
+      text:PRIME_META[driver].name+' is adding the most years to your knees, and it is the one you can move fastest. Based on your answers, '+PRIME_ACTION[driver]+' could take '+fmtYears(r)+' off your Knee Age over the coming months. Small, repeated, compounding. This is where I would start.'};
+  }
+  if(type==='genetic'){
+    const tm=topModifiable(years);
+    return {template:'genetic',driver,
+      text:'Your family history is the biggest single factor here. You cannot change your genes, but they set the timeline, not the outcome. The patients who do best start earlier on the things they can change. For you that is '+PRIME_META[tm].name+', where your answers show the most room. Acting now is worth more than acting harder later.'};
+  }
+  return {template:'injury',driver,
+    text:'Your answers about the knee itself are the biggest factor in your score. That is less about training and more about getting the right eyes on it. I would have this looked at before adding load. This is not a diagnosis. It is a prompt to check.'};
+}
 
 // ── Verdict ───────────────────────────────────────────────────────────────────
 function getStatus(diff,isTeen,jhs,age){
@@ -612,15 +732,6 @@ function getStatus(diff,isTeen,jhs,age){
     statusLine:'Your joints are showing signs of accelerated ageing.',
     reaction:'Your joints need attention — but you found out at exactly the right time.',
     identity:'A Knee Age this far ahead of your chronological age is a clear signal — and it is not a fixed outcome. The factors driving an older Knee Age are directly addressable: strength, muscle mass, nutrition, inflammation, sleep, weight, and stress. The biology can change. That is not a promise — it is what the evidence shows and what I see in clinical practice every week. The OrthoLongevity™ app is being built specifically for people in your position — a structured programme targeting every driver behind your score. You will be first to access it. For free guidance right now, visit my YouTube channel and Substack. If you have joint pain, stiffness, or swelling that concerns you, please do not wait — book a consultation at ortholongevity.ai or speak to your GP. Most people find out too late. You just found out at exactly the right time.',badge:'Needs attention'};
-}
-
-// Get improvable years (potential)
-function getImproveable(domains){
-  const worst=Object.values(domains).filter(v=>v<60);
-  if(worst.length===0)return 3;
-  if(worst.length===1)return 5;
-  if(worst.length>=3)return 10;
-  return 7;
 }
 
 // ── Info panels ───────────────────────────────────────────────────────────────
@@ -666,69 +777,48 @@ function getTopActions(domains,pain){
 function dInfo(k){return DRIVERS.find(d=>d.key===k);}
 
 // ── PRIME breakdown (results) ───────────────────────────────────────────────
-function buildPrimeBreakdown(domains){
+// Centre-zero diverging PRIME bars, driven by each patient's REAL per-domain years.
+// Same renderer serves the healthy and escalation states (greens vs ambers emerge
+// from the data, never a forced direction).
+function buildPrimeBreakdown(R){
   var CONSULT='https://www.ortholongevity.co.uk/book-an-appointment/';
-  var GRAD_H='linear-gradient(90deg,#1d9e75,#5dcaa5,#c9a84c)';      // health: teal -> mint -> gold (higher = healthier)
-  var GRAD_R='linear-gradient(90deg,#5dcaa5,#c9a84c,#c0703a)';      // risk: mint/gold -> terracotta (higher = more risk)
-  var TIP='Based on family history. Genomic risk scoring coming soon.';
-  function fillStyle(v,grad){
-    var w=Math.max(3,Math.min(100,Math.round(v)));
-    var size=Math.round(10000/w);
-    return 'width:'+w+'%;background:'+grad+';background-size:'+size+'% 100%;background-position:left center;background-repeat:no-repeat';
+  var model=computePrimeYears(R.domains,R.age,R.menoAgeMod,R.isTeen);
+  model.domains=R.domains; model.age=R.age; model.menoAgeMod=R.menoAgeMod;
+  var HALF=8;                                   // years half-scale (covers Power +7.9)
+  var MINUS='−';                           // true minus glyph
+  var DESC={
+    strength:'Strength and force capacity',
+    genetic:'Family history and inherited risk',
+    injury:'Injury and load history',
+    move:'Range, mechanics, posture and function',
+    bio:'Hormones, metabolism and inflammation'
+  };
+  function bar(k){
+    var y=model.disp[k], meta=PRIME_META[k];
+    var pct=(Math.min(Math.abs(y),HALF)/HALF)*100;              // % of one half-track
+    var capped=Math.abs(y)>HALF+1e-9;                           // exceeds scale -> cap marker
+    var label=(y>0?'+':(y<0?MINUS:'±'))+Math.abs(y).toFixed(1);
+    var col=y>0?'#c0703a':(y<0?'#1d9e75':'var(--muted)');
+    var neg=y<0?'<div class="pby-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#5dcaa5,#1d9e75)">'+(capped?'<span class="pby-cap pby-cap-l">‹</span>':'')+'</div>':'';
+    var pos=y>0?'<div class="pby-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#c9a84c,#c0703a)">'+(capped?'<span class="pby-cap pby-cap-r">›</span>':'')+'</div>':'';
+    return '<div class="pby-row">'
+      +'<div class="pby-meta"><span class="pby-letter" aria-hidden="true">'+meta.letter+'</span><span class="pby-name">'+meta.name+'</span>'
+      +'<span class="pby-val" style="color:'+col+'">'+label+' <span class="pby-unit">yrs</span></span></div>'
+      +'<div class="pby-track"><div class="pby-half pby-half-neg">'+neg+'</div><span class="pby-zero"></span><div class="pby-half pby-half-pos">'+pos+'</div></div>'
+      +'<div class="pby-desc">'+DESC[k]+'</div></div>';
   }
-  function healthRow(letter,name,desc,v){
-    return '<div class="pb-row">'
-      +'<div class="pb-meta"><span class="pb-letter" aria-hidden="true">'+letter+'</span>'
-      +'<span class="pb-name">'+name+'</span>'
-      +'<span class="pb-score">'+Math.round(v)+'<span class="pb-score-max">/100</span></span></div>'
-      +'<div class="pb-track"><div class="pb-fill" style="'+fillStyle(v,GRAD_H)+'"></div></div>'
-      +'<div class="pb-desc">'+desc+'</div></div>';
-  }
-  var P=domains.strength||0, I=domains.injury||0, M=domains.move||0, E=domains.bio||0;
-  var genetic=(domains.genetic==null?65:domains.genetic);
-  var risk=Math.max(0,Math.min(100,100-genetic));               // displayed value: 100 - stored genetic
-  var riskWord=risk<=33?'Low':risk<=66?'Moderate':'High';
-  var band;
-  if(risk<=33){
-    band={key:'low',col:'#5dcaa5',head:'Low genetic risk',
-      msg:'Your family history is working in your favour. That’s one advantage banked — keep your other four domains strong to hold onto it.',
-      cta:'See your full PRIME profile',href:null};
-  } else if(risk<=66){
-    band={key:'mod',col:'#c9a84c',head:'Moderate genetic risk',
-      msg:'A family history like yours doesn’t decide the outcome — it moves the timeline forward. The advantage is in acting earlier, not harder.',
-      cta:'Book a consultation',href:CONSULT};
-  } else {
-    band={key:'high',col:'#c0703a',head:'High genetic risk',
-      msg:'A strong family history raises urgency, not inevitability. The patients who do best are the ones who start before symptoms force the decision.',
-      cta:'Book a consultation',href:CONSULT};
-  }
-  // Inverted Risk bar: high value = high risk, with explicit Low/Moderate/High scale + marker
-  var markerPos=Math.max(3,Math.min(100,risk));
-  var riskRow='<div class="pb-row pb-row-risk">'
-    +'<div class="pb-meta"><span class="pb-letter" aria-hidden="true">R</span>'
-    +'<span class="pb-name">Risk <button type="button" class="pb-info" aria-label="'+TIP+'" title="'+TIP+'">i</button></span>'
-    +'<span class="pb-score" style="color:'+band.col+'">'+riskWord+'</span></div>'
-    +'<div class="pb-track pb-track-risk" title="'+TIP+'"><div class="pb-fill" style="'+fillStyle(risk,GRAD_R)+'"></div>'
-    +'<span class="pb-marker" style="left:'+markerPos+'%"></span></div>'
-    +'<div class="pb-scale"><span>Low</span><span>Moderate</span><span>High</span></div>'
-    +'<div class="pb-desc">Genetic Risk — higher reads as higher risk (the opposite of the bars above)</div></div>';
-  // Risk-band message + calibrated next step
-  var bandCta = band.href
-    ? '<a class="pb-band-cta" href="'+band.href+'" target="_blank" rel="noopener">'+band.cta+' →</a>'
-    : '<a class="pb-band-cta pb-band-cta-soft" href="#primeBreakdown" onclick="var el=document.getElementById(\'primeBreakdown\');if(el)el.scrollIntoView({behavior:\'smooth\'});return false;">'+band.cta+' ↓</a>';
-  var bandBlock='<div class="pb-band" style="border-color:'+band.col+'40">'
-    +'<div class="pb-band-head" style="color:'+band.col+'">'+band.head+'</div>'
-    +'<div class="pb-band-msg">'+band.msg+'</div>'+bandCta+'</div>';
-
+  var bars=PRIME_ORDER.map(bar).join('');
+  var opp=opportunityCopy(model);
+  var oppCta=(opp.template==='injury'||opp.template==='genetic')
+    ? '<a class="pby-opp-cta" href="'+CONSULT+'" target="_blank" rel="noopener">Book an assessment →</a>' : '';
+  var oppCard='<div class="pby-opp"><div class="pby-opp-h">Your biggest opportunity</div>'
+    +'<div class="pby-opp-body">'+opp.text+'</div>'+oppCta+'</div>';
   return '<div class="prime-breakdown" id="primeBreakdown">'
-    +'<div class="pb-h">Your PRIME breakdown</div>'
-    +'<div class="pb-sub">The five domains behind your Knee Age.</div>'
-    + healthRow('P','Power','Strength and force capacity',P)
-    + riskRow
-    + bandBlock
-    + healthRow('I','Injury','Injury and load history',I)
-    + healthRow('M','Movement','Range, mechanics, posture and function',M)
-    + healthRow('E','Endocrine &amp; Metabolic','Hormones, metabolism and inflammation',E)
+    +'<div class="pb-h">What’s driving your score</div>'
+    +'<div class="pb-sub">Each domain’s effect on your Knee Age, in years. Green makes your knees younger, amber older.</div>'
+    +'<div class="pby-axis"><span>← younger</span><span>older →</span></div>'
+    + bars
+    + oppCard
     + '<div class="pb-consult">Want a clinician to interpret your PRIME profile? <a href="'+CONSULT+'" target="_blank" rel="noopener">Book a consultation →</a></div>'
     + '</div>';
 }
@@ -1549,13 +1639,15 @@ function showResult(){
     domains: R_data.domains || {}
   });
   const R=calc(answers);
-  const {isTeen,age,kneeAge,jhs,diff,domains,familyRisk,painLevel,menoStatus,teenHorStatus,hypermobile}=R;
+  const {isTeen,age,kneeAge,jhs,diff,domains,menoAgeMod,familyRisk,painLevel,menoStatus,teenHorStatus,hypermobile}=R;
   // Update Kit subscriber with result data if email was captured
   if(answers._email){
     sendToKit(answers._email, isTeen ? null : kneeAge, isTeen ? jhs : R.composite);
   }
   const status=getStatus(diff,isTeen,jhs,age);
-  const improveable=getImproveable(domains);
+  // Projected potential — REAL recompute (item 6), lifting the top modifiable domain.
+  const _pyModel=isTeen?null:computePrimeYears(domains,age,menoAgeMod,isTeen);
+  const potentialText=isTeen?'':fmtYears(projectRange(domains,age,menoAgeMod,topModifiable(_pyModel.years)));
   const actions=getTopActions(domains,painLevel);
   // Info panels
   const panels=[];
@@ -1623,7 +1715,7 @@ function showResult(){
     </div>`}
 
     <div id="primeUnlocked"${isTeen ? '' : ' style="display:none"'}>
-    ${isTeen ? '' : buildPrimeBreakdown(domains)}
+    ${isTeen ? '' : buildPrimeBreakdown(R)}
 
     <div id="scorecardSlot"></div>
 
@@ -1717,7 +1809,7 @@ function showResult(){
 
     <div class="improve-hook">
       <div style="font-size:11px;color:var(--teal-l);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Your potential</div>
-      <div style="font-family:var(--fd);font-size:clamp(20px,5vw,26px);font-weight:700;color:var(--cream);margin-bottom:6px;line-height:1.2">You could take <span style="color:var(--teal-l)">${improveable} years</span> off your Knee Age.</div>
+      <div style="font-family:var(--fd);font-size:clamp(20px,5vw,26px);font-weight:700;color:var(--cream);margin-bottom:6px;line-height:1.2">You could take <span style="color:var(--teal-l)">${potentialText}</span> off your Knee Age.</div>
       <div class="improve-hook-sub">Most people never do this. But you can \u2014 and it starts with the three actions below.</div>
     </div>`:''}
 
