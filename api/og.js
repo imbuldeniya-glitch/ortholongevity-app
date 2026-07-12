@@ -72,12 +72,16 @@ export default async function handler(req) {
   const fonts = loadFonts();
   const opts = { width: 1200, height: 630 };
   if (fonts) opts.fonts = fonts;
-  const img = new ImageResponse(el, opts);
-  // Re-wrap the PNG stream so we control headers exactly (no duplicated
-  // cache-control). Modest cache until the DEPLOYED endpoint is confirmed
-  // non-empty; can be raised to immutable once verified live.
-  return new Response(img.body, {
+  // Fully render before responding: yields a real Content-Length and removes any
+  // chance of a mid-stream failure after the 200 headers have flushed. If the
+  // render ever threw it would surface as a 5xx (never a cached empty 200).
+  const buf = await new ImageResponse(el, opts).arrayBuffer();
+  return new Response(buf, {
     status: 200,
-    headers: { 'content-type': 'image/png', 'Cache-Control': 'public, max-age=300, must-revalidate' },
+    headers: {
+      'content-type': 'image/png',
+      'content-length': String(buf.byteLength),
+      'Cache-Control': 'public, immutable, no-transform, max-age=31536000',
+    },
   });
 }
