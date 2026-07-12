@@ -3,20 +3,17 @@
 // Social crawlers do not run client JS, so og:image is emitted here and points at
 // /api/og. Humans get a light result view with a button back to the free test.
 // Only two numbers travel in the URL (knee, age); no name or identifying detail.
+import { clampAge, heroState } from '../hero-core.js';
+
 export const config = { runtime: 'edge' };
 
-function clampNum(v, lo, hi, fallback) {
-  const n = Math.round(Number(v));
-  if (!Number.isFinite(n)) return fallback;
-  return Math.max(lo, Math.min(hi, n));
-}
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 export default async function handler(req) {
   const url = new URL(req.url);
   const origin = url.origin;
-  const knee = clampNum(url.searchParams.get('knee'), 18, 90, 40);
-  const age = clampNum(url.searchParams.get('age'), 18, 90, 40);
+  const knee = clampAge(url.searchParams.get('knee'));
+  const age = clampAge(url.searchParams.get('age'));
   const gap = knee - age, diff = Math.abs(gap);
   const word = gap < 0 ? 'younger' : gap > 0 ? 'older' : 'in line with';
   const gapLine = gap === 0 ? `in line with the age of ${age}` : `${diff} year${diff === 1 ? '' : 's'} ${word} than the age of ${age}`;
@@ -24,7 +21,7 @@ export default async function handler(req) {
   const title = `These knees are ${knee}. Real age ${age}.`;
   const desc = `A surgeon-built test scores the biological age of your knees in 60 seconds. Find out your own Knee Age, free.`;
   const testUrl = `${origin}/kneeagequiz.html`;
-  const pillCol = gap < 0 ? '#5dcaa5' : gap > 0 ? '#c0703a' : '#c9a84c';
+  const pillCol = heroState(knee, age).pill.color;
 
   const html = `<!DOCTYPE html>
 <html lang="en-GB">

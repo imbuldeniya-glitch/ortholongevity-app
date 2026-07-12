@@ -27,6 +27,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f2d1e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='18' font-weight='700' text-anchor='middle' fill='%235dcaa5'%3EK%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script type="module" src="/hero-core.js"></script>
 <style>
 :root{
   --forest:#0f2d1e;--teal:#1d9e75;--teal-l:#5dcaa5;
@@ -117,6 +118,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .res-compare{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:8px 20px;margin-bottom:20px}
 .res-compare-txt{font-size:14px;color:rgba(247,243,237,.7)}
 .res-compare-age{font-size:14px;font-weight:600;color:var(--cream)}
+/* Knee Age ring hero (shares hero-core.js geometry with /api/og) */
+.kh-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:22px}
+.kh-ring{position:relative;width:min(300px,74vw);aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.kh-ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.kh-center{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.kh-num{font-family:var(--fd);font-weight:700;font-size:clamp(64px,20vw,96px);line-height:1;color:var(--cream)}
+.kh-lbl{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.kh-pill{display:inline-block;margin-top:18px;padding:9px 22px;border-radius:100px;border:2px solid;font-size:15px;font-weight:600;font-family:var(--fb)}
 
 /* STATUS LINE — the shareable bit */
 .status-line{font-family:var(--fd);font-size:clamp(18px,4vw,24px);font-weight:700;line-height:1.3;margin-bottom:8px}
@@ -1668,6 +1677,23 @@ function showResult(){
         ? `I'm ${age}. My Knee Age is ${kneeAge}. Just found out — test yours → kneeage.com`
         : `I'm ${age}. My Knee Age is ${kneeAge}. I'm fixing this → kneeage.com`
 
+  // Knee Age ring hero — rendered from the shared hero-core module (same source as /api/og).
+  let khHero = '';
+  if (!isTeen) {
+    if (window.KneeHero) {
+      const _s = window.KneeHero.heroState(kneeAge, age);
+      khHero = '<div class="res-eyebrow">Well done — you have found out your Knee Age</div>'
+        + '<div class="kh-hero"><div class="kh-ring">' + window.KneeHero.ringSvg(kneeAge, age)
+        + '<div class="kh-center"><div class="kh-num">' + kneeAge + '</div><div class="kh-lbl">Knee Age</div></div></div>'
+        + '<div class="kh-pill" style="color:' + _s.pill.color + ';border-color:' + _s.pill.color + '">' + _s.pill.text + '</div></div>';
+    } else {
+      khHero = '<div class="res-eyebrow">Well done — you have found out your Knee Age</div>'
+        + '<div class="res-age-big" style="color:' + status.heroColor + '">' + kneeAge + '</div>'
+        + '<div class="res-age-lbl">Knee Age</div>'
+        + '<div class="res-compare"><span class="res-compare-txt">You are</span><span class="res-compare-age">' + age + '</span></div>';
+    }
+  }
+
   // Hero section
   const heroHTML = isTeen ? `
     <div class="res-eyebrow">Well done — you have found out your Joint Health Score</div>
@@ -1685,13 +1711,7 @@ function showResult(){
         : 'This is useful information — and that is exactly what it is. A lower score at your age is not a problem. It is an early signal, and early signals are the best kind to get. Your joints are still developing and respond well to change. Building strength, improving sleep, and moving more regularly can shift your score significantly. You are in exactly the right place to start.<br><br><span style="font-size:12px;color:rgba(247,243,237,.6)">This assessment is a wellness tool, not a medical check. If you have joint pain or concerns, speak to your GP or a healthcare professional.</span><div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(127,119,221,.15);font-size:13px;color:rgba(247,243,237,.6);line-height:1.7">Finding this out now is genuinely one of the best things you could have done for your future self. Share <a href="https://kneeage.com" target="_blank" style="color:#5dcaa5;text-decoration:underline">kneeage.com</a> with your friends and family — the earlier everyone finds out, the more they can do about it. And your score? It can absolutely improve.</div>'}</div>
     </div>
     <div style="font-size:13px;color:rgba(247,243,237,.7);line-height:1.6;text-align:center;margin-bottom:20px">Know someone who should find out their score? Send them the link — it takes 60 seconds and could matter for life.</div>` : `
-    <div class="res-eyebrow">Well done — you have found out your Knee Age</div>
-    <div class="res-age-big" style="color:${status.heroColor}">${kneeAge}</div>
-    <div class="res-age-lbl">Knee Age</div>
-    <div class="res-compare">
-      <span class="res-compare-txt">You are</span>
-      <span class="res-compare-age">${age}</span>
-    </div>`;
+    ${khHero}`;
 
   window.__kaResult = { kneeAge: isTeen ? null : kneeAge, score: jhs };
   const card=document.createElement('div');
