@@ -45,7 +45,7 @@ export function buildOgElement(kneeIn, ageIn) {
   const pillCol = gap < 0 ? '#5dcaa5' : gap > 0 ? '#c0703a' : '#c9a84c';
   const svg = 'data:image/svg+xml;utf8,' + encodeURIComponent(dialSvg(gap));
 
-  return h('div', { style: { width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', background: FOREST, padding: '54px 60px' } },
+  return h('div', { style: { width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', background: FOREST, padding: '54px 60px', fontFamily: 'DM Sans' } },
     // header
     h('div', { style: { display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' } },
       h('div', { style: { display: 'flex', fontSize: 30, fontWeight: 700, color: CREAM } }, 'OrthoLongevity™'),
@@ -55,7 +55,7 @@ export function buildOgElement(kneeIn, ageIn) {
     h('div', { style: { display: 'flex', position: 'relative', width: 380, height: 380, alignItems: 'center', justifyContent: 'center' } },
       h('img', { src: svg, width: 380, height: 380, style: { position: 'absolute', top: 0, left: 0 } }),
       h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } },
-        h('div', { style: { display: 'flex', fontSize: 160, fontWeight: 700, color: CREAM, lineHeight: 1 } }, String(knee)),
+        h('div', { style: { display: 'flex', fontFamily: 'Playfair Display', fontSize: 168, fontWeight: 700, color: CREAM, lineHeight: 1 } }, String(knee)),
         h('div', { style: { display: 'flex', fontSize: 22, letterSpacing: 3, color: MUTED, marginTop: 6 } }, 'KNEE AGE')
       )
     ),
@@ -67,12 +67,28 @@ export function buildOgElement(kneeIn, ageIn) {
   );
 }
 
+// Brand fonts are served as static assets; fetch once per instance and cache.
+let _fontCache;
+async function loadFonts(origin) {
+  if (_fontCache) return _fontCache;
+  const load = (file, name, weight) => fetch(origin + '/fonts/' + file)
+    .then(r => r.arrayBuffer()).then(data => ({ name, data, weight, style: 'normal' }));
+  _fontCache = await Promise.all([
+    load('DMSans-400.woff', 'DM Sans', 400),
+    load('DMSans-700.woff', 'DM Sans', 700),
+    load('PlayfairDisplay-700.woff', 'Playfair Display', 700),
+  ]);
+  return _fontCache;
+}
+
 export default async function handler(req) {
-  const { searchParams } = new URL(req.url);
-  const el = buildOgElement(searchParams.get('knee'), searchParams.get('age'));
+  const url = new URL(req.url);
+  const el = buildOgElement(url.searchParams.get('knee'), url.searchParams.get('age'));
+  const fonts = await loadFonts(url.origin);
   return new ImageResponse(el, {
     width: 1200,
     height: 630,
+    fonts,
     headers: { 'Cache-Control': 'public, immutable, no-transform, max-age=31536000' },
   });
 }
