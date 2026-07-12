@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://www.kneeage.com/kneeagequiz.html"/>
 <meta property="og:image" content="https://www.kneeage.com/og-image.jpg"/>
 <meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="903"/>
+<meta property="og:image:height" content="630"/>
 <meta property="og:image:alt" content="Dr Arj Imbuldeniya, Consultant Orthopaedic Knee & Hip Surgeon"/>
 <meta property="og:locale" content="en_GB"/>
 <meta name="twitter:card" content="summary_large_image"/>
@@ -1367,22 +1367,36 @@ function scShowToast(msg) {
   setTimeout(function(){ el.remove(); }, 4000);
 }
 
+function scCopyShareUrl(url) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function(){ scShowToast('Link copied \u2014 paste it anywhere'); },
+      function(){ scShowToast('Copy this link: ' + url); });
+  } else {
+    scShowToast('Copy this link: ' + url);
+  }
+}
 async function scShareCard(canvas, caption, filename) {
+  // Share the /r result URL (unfurls to the user's own dial); attach the canvas
+  // image where the platform supports files; fall back to copying the link.
+  const url = window.__shareUrl || location.origin;
+  const base = { title: 'My Knee Age \u2014 OrthoLongevity\u2122', text: caption, url: url };
   if (navigator.canShare) {
     canvas.toBlob(async function(blob) {
       const file = new File([blob], filename||'my-knee-age.png', {type:'image/png'});
+      const withFile = Object.assign({}, base, { files: [file] });
       try {
-        await navigator.share({title:'My Knee Age \u2014 OrthoLongevity\u2122', text:caption, files:[file]});
+        if (navigator.canShare(withFile)) { await navigator.share(withFile); }
+        else { await navigator.share(base); }
       } catch(e) {
-        if (e.name !== 'AbortError') {
-          scTriggerDownload(canvas, filename);
-          scShowToast('Image saved \u2014 attach it to WhatsApp or Snapchat manually');
-        }
+        if (e.name !== 'AbortError') { scTriggerDownload(canvas, filename); scCopyShareUrl(url); }
       }
     }, 'image/png');
+  } else if (navigator.share) {
+    try { await navigator.share(base); }
+    catch(e) { if (e.name !== 'AbortError') scCopyShareUrl(url); }
   } else {
     scTriggerDownload(canvas, filename);
-    scShowToast('Image saved to Downloads \u2014 attach it manually to WhatsApp or Snapchat');
+    scCopyShareUrl(url);
   }
 }
 
@@ -1391,6 +1405,10 @@ async function scShareCard(canvas, caption, filename) {
 function insertScoreCard(container, isTeen, mainValue, chronAge, tierKey, domains) {
   const isPaed = isTeen;
   const filename = isPaed ? 'my-joint-score.png' : 'my-knee-age.png';
+  // Shareable /r URL — only the two numbers travel; teens share the quiz link.
+  window.__shareUrl = isPaed
+    ? location.origin + '/kneeagequiz.html'
+    : location.origin + '/r?knee=' + mainValue + '&age=' + chronAge;
   let canvas, caption, tierConfig;
 
   if (isPaed) {

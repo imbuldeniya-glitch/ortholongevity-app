@@ -11,6 +11,7 @@
   "rewrites": [
     { "source": "/confirmed", "destination": "/confirmed.html" },
     { "source": "/articles/:slug", "destination": "/articles/:slug.html" },
+    { "source": "/r", "destination": "/api/r" },
     { "source": "/", "destination": "/index.html" }
   ]
 }

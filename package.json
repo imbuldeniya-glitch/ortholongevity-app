@@ -1,0 +1,9 @@
+{
+  "name": "kneeage",
+  "version": "1.0.0",
+  "private": true,
+  "description": "kneeage.com — static site with Vercel edge functions",
+  "dependencies": {
+    "@vercel/og": "^0.6.8"
+  }
+}
