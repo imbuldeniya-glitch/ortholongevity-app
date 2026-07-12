@@ -545,7 +545,7 @@ function calc(a){
   if(isTeen) kneeAge=age;
   const jhs=Math.round(composite);
   return {
-    isTeen,age,sex,kneeAge,jhs,diff:kneeAge-age,
+    isTeen,age,sex,kneeAge,jhs,diff:kneeAge-age,composite,
     domains:{bio:Math.round(bioAdj),move:Math.round(moveAdj),strength:Math.round(strAdj),injury:Math.round(injAdj),genetic:Math.round(genetic)},
     familyRisk:a.family||'unsure',painLevel:painRaw,
     menoStatus:a.menopause||null,teenHorStatus:a.teen_hormonal||null,hypermobile:a.hypermobility||null
