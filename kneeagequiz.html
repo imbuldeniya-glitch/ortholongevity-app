@@ -1613,6 +1613,11 @@ function insertScoreCard(container, isTeen, mainValue, chronAge, tierKey, domain
 // ── Result ────────────────────────────────────────────────────────────────────
 function showResult(){
   const R_data = calc(answers);
+  // One id per completion — sent with every capture so quiz, supplementary and
+  // Kit rows always join, even when a field (like email) is missing.
+  window.__kaResultId = 'ka-' + (window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10));
   // Store completed email in localStorage
   const completedEmail = answers._email || userEmail || '';
   if(completedEmail){
@@ -1623,6 +1628,7 @@ function showResult(){
     }catch(e){}
   }
   incrementCounter({
+    result_id: window.__kaResultId,
     email: answers._email || userEmail ||'',
     age: R_data.age,
     sex: R_data.sex,
@@ -1724,14 +1730,10 @@ function showResult(){
 
     ${isTeen ? '' : `
     <div id="primeLocked" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:24px 18px;margin-bottom:20px;text-align:center">
-      <div style="font-family:var(--fd);font-size:clamp(19px,4.5vw,24px);font-weight:700;color:var(--cream);margin-bottom:8px">Unlock your full result</div>
-      <div style="font-size:14px;color:rgba(247,243,237,.65);line-height:1.6;max-width:380px;margin:0 auto 18px">Enter your email to unlock your full PRIME breakdown and score-card.</div>
-      <div style="max-width:420px;margin:0 auto;text-align:left">
-        <label for="unlockEmail" style="display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase">Your email address</label>
-        <input type="email" id="unlockEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key==='Enter')unlockResult()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--cream);font-family:var(--fb);outline:none;margin-bottom:10px"/>
-        <button onclick="unlockResult()" style="width:100%;background:var(--gold);color:#173d2c;border:none;border-radius:100px;padding:15px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer">Unlock my PRIME breakdown →</button>
-        <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">Your result is emailed to you so you can save it. No spam. Unsubscribe any time.</div>
-      </div>
+      <div style="font-family:var(--fd);font-size:clamp(19px,4.5vw,24px);font-weight:700;color:var(--cream);margin-bottom:8px">Unlock your full report</div>
+      <div style="font-size:14px;color:rgba(247,243,237,.65);line-height:1.6;max-width:380px;margin:0 auto 16px">Your full PRIME breakdown, your risk band and your downloadable score card. Five quick taps to tailor it, then your email. About twenty seconds.</div>
+      <div id="gateProg" style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Step 1 of 6</div>
+      <div id="gateBody" style="max-width:420px;margin:0 auto;text-align:left"></div>
     </div>`}
 
     <div id="primeUnlocked"${isTeen ? '' : ' style="display:none"'}>
@@ -1751,67 +1753,6 @@ function showResult(){
     </div>
     </div><!-- /primeUnlocked -->
 
-    <div id="suppPanel" style="background:#1E4D3B;border:2px solid #C9A84C;border-radius:14px;padding:18px 14px;margin-bottom:20px">
-      <div style="font-family:var(--fd);font-size:clamp(16px,4vw,20px);font-weight:700;color:#C9A84C;margin-bottom:8px;text-align:center;line-height:1.3">FOUNDING MEMBER ACCESS — CLAIM YOURS NOW</div>
-      <div style="font-size:13px;color:rgba(247,243,237,.8);line-height:1.6;margin-bottom:14px;text-align:center">Four quick questions. 60 seconds. Complete these and you will be locked in as a founding member of OrthoLongevity™ — our lowest ever price, priority access before public launch, and benefits never available again once we open more widely. Most people skip this. Founding members don't.</div>
-      <div style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">How did you hear about this?</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px" id="supp_referral">
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">Word of mouth / friend / family</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">YouTube</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">Instagram</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">TikTok</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">Facebook</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">LinkedIn</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">Internet search</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">Other professional referral</button>
-          <button class="supp-pill" onclick="suppSel('referral_source',this)">Other</button>
-        </div>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">Where are you based?</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px" id="supp_region">
-          <button class="supp-pill" onclick="suppSel('region',this)">London</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Rest of UK</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Ireland</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Europe</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">USA</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Canada</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Australia and New Zealand</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Middle East</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Asia</button>
-          <button class="supp-pill" onclick="suppSel('region',this)">Rest of World</button>
-        </div>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">Have you ever sought professional advice about your joint health?</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px" id="supp_prior_advice">
-          <button class="supp-pill" onclick="suppSel('prior_advice',this)">Yes</button>
-          <button class="supp-pill" onclick="suppSel('prior_advice',this)">No</button>
-          <button class="supp-pill" onclick="suppSel('prior_advice',this)">Not yet but planning to</button>
-        </div>
-      </div>
-      <div style="margin-bottom:12px">
-        <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">Would you pay for a personalised joint health programme?</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px" id="supp_willingness_to_pay">
-          <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">Yes definitely</button>
-          <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">Possibly</button>
-          <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">Not sure</button>
-          <button class="supp-pill" onclick="suppSel('willingness_to_pay',this)">No</button>
-        </div>
-      </div>
-      <div style="margin-bottom:14px">
-        <div style="font-size:11px;font-weight:500;color:rgba(247,243,237,.7);margin-bottom:6px">Would you be interested in a genomic risk assessment as part of your OrthoLongevity™ programme — understanding how your genetics influence your joint health and injury risk?</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px" id="supp_genomics_interest">
-          <button class="supp-pill" onclick="suppSel('genomics_interest',this)">Yes definitely</button>
-          <button class="supp-pill" onclick="suppSel('genomics_interest',this)">Possibly</button>
-          <button class="supp-pill" onclick="suppSel('genomics_interest',this)">Not sure</button>
-          <button class="supp-pill" onclick="suppSel('genomics_interest',this)">No</button>
-        </div>
-      </div>
-      <button id="suppSubmit" class="supp-submit" onclick="submitSupp()" disabled style="background:#C9A84C;color:#1E4D3B;font-weight:700">Claim my founding member rate →</button>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px;cursor:pointer" onclick="document.getElementById('suppPanel').style.display='none'">Skip for now</div>
-    </div>
 
     ${!isTeen?`<div class="compare-wrap">
       <div class="compare-title">Compared to others who've taken this test</div>
@@ -2008,6 +1949,9 @@ function showResult(){
       requestAnimationFrame(()=>{el.style.width=w;});
     });
   },120);
+
+  // Adults: start the unlock stepper (five questions, then email).
+  if(!isTeen) renderGateStep(0);
 }
 
 function copyShare(txt){
@@ -2312,38 +2256,52 @@ function showShareModal(whatsappText){
   bg.addEventListener('click',e=>{if(e.target===bg)bg.remove();});
 }
 
-// ── Supplementary panel ──────────────────────────────────────────────────
-const suppData={};
-function suppSel(field,btn){
-  const wrap=btn.parentElement;
-  wrap.querySelectorAll('.supp-pill').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-  suppData[field]=btn.textContent.trim();
-  const needed=['referral_source','region','prior_advice','willingness_to_pay'];
-  const filled=needed.filter(k=>suppData[k]);
-  const sub=document.getElementById('suppSubmit');
-  if(sub) sub.disabled=filled.length<needed.length;
+// ── Unlock gate — five tailoring questions, then email, then the full report ──
+const gateData={};
+const GATE_STEPS=[
+  {field:'referral_source',q:'How did you hear about this?',opts:['Word of mouth / friend / family','YouTube','Instagram','TikTok','Facebook','LinkedIn','Internet search','Other professional referral','Other']},
+  {field:'region',q:'Where are you based?',opts:['London','Rest of UK','Ireland','Europe','USA','Canada','Australia and New Zealand','Middle East','Asia','Rest of World']},
+  {field:'prior_advice',q:'Have you ever sought professional advice about your joint health?',opts:['Yes','No','Not yet but planning to']},
+  {field:'willingness_to_pay',q:'Would you pay for a personalised joint health programme?',opts:['Yes definitely','Possibly','Not sure','No']},
+  {field:'genomics_interest',q:'Would you be interested in a genomic risk assessment, understanding how your genetics influence your joint health and injury risk?',opts:['Yes definitely','Possibly','Not sure','No']}
+];
+let gateIdx=0;
+function renderGateStep(i){
+  gateIdx=i;
+  const body=document.getElementById('gateBody');
+  const prog=document.getElementById('gateProg');
+  if(!body) return;
+  if(prog) prog.textContent='Step '+(i+1)+' of '+(GATE_STEPS.length+1);
+  if(i<GATE_STEPS.length){
+    const st=GATE_STEPS[i];
+    body.innerHTML=
+      '<div style="font-size:13px;font-weight:500;color:rgba(247,243,237,.85);margin-bottom:10px;line-height:1.5">'+st.q+'</div>'
+      +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">'
+      +st.opts.map(o=>'<button class="supp-pill" style="font-size:12px;padding:8px 14px" onclick="gateSel(this)">'+o+'</button>').join('')
+      +'</div>'
+      +(i>0?'<div style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="renderGateStep('+(i-1)+')">&larr; Back</div>':'');
+    const prev=gateData[st.field];
+    if(prev){body.querySelectorAll('.supp-pill').forEach(b=>{if(b.textContent.trim()===prev)b.classList.add('sel');});}
+  }else{
+    body.innerHTML=
+      '<div style="font-size:13px;font-weight:500;color:rgba(247,243,237,.85);margin-bottom:4px;line-height:1.5">Last step. Where should we send your full report?</div>'
+      +'<div style="font-size:12px;color:rgba(247,243,237,.55);line-height:1.5;margin-bottom:10px">Your report is emailed to you so you can save it and track your progress.</div>'
+      +'<input type="email" id="unlockEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key===\'Enter\')unlockResult()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--cream);font-family:var(--fb);outline:none;margin-bottom:10px"/>'
+      +'<button id="unlockBtn" onclick="unlockResult()" style="width:100%;background:var(--gold);color:#173d2c;border:none;border-radius:100px;padding:15px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer">Unlock my full report &rarr;</button>'
+      +'<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">No spam. Unsubscribe any time. We never share your data.</div>'
+      +'<div style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:8px" onclick="renderGateStep('+(GATE_STEPS.length-1)+')">&larr; Back</div>';
+    const inp=document.getElementById('unlockEmail');
+    if(inp) setTimeout(()=>inp.focus(),150);
+  }
 }
-async function submitSupp(){
-  const btn=document.getElementById('suppSubmit');
-  if(btn){btn.disabled=true;btn.textContent='Sending…';}
-  try{
-    await fetch('/api/supplementary',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        timestamp:new Date().toISOString(),
-        email:userEmail||'',
-        referral_source:suppData.referral_source||'',
-        region:suppData.region||'',
-        prior_advice:suppData.prior_advice||'',
-        willingness_to_pay:suppData.willingness_to_pay||'',
-        genomics_interest:suppData.genomics_interest||''
-      })
-    });
-  }catch(e){}
-  const panel=document.getElementById('suppPanel');
-  if(panel) panel.innerHTML='<div class="supp-thank"><div class="supp-thank-title">Thank you</div><div class="supp-thank-sub">Thank you — your answers are helping shape something we believe will be genuinely valuable. We will keep you updated using the email address linked to your assessment. Access will be released in stages. Early registrants will be the first to hear — and will receive priority access and additional benefits not available once we open more widely.</div></div>';
+function gateSel(btn){
+  const st=GATE_STEPS[gateIdx];
+  if(!st) return;
+  btn.parentElement.querySelectorAll('.supp-pill').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  gateData[st.field]=btn.textContent.trim();
+  if(window.kaTrack) kaTrack('supp_step',{ step:gateIdx+1, field:st.field });
+  setTimeout(()=>renderGateStep(gateIdx+1),180);
 }
 
 // ── Counter (Supabase optional) ───────────────────────────────────────────
@@ -2370,15 +2328,52 @@ async function incrementCounter(resultData){
   } catch(e){}
 }
 
-// ── Result unlock — email reveals the full PRIME breakdown + score-card ──────
+// ── Result unlock — answers + email reveal the full PRIME breakdown + score-card ──
+let gateSubmitted=false;
 function unlockResult(){
   var inp=document.getElementById('unlockEmail'); if(!inp) return;
   var val=(inp.value||'').trim();
   if(!val || val.indexOf('@')<0){ inp.style.borderColor='rgba(224,85,85,.6)'; inp.placeholder='Please enter a valid email'; return; }
+  if(gateSubmitted) return;
+  gateSubmitted=true;
+  var btn=document.getElementById('unlockBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Unlocking…'; }
   var R=window.__kaResult||{};
-  if(window.kaTrack) kaTrack('email_captured',{ point:'result-unlock' });
-  // Tie email -> result -> source in Kit (sendToKit already carries UTM/source from Spec 1)
-  try{ userEmail=val; sendToKit(val, R.kneeAge, R.score); }catch(e){}
+  userEmail=val;
+  if(window.kaTrack) kaTrack('email_captured',{ point:'gated-unlock' });
+  // Supplementary answers + email + result_id — the row that joins everything.
+  try{
+    fetch('/api/supplementary',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        timestamp:new Date().toISOString(),
+        result_id:window.__kaResultId||'',
+        email:val,
+        referral_source:gateData.referral_source||'',
+        region:gateData.region||'',
+        prior_advice:gateData.prior_advice||'',
+        willingness_to_pay:gateData.willingness_to_pay||'',
+        genomics_interest:gateData.genomics_interest||''
+      })
+    }).catch(()=>{});
+  }catch(e){}
+  // Backfill the email onto the Quiz Responses row written at result display.
+  try{
+    fetch('/api/unlock',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ result_id:window.__kaResultId||'', email:val })
+    }).catch(()=>{});
+  }catch(e){}
+  // Tie email -> result -> source in Kit (sendToKit carries UTM/source + result_id)
+  try{ sendToKit(val, R.kneeAge, R.score); }catch(e){}
+  // Remember completion locally so repeat attempts are recognised.
+  try{
+    const done=JSON.parse(localStorage.getItem('kneeage_completed_emails')||'[]');
+    if(!done.includes(val.toLowerCase())){ done.push(val.toLowerCase()); localStorage.setItem('kneeage_completed_emails',JSON.stringify(done)); }
+  }catch(e){}
+  if(window.kaTrack) kaTrack('report_unlocked',{});
   var locked=document.getElementById('primeLocked');
   var unlocked=document.getElementById('primeUnlocked');
   if(locked) locked.style.display='none';
@@ -2477,6 +2472,7 @@ function sendToKit(email, kneeAge, score){
       tags:['knee-age-quiz-completed'],
       kneeAge: kneeAge||'',
       score: score||'',
+      resultId: window.__kaResultId || '',
       attribution: window.KA_getAttribution ? window.KA_getAttribution() : null   // tie email to source
     })
   }).catch(()=>{});
