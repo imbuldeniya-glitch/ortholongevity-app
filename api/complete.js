@@ -12,6 +12,7 @@ export default async function handler(req) {
   try {
     const body = await req.json().catch(() => ({}));
     const {
+      result_id = '',
       email = '',
       age = '',
       sex = '',
@@ -34,6 +35,7 @@ export default async function handler(req) {
     const getGenetic = function() { if (pillarScores.genetic !== undefined) return pillarScores.genetic; if (domains.genetic !== undefined) return domains.genetic; return ''; };
     const row = {
       timestamp: new Date().toISOString(),
+      result_id: String(result_id),
       email: String(email),
       age: String(age),
       sex: String(sex),

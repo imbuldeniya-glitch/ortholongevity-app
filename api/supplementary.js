@@ -15,6 +15,7 @@ export default async function handler(req) {
     if (!SHEETDB_URL) return err('SHEETDB_URL not configured');
     const row = {
       timestamp: body.timestamp || new Date().toISOString(),
+      result_id: body.result_id || '',
       email: body.email || '',
       referral_source: body.referral_source || '',
       region: body.region || '',
