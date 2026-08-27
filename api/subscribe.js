@@ -31,10 +31,11 @@ const TAG = {
   younger:     22801323,  // knees-younger         — knee_age < age
   menoFemale:  22801324,  // menopause-age-female  — female AND age 45–60
   unlocked:    22801325,  // unlocked-full-report  — reached the full report
+  earlyAccess: 22803149,  // early-access          — opted in on the results page
 };
 
 // Derive tag IDs from the result. Server-side so there is one source of truth.
-function tagsFor({ kneeAge, age, sex, unlocked }) {
+function tagsFor({ kneeAge, age, sex, unlocked, earlyAccess }) {
   const t = [TAG.quiz];
   const ka = Number(kneeAge);
   const ag = Number(age);
@@ -46,6 +47,10 @@ function tagsFor({ kneeAge, age, sex, unlocked }) {
   const s = String(sex || '').trim().toLowerCase();
   if (s === 'female' && Number.isFinite(ag) && ag >= 45 && ag <= 60) t.push(TAG.menoFemale);
   if (unlocked) t.push(TAG.unlocked);
+  // Only applied when the person actually opted in on the results page, not to
+  // everyone who passed the email gate — the gate is to see their own result,
+  // the early access list is a separate, deliberate choice.
+  if (earlyAccess) t.push(TAG.earlyAccess);
   return t;
 }
 
@@ -70,7 +75,7 @@ export default async function handler(req) {
     if (req.method !== 'POST') return ok({ skipped: 'method' });
 
     const body = await req.json().catch(() => ({}));
-    const { email, kneeAge, score, age, sex, resultId, unlocked } = body;
+    const { email, kneeAge, score, age, sex, resultId, unlocked, earlyAccess } = body;
     const attr = body.attribution || {};
 
     if (!email || !String(email).includes('@')) return ok({ skipped: 'email' });
@@ -93,7 +98,7 @@ export default async function handler(req) {
       referrer:     attr.referrer     || '',
     };
 
-    const tagIds = tagsFor({ kneeAge, age, sex, unlocked });
+    const tagIds = tagsFor({ kneeAge, age, sex, unlocked, earlyAccess });
     const KIT_API_KEY = process.env.KIT_API_KEY;
 
     if (!KIT_API_KEY) {

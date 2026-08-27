@@ -2043,7 +2043,7 @@ function joinEarlyAccess(){
   var slot = document.getElementById('eaSlot'); if(!slot) return;
   if(userEmail){
     // Already given at the gate — do not ask twice. Acknowledge and re-tag.
-    try { var P=window.__kaPendingReport||{}; sendToKit(userEmail, P.kneeAge, P.score, P.age, P.sex, true); } catch(e){}
+    try { var P=window.__kaPendingReport||{}; sendToKit(userEmail, P.kneeAge, P.score, P.age, P.sex, true, true); } catch(e){}
     if(window.kaTrack) kaTrack('early_access_join',{ point:'already-known' });
     slot.innerHTML='<div style="background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.3);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--cream);line-height:1.5">&#10003; You are on the early access list as <strong>'+userEmail.replace(/</g,'&lt;')+'</strong>. Nothing else to do.</div>';
     return;
@@ -2064,7 +2064,7 @@ function submitEarlyAccess(){
   var btn=document.getElementById('eaBtn'); if(btn){ btn.disabled=true; btn.textContent='Adding…'; }
   userEmail = val;
   var P = window.__kaPendingReport || {};
-  try { sendToKit(val, P.kneeAge, P.score, P.age, P.sex, true); } catch(e){}
+  try { sendToKit(val, P.kneeAge, P.score, P.age, P.sex, true, true); } catch(e){}
   try {
     fetch('/api/unlock',{ method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({ result_id: window.__kaResultId||'', email: val }) }).catch(function(){});
@@ -2572,7 +2572,7 @@ function skipEmail(){
   startQuizFromGate();
 }
 
-function sendToKit(email, kneeAge, score, age, sex, unlocked){
+function sendToKit(email, kneeAge, score, age, sex, unlocked, earlyAccess){
   // Updates the Kit subscriber's custom fields and tags with their quiz result.
   // Uses the Vercel Edge Function at /api/subscribe, which derives age_gap and
   // the numeric tag IDs server-side so there is a single source of truth.
@@ -2590,6 +2590,7 @@ function sendToKit(email, kneeAge, score, age, sex, unlocked){
       age:     (age===0||age)         ? age     : '',
       sex:     sex || '',
       unlocked: !!unlocked,
+      earlyAccess: !!earlyAccess,
       resultId: window.__kaResultId || '',
       attribution: window.KA_getAttribution ? window.KA_getAttribution() : null   // tie email to source
     })
