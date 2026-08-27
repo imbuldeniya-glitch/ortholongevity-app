@@ -24,8 +24,22 @@ window.KA_ANALYTICS_CONFIG = {
 (function () {
   var C = window.KA_ANALYTICS_CONFIG;
 
-  /* ── 1. Capture UTM + referrer on first landing, persist for the session ── */
+  /* ── 1. Capture UTM + referrer on first landing, persist for the session ──
+     sessionStorage carries attribution across index.html -> kneeagequiz.html
+     (both pages load this file, and the quiz is linked same-tab, so the session
+     survives the navigation).
+
+     localStorage additionally holds FIRST-TOUCH attribution. sessionStorage
+     ends when the tab closes, so somebody who arrives on a campaign link,
+     leaves, and returns the next day to finish would otherwise be recorded as
+     'direct'. When the current visit carries no real UTM but a first touch was
+     stored earlier, the campaign is carried forward and the current referrer is
+     kept alongside it as last-touch.                                        */
   var SS_KEY = 'ka_attribution';
+  var LS_KEY = 'ka_first_touch';
+  function hasRealUtm(a) {
+    return !!(a && a.utm_source && a.utm_source !== 'direct' && a.utm_source.indexOf('referral') !== 0);
+  }
   function buildAttribution() {
     try { var saved = sessionStorage.getItem(SS_KEY); if (saved) return JSON.parse(saved); } catch (e) {}
     var p = new URLSearchParams(location.search);
@@ -45,6 +59,23 @@ window.KA_ANALYTICS_CONFIG = {
       } else {
         attr.utm_source = 'direct';
       }
+    }
+    if (hasRealUtm(attr)) {
+      // Genuine campaign arrival — record it as the first touch (once).
+      try { if (!localStorage.getItem(LS_KEY)) localStorage.setItem(LS_KEY, JSON.stringify(attr)); } catch (e) {}
+    } else {
+      // No campaign this visit — inherit an earlier one if we have it.
+      try {
+        var first = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+        if (hasRealUtm(first)) {
+          attr.last_touch_source = attr.utm_source;
+          attr.utm_source   = first.utm_source;
+          attr.utm_medium   = first.utm_medium   || attr.utm_medium;
+          attr.utm_campaign = first.utm_campaign || attr.utm_campaign;
+          attr.utm_content  = first.utm_content  || attr.utm_content;
+          attr.first_touch_ts = first.landing_ts || '';
+        }
+      } catch (e) {}
     }
     try { sessionStorage.setItem(SS_KEY, JSON.stringify(attr)); } catch (e) {}
     return attr;

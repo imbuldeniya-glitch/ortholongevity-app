@@ -300,6 +300,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .pby-opp-body{font-size:14px;color:rgba(247,243,237,.9);line-height:1.65}
 .pby-opp-cta{display:inline-block;margin-top:12px;font-size:13px;font-weight:600;text-decoration:none;background:var(--gold);color:#173d2c;padding:9px 16px;border-radius:8px}
 .paed-disclaimer{width:100%;max-width:500px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:0.75rem 1rem;font-family:Georgia,serif;font-size:0.78rem;font-style:italic;color:rgba(255,255,255,0.4);text-align:center;line-height:1.5}
+/* <picture> must not generate a box: with display:contents its <source> would
+   otherwise become a real flex item and add a phantom gap. */
+picture{display:contents}picture>source{display:none}
 </style>
 <script type="application/ld+json">
 {
@@ -740,7 +743,7 @@ function getStatus(diff,isTeen,jhs,age){
   return {color:'#e05555',heroColor:'#e05555',
     statusLine:'Your joints are showing signs of accelerated ageing.',
     reaction:'Your joints need attention — but you found out at exactly the right time.',
-    identity:'A Knee Age this far ahead of your chronological age is a clear signal — and it is not a fixed outcome. The factors driving an older Knee Age are directly addressable: strength, muscle mass, nutrition, inflammation, sleep, weight, and stress. The biology can change. That is not a promise — it is what the evidence shows and what I see in clinical practice every week. The OrthoLongevity™ app is being built specifically for people in your position — a structured programme targeting every driver behind your score. You will be first to access it. For free guidance right now, visit my YouTube channel and Substack. If you have joint pain, stiffness, or swelling that concerns you, please do not wait — book a consultation at ortholongevity.ai or speak to your GP. Most people find out too late. You just found out at exactly the right time.',badge:'Needs attention'};
+    identity:'A Knee Age this far ahead of your chronological age is a clear signal — and it is not a fixed outcome. The factors driving an older Knee Age are directly addressable: strength, muscle mass, nutrition, inflammation, sleep, weight, and stress. The biology can change. That is not a promise — it is what the evidence shows and what I see in clinical practice every week. The OrthoLongevity™ app is being built specifically for people in your position — a structured programme targeting every driver behind your score. You will be first to access it. For free guidance right now, visit my YouTube channel and Substack. If you have joint pain, stiffness, or swelling that concerns you, please do not wait — book a consultation at ortholongevity.co.uk or speak to your GP. Most people find out too late. You just found out at exactly the right time.',badge:'Needs attention'};
 }
 
 // ── Info panels ───────────────────────────────────────────────────────────────
@@ -1657,7 +1660,9 @@ function showResult(){
   const {isTeen,age,kneeAge,jhs,diff,domains,menoAgeMod,familyRisk,painLevel,menoStatus,teenHorStatus,hypermobile}=R;
   // Update Kit subscriber with result data if email was captured
   if(answers._email){
-    sendToKit(answers._email, isTeen ? null : kneeAge, isTeen ? jhs : R.composite);
+    // Arrived with a known email (Kit incentive link). Record the result now so
+    // it is not lost if they abandon at the gate; unlocked=false until they pass it.
+    sendToKit(answers._email, isTeen ? null : kneeAge, isTeen ? jhs : Math.round(R.composite), age, R.sex, false);
   }
   const status=getStatus(diff,isTeen,jhs,age);
   // Projected potential — REAL recompute (item 6), lifting the top modifiable domain.
@@ -1728,15 +1733,7 @@ function showResult(){
     <div style="font-size:15px;color:rgba(247,243,237,.85);font-weight:500;margin:4px 0 10px">${status.reaction}</div>
     <div class="identity">${status.identity}</div>
 
-    ${isTeen ? '' : `
-    <div id="primeLocked" style="background:rgba(255,255,255,.04);border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:24px 18px;margin-bottom:20px;text-align:center">
-      <div style="font-family:var(--fd);font-size:clamp(19px,4.5vw,24px);font-weight:700;color:var(--cream);margin-bottom:8px">Unlock your full report</div>
-      <div style="font-size:14px;color:rgba(247,243,237,.65);line-height:1.6;max-width:380px;margin:0 auto 16px">Your full PRIME breakdown, your risk band and your downloadable score card. Five quick taps to tailor it, then your email. About twenty seconds.</div>
-      <div id="gateProg" style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Step 1 of 6</div>
-      <div id="gateBody" style="max-width:420px;margin:0 auto;text-align:left"></div>
-    </div>`}
-
-    <div id="primeUnlocked"${isTeen ? '' : ' style="display:none"'}>
+    <div id="primeUnlocked">
     ${isTeen ? '' : buildPrimeBreakdown(R)}
 
     <div id="scorecardSlot"></div>
@@ -1824,19 +1821,21 @@ function showResult(){
         <div style="font-weight:500;color:rgba(175,169,236,.9);margin-bottom:4px">In the meantime:</div>
         The five drivers on your result page are exactly the same ones adults work on. Strength training, sleep, nutrition, and managing sport load well now will compound across decades. Share the quiz link with friends and family — encourage them to find out their Knee Age or Joint Health Score too.
       </div>
-      <button class="cta-primary" style="background:rgba(127,119,221,.8)" onclick="window.open('https://ortholongevity.ai','_blank')">Join the early access list →</button>
+      <button class="cta-primary" style="background:rgba(127,119,221,.8)" onclick="joinEarlyAccess()">Join the early access list →</button>
+      <div id="eaSlot" style="margin-top:10px"></div>
       <div class="cta-secondary">Be first in the world to access the full app</div>
       ` : `
       <div class="cta-ey">OrthoLongevity™ App</div>
       <h2 class="cta-h">You are<br/><em>first in the world.</em></h2>
       <p class="cta-sub" style="margin-bottom:16px">The OrthoLongevity™ app does not exist yet. You are among the first people on earth to receive a Knee Age score — and the first who will access the full platform when it launches.</p>
-      <button class="cta-primary" onclick="window.open('https://ortholongevity.ai','_blank')">Stay on the early access list →</button>
+      <button class="cta-primary" onclick="joinEarlyAccess()">Stay on the early access list →</button>
+      <div id="eaSlot" style="margin-top:10px"></div>
       <div class="cta-secondary">Join the early access list — founding member pricing available</div>
       `}
 
       <!-- SURGICAL PHOTO -->
       <div style="margin:20px 0;border-radius:16px;overflow:hidden;position:relative">
-        <img src="\${SURGICAL_B64}" alt="Dr Arj Imbuldeniya in surgery" style="width:100%;height:220px;object-fit:cover;object-position:center 20%;display:block"/>
+        <picture><source srcset="/images/dr-arj-surgery.webp" type="image/webp"><img src="/images/dr-arj-surgery.jpg" alt="Dr Arj Imbuldeniya in surgery" style="width:100%;height:220px;object-fit:cover;object-position:center 20%;display:block" width="900" height="687" loading="lazy" decoding="async"/></picture>
         <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(15,45,30,.9) 0%,rgba(15,45,30,.2) 60%)"></div>
         <div style="position:absolute;bottom:16px;left:16px;right:16px">
           <div style="font-size:10px;color:var(--teal-l);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Surgery-last. Not surgery-never.</div>
@@ -1894,7 +1893,7 @@ function showResult(){
         <div style="font-size:13px;color:rgba(247,243,237,.6);line-height:1.6;margin-bottom:14px">A full OrthoLongevity™ 360 Assessment at Lanserhof Mayfair — surgeon-led, with clinical examination, biological readiness review, and a complete R.E.P.A.I.R.™ plan. Surgical care when needed at Cromwell Hospital.</div>
         <a href="https://lhtac.com/team/dr-arj-imbuldeniya/" target="_blank"
            style="display:flex;align-items:center;gap:12px;background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.3);border-radius:12px;padding:12px 14px;text-decoration:none;margin-bottom:8px;transition:background .2s">
-          <img src="\${LANSERHOF_B64}" alt="Lanserhof" style="height:36px;width:auto;object-fit:contain"/>
+          <picture><source srcset="/images/lanserhof-arts-club-logo.webp" type="image/webp"><img src="/images/lanserhof-arts-club-logo.png" alt="Lanserhof" style="height:36px;width:auto;object-fit:contain" width="400" height="400" loading="lazy" decoding="async"/></picture>
           <div>
             <div style="font-size:13px;font-weight:500;color:var(--cream)">Book at Lanserhof Mayfair</div>
             <div style="font-size:11px;color:var(--muted)">lhtac.com · Dr Arj Imbuldeniya</div>
@@ -1928,30 +1927,152 @@ function showResult(){
     </div>
     <p class="disc">This tool provides general insight into lifestyle factors related to knee health. It does not diagnose or predict medical conditions. The OrthoLongevity™ face-to-face and digital programmes are designed for adults aged 18 and over. For medical advice, please consult a qualified healthcare professional. OrthoLongevity™ · kneeage.com</p>
   `;
-  document.getElementById('app').innerHTML='';
-  document.getElementById('app').appendChild(card);
+  // ── Email gate ──────────────────────────────────────────────────────────
+  // The card is fully built but deliberately NOT inserted into the document.
+  // /api/complete has already fired at the top of showResult(), so somebody who
+  // abandons at the email step is still captured as an anonymous row. That
+  // ordering is load-bearing: capture first, gate second.
+  window.__kaPendingReport = {
+    card:    card,
+    isTeen:  isTeen,
+    jhs:     jhs,
+    kneeAge: isTeen ? null : kneeAge,
+    score:   isTeen ? jhs : Math.round(R.composite),
+    age:     age,
+    sex:     R.sex,
+    diff:    diff,
+    domains: domains
+  };
 
-  // Insert inline score card
-  const scSlot=document.getElementById('scorecardSlot');
+  if (isTeen) {
+    // Under-18s are never asked for an email. Gating a minor's result behind an
+    // email capture is not something to do casually under UK GDPR, and this
+    // path already collected no email before today.
+    revealReport();
+  } else {
+    showResultEmailGate();
+  }
+}
+
+// ── Reveal ───────────────────────────────────────────────────────────────────
+// Paints the held report. Identical markup and post-render steps to before —
+// only the moment at which it happens has changed.
+function revealReport(){
+  var P = window.__kaPendingReport; if(!P) return;
+  var app = document.getElementById('app');
+  app.innerHTML = '';
+  app.appendChild(P.card);
+
+  var scSlot = document.getElementById('scorecardSlot');
   if(scSlot){
-    // Determine tier key
-    const tierKey = getAdultTierKey(diff);
-    if(isTeen){
-      insertScoreCard(scSlot, true, jhs, null, null, domains);
-    } else {
-      insertScoreCard(scSlot, false, kneeAge, age, tierKey, domains);
-    }
+    var tierKey = getAdultTierKey(P.diff);
+    if(P.isTeen) insertScoreCard(scSlot, true, P.jhs, null, null, P.domains);
+    else         insertScoreCard(scSlot, false, P.kneeAge, P.age, tierKey, P.domains);
   }
 
-  setTimeout(()=>{
-    card.querySelectorAll('.driver-fill').forEach(el=>{
-      const w=el.style.width;el.style.width='0%';
-      requestAnimationFrame(()=>{el.style.width=w;});
+  setTimeout(function(){
+    P.card.querySelectorAll('.driver-fill').forEach(function(el){
+      var w = el.style.width; el.style.width = '0%';
+      requestAnimationFrame(function(){ el.style.width = w; });
     });
-  },120);
+  }, 120);
 
-  // Adults: start the unlock stepper (five questions, then email).
-  if(!isTeen) renderGateStep(0);
+  try { window.scrollTo(0, 0); } catch(e){}
+
+  // The five tailoring questions now run AFTER the report, and are optional.
+  if(!P.isTeen) renderOptionalSurvey();
+}
+
+// ── Results email gate — one field, one button, nothing else ─────────────────
+function showResultEmailGate(){
+  if(window.kaTrack) kaTrack('result_gate_shown',{});
+  var known = '';
+  try { known = (answers._email || userEmail || ''); } catch(e){}
+  document.getElementById('app').innerHTML=`
+    <div style="padding-top:56px;animation:fu .4s ease both;max-width:400px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:26px">
+        <div style="font-family:var(--fd);font-size:clamp(25px,6.5vw,32px);font-weight:700;color:var(--cream);line-height:1.25;margin-bottom:10px">Your Knee Age is ready.</div>
+        <div style="font-size:15px;color:rgba(247,243,237,.65);line-height:1.6">Where shall I send it?</div>
+      </div>
+      <input type="email" id="resultEmail" placeholder="you@example.com" autocomplete="email" inputmode="email" value="${known.replace(/"/g,'&quot;')}"
+        onkeydown="if(event.key==='Enter')submitResultEmail()"
+        style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:15px 16px;font-size:16px;color:var(--cream);font-family:var(--fb);outline:none;margin-bottom:10px"/>
+      <button id="resultEmailBtn" onclick="submitResultEmail()" style="width:100%;background:var(--gold);color:#173d2c;border:none;border-radius:100px;padding:16px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer">Show me my Knee Age &rarr;</button>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5">No spam. Unsubscribe any time. We never share your data.</div>
+    </div>`;
+  setTimeout(function(){ var i=document.getElementById('resultEmail'); if(i) i.focus(); },150);
+}
+
+let resultEmailSubmitted = false;
+function submitResultEmail(){
+  var inp = document.getElementById('resultEmail'); if(!inp) return;
+  var val = (inp.value||'').trim();
+  if(!val || val.indexOf('@') < 1 || val.indexOf('.') < 0){
+    inp.style.borderColor='rgba(224,85,85,.6)';
+    inp.value=''; inp.placeholder='Please enter a valid email';
+    return;
+  }
+  if(resultEmailSubmitted) return;
+  resultEmailSubmitted = true;
+  var btn=document.getElementById('resultEmailBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Sending…'; }
+
+  var P = window.__kaPendingReport || {};
+  userEmail = val;
+  if(window.kaTrack) kaTrack('email_captured',{ point:'result-gate' });
+
+  // Kit: subscriber + custom fields + tags. unlocked=true, the report follows.
+  try { sendToKit(val, P.kneeAge, P.score, P.age, P.sex, true); } catch(e){}
+  // Backfill the email onto the anonymous quiz row written before this gate.
+  try {
+    fetch('/api/unlock',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ result_id: window.__kaResultId||'', email: val })
+    }).catch(function(){});
+  } catch(e){}
+  try {
+    var done=JSON.parse(localStorage.getItem('kneeage_completed_emails')||'[]');
+    if(done.indexOf(val.toLowerCase())<0){ done.push(val.toLowerCase()); localStorage.setItem('kneeage_completed_emails',JSON.stringify(done)); }
+  } catch(e){}
+
+  if(window.kaTrack) kaTrack('report_unlocked',{});
+  revealReport();   // same page, no redirect, no reload, no new tab
+}
+
+// ── Early access — always inline, never a new tab ────────────────────────────
+function joinEarlyAccess(){
+  var slot = document.getElementById('eaSlot'); if(!slot) return;
+  if(userEmail){
+    // Already given at the gate — do not ask twice. Acknowledge and re-tag.
+    try { var P=window.__kaPendingReport||{}; sendToKit(userEmail, P.kneeAge, P.score, P.age, P.sex, true); } catch(e){}
+    if(window.kaTrack) kaTrack('early_access_join',{ point:'already-known' });
+    slot.innerHTML='<div style="background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.3);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--cream);line-height:1.5">&#10003; You are on the early access list as <strong>'+userEmail.replace(/</g,'&lt;')+'</strong>. Nothing else to do.</div>';
+    return;
+  }
+  if(document.getElementById('eaEmail')) { document.getElementById('eaEmail').focus(); return; }
+  slot.innerHTML=
+    '<input type="email" id="eaEmail" placeholder="you@example.com" autocomplete="email" inputmode="email" onkeydown="if(event.key===\'Enter\')submitEarlyAccess()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:13px 15px;font-size:15px;color:var(--cream);font-family:var(--fb);outline:none;margin-bottom:8px"/>'
+    +'<button id="eaBtn" onclick="submitEarlyAccess()" style="width:100%;background:var(--teal);color:var(--w);border:none;border-radius:100px;padding:13px;font-family:var(--fb);font-size:15px;font-weight:500;cursor:pointer">Add me to the list &rarr;</button>';
+  setTimeout(function(){ var i=document.getElementById('eaEmail'); if(i) i.focus(); },100);
+}
+
+function submitEarlyAccess(){
+  var inp=document.getElementById('eaEmail'); if(!inp) return;
+  var val=(inp.value||'').trim();
+  if(!val || val.indexOf('@')<1 || val.indexOf('.')<0){
+    inp.style.borderColor='rgba(224,85,85,.6)'; inp.value=''; inp.placeholder='Please enter a valid email'; return;
+  }
+  var btn=document.getElementById('eaBtn'); if(btn){ btn.disabled=true; btn.textContent='Adding…'; }
+  userEmail = val;
+  var P = window.__kaPendingReport || {};
+  try { sendToKit(val, P.kneeAge, P.score, P.age, P.sex, true); } catch(e){}
+  try {
+    fetch('/api/unlock',{ method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ result_id: window.__kaResultId||'', email: val }) }).catch(function(){});
+  } catch(e){}
+  if(window.kaTrack) kaTrack('early_access_join',{ point:'inline' });
+  var slot=document.getElementById('eaSlot');
+  if(slot) slot.innerHTML='<div style="background:rgba(29,158,117,.12);border:1px solid rgba(29,158,117,.3);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--cream);line-height:1.5">&#10003; You are on the early access list. You will hear about every feature before anyone else.</div>';
 }
 
 function copyShare(txt){
@@ -2256,7 +2377,12 @@ function showShareModal(whatsappText){
   bg.addEventListener('click',e=>{if(e.target===bg)bg.remove();});
 }
 
-// ── Unlock gate — five tailoring questions, then email, then the full report ──
+// ── Optional tailoring survey — runs AFTER the report is revealed ────────────
+// Previously this was a six-step wall in front of the result, labelled
+// "Step 1 of 6", that gated nothing (one tap on question 1 revealed everything)
+// and asked what the business wanted to know before giving the user anything.
+// The email gate now sits before the report; these five questions sit after it
+// and are genuinely optional.
 const gateData={};
 const GATE_STEPS=[
   {field:'referral_source',q:'How did you hear about this?',opts:['Word of mouth / friend / family','YouTube','Instagram','TikTok','Facebook','LinkedIn','Internet search','Other professional referral','Other']},
@@ -2265,35 +2391,45 @@ const GATE_STEPS=[
   {field:'willingness_to_pay',q:'Would you pay for a personalised joint health programme?',opts:['Yes definitely','Possibly','Not sure','No']},
   {field:'genomics_interest',q:'Would you be interested in a genomic risk assessment, understanding how your genetics influence your joint health and injury risk?',opts:['Yes definitely','Possibly','Not sure','No']}
 ];
-let gateIdx=0;
+let gateIdx=0, surveySent=false;
+
+// Mounts the optional block at the foot of the revealed report.
+function renderOptionalSurvey(){
+  var card=(window.__kaPendingReport||{}).card; if(!card) return;
+  if(document.getElementById('surveyWrap')) return;
+  var wrap=document.createElement('div');
+  wrap.id='surveyWrap';
+  wrap.style.cssText='background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px 18px;margin:20px 0';
+  wrap.innerHTML=
+     '<div style="font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Optional</div>'
+    +'<div style="font-family:var(--fd);font-size:17px;font-weight:700;color:var(--cream);margin-bottom:4px">Help me build this properly</div>'
+    +'<div style="font-size:13px;color:rgba(247,243,237,.6);line-height:1.6;margin-bottom:14px">Five quick taps. Your report is already yours either way &mdash; skip any of these.</div>'
+    +'<div id="gateBody"></div>';
+  card.appendChild(wrap);
+  renderGateStep(0);
+}
+
 function renderGateStep(i){
   gateIdx=i;
   const body=document.getElementById('gateBody');
-  const prog=document.getElementById('gateProg');
   if(!body) return;
-  if(prog) prog.textContent='Step '+(i+1)+' of '+(GATE_STEPS.length+1);
-  if(i<GATE_STEPS.length){
-    const st=GATE_STEPS[i];
-    body.innerHTML=
-      '<div style="font-size:13px;font-weight:500;color:rgba(247,243,237,.85);margin-bottom:10px;line-height:1.5">'+st.q+'</div>'
-      +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">'
-      +st.opts.map(o=>'<button class="supp-pill" style="font-size:12px;padding:8px 14px" onclick="gateSel(this)">'+o+'</button>').join('')
-      +'</div>'
-      +(i>0?'<div style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="renderGateStep('+(i-1)+')">&larr; Back</div>':'');
-    const prev=gateData[st.field];
-    if(prev){body.querySelectorAll('.supp-pill').forEach(b=>{if(b.textContent.trim()===prev)b.classList.add('sel');});}
-  }else{
-    body.innerHTML=
-      '<div style="font-size:13px;font-weight:500;color:rgba(247,243,237,.85);margin-bottom:4px;line-height:1.5">Last step. Where should we send your full report?</div>'
-      +'<div style="font-size:12px;color:rgba(247,243,237,.55);line-height:1.5;margin-bottom:10px">Your report is emailed to you so you can save it and track your progress.</div>'
-      +'<input type="email" id="unlockEmail" placeholder="you@example.com" autocomplete="email" onkeydown="if(event.key===\'Enter\')unlockResult()" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 16px;font-size:15px;color:var(--cream);font-family:var(--fb);outline:none;margin-bottom:10px"/>'
-      +'<button id="unlockBtn" onclick="unlockResult()" style="width:100%;background:var(--gold);color:#173d2c;border:none;border-radius:100px;padding:15px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer">Unlock my full report &rarr;</button>'
-      +'<div style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">No spam. Unsubscribe any time. We never share your data.</div>'
-      +'<div style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:8px" onclick="renderGateStep('+(GATE_STEPS.length-1)+')">&larr; Back</div>';
-    const inp=document.getElementById('unlockEmail');
-    if(inp) setTimeout(()=>inp.focus(),150);
-  }
+  if(i>=GATE_STEPS.length){ finishSurvey(true); return; }
+  const st=GATE_STEPS[i];
+  body.innerHTML=
+    '<div style="font-size:11px;color:var(--muted);margin-bottom:8px">'+(i+1)+' of '+GATE_STEPS.length+'</div>'
+    +'<div style="font-size:13px;font-weight:500;color:rgba(247,243,237,.85);margin-bottom:10px;line-height:1.5">'+st.q+'</div>'
+    +'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">'
+    +st.opts.map(o=>'<button class="supp-pill" style="font-size:12px;padding:8px 14px" onclick="gateSel(this)">'+o+'</button>').join('')
+    +'</div>'
+    +'<div style="display:flex;gap:14px;align-items:center">'
+    +(i>0?'<span style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="renderGateStep('+(i-1)+')">&larr; Back</span>':'')
+    +'<span style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="renderGateStep('+(i+1)+')">Skip this</span>'
+    +'<span style="font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="finishSurvey(false)">No thanks</span>'
+    +'</div>';
+  const prev=gateData[st.field];
+  if(prev){body.querySelectorAll('.supp-pill').forEach(b=>{if(b.textContent.trim()===prev)b.classList.add('sel');});}
 }
+
 function gateSel(btn){
   const st=GATE_STEPS[gateIdx];
   if(!st) return;
@@ -2302,6 +2438,36 @@ function gateSel(btn){
   gateData[st.field]=btn.textContent.trim();
   if(window.kaTrack) kaTrack('supp_step',{ step:gateIdx+1, field:st.field });
   setTimeout(()=>renderGateStep(gateIdx+1),180);
+}
+
+// Posts whatever was answered. Never blocks anything; the report is already up.
+function finishSurvey(completed){
+  var body=document.getElementById('gateBody');
+  var answered=Object.keys(gateData).length;
+  if(!surveySent && answered>0){
+    surveySent=true;
+    try{
+      fetch('/api/supplementary',{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          timestamp:new Date().toISOString(),
+          result_id:window.__kaResultId||'',
+          email:userEmail||'',
+          referral_source:gateData.referral_source||'',
+          region:gateData.region||'',
+          prior_advice:gateData.prior_advice||'',
+          willingness_to_pay:gateData.willingness_to_pay||'',
+          genomics_interest:gateData.genomics_interest||''
+        })
+      }).catch(function(){});
+    }catch(e){}
+  }
+  if(body){
+    body.innerHTML = answered>0
+      ? '<div style="font-size:13px;color:var(--cream);line-height:1.6">&#10003; Thank you &mdash; that genuinely helps.</div>'
+      : '<div style="font-size:13px;color:var(--muted);line-height:1.6">No problem.</div>';
+  }
+  if(window.kaTrack) kaTrack('supp_finished',{ answered:answered, completed:!!completed });
 }
 
 // ── Counter (Supabase optional) ───────────────────────────────────────────
@@ -2326,58 +2492,6 @@ async function incrementCounter(resultData){
       body:JSON.stringify(rd)
     }).catch(()=>{});
   } catch(e){}
-}
-
-// ── Result unlock — answers + email reveal the full PRIME breakdown + score-card ──
-let gateSubmitted=false;
-function unlockResult(){
-  var inp=document.getElementById('unlockEmail'); if(!inp) return;
-  var val=(inp.value||'').trim();
-  if(!val || val.indexOf('@')<0){ inp.style.borderColor='rgba(224,85,85,.6)'; inp.placeholder='Please enter a valid email'; return; }
-  if(gateSubmitted) return;
-  gateSubmitted=true;
-  var btn=document.getElementById('unlockBtn');
-  if(btn){ btn.disabled=true; btn.textContent='Unlocking…'; }
-  var R=window.__kaResult||{};
-  userEmail=val;
-  if(window.kaTrack) kaTrack('email_captured',{ point:'gated-unlock' });
-  // Supplementary answers + email + result_id — the row that joins everything.
-  try{
-    fetch('/api/supplementary',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        timestamp:new Date().toISOString(),
-        result_id:window.__kaResultId||'',
-        email:val,
-        referral_source:gateData.referral_source||'',
-        region:gateData.region||'',
-        prior_advice:gateData.prior_advice||'',
-        willingness_to_pay:gateData.willingness_to_pay||'',
-        genomics_interest:gateData.genomics_interest||''
-      })
-    }).catch(()=>{});
-  }catch(e){}
-  // Backfill the email onto the Quiz Responses row written at result display.
-  try{
-    fetch('/api/unlock',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ result_id:window.__kaResultId||'', email:val })
-    }).catch(()=>{});
-  }catch(e){}
-  // Tie email -> result -> source in Kit (sendToKit carries UTM/source + result_id)
-  try{ sendToKit(val, R.kneeAge, R.score); }catch(e){}
-  // Remember completion locally so repeat attempts are recognised.
-  try{
-    const done=JSON.parse(localStorage.getItem('kneeage_completed_emails')||'[]');
-    if(!done.includes(val.toLowerCase())){ done.push(val.toLowerCase()); localStorage.setItem('kneeage_completed_emails',JSON.stringify(done)); }
-  }catch(e){}
-  if(window.kaTrack) kaTrack('report_unlocked',{});
-  var locked=document.getElementById('primeLocked');
-  var unlocked=document.getElementById('primeUnlocked');
-  if(locked) locked.style.display='none';
-  if(unlocked){ unlocked.style.display='block'; unlocked.scrollIntoView({behavior:'smooth',block:'start'}); }
 }
 
 // ── Email gate ──────────────────────────────────────────────────────────────
@@ -2459,19 +2573,24 @@ function skipEmail(){
   startQuizFromGate();
 }
 
-function sendToKit(email, kneeAge, score){
-  // Updates Kit subscriber custom fields with their quiz result
-  // Uses Vercel Edge Function at /api/subscribe
-  // Only fires if we have an email (from URL param or email gate)
+function sendToKit(email, kneeAge, score, age, sex, unlocked){
+  // Updates the Kit subscriber's custom fields and tags with their quiz result.
+  // Uses the Vercel Edge Function at /api/subscribe, which derives age_gap and
+  // the numeric tag IDs server-side so there is a single source of truth.
+  // `tags` is deliberately NOT sent from here any more: it used to pass the name
+  // 'knee-age-quiz-completed', which Kit v3 cannot resolve and which does not
+  // exist in the account.
   if(!email) return;
   fetch('/api/subscribe',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
       email,
-      tags:['knee-age-quiz-completed'],
-      kneeAge: kneeAge||'',
-      score: score||'',
+      kneeAge: (kneeAge===0||kneeAge) ? kneeAge : '',
+      score:   (score===0||score)     ? score   : '',
+      age:     (age===0||age)         ? age     : '',
+      sex:     sex || '',
+      unlocked: !!unlocked,
       resultId: window.__kaResultId || '',
       attribution: window.KA_getAttribution ? window.KA_getAttribution() : null   // tie email to source
     })

@@ -9,8 +9,24 @@ export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: corsHeaders });
   const ok = (msg) => new Response(JSON.stringify({ success: true, msg }), { status: 200, headers: corsHeaders });
   const err = (msg) => new Response(JSON.stringify({ success: false, msg }), { status: 200, headers: corsHeaders });
+
+  // Same blank-row hole as /api/complete had: no method check, so a bare GET
+  // writes an empty row into the supplementary sheet. Closed here too.
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ success: false, msg: 'method not allowed' }), {
+      status: 405, headers: { ...corsHeaders, 'Allow': 'POST, OPTIONS' },
+    });
+  }
+
   try {
-    const body = await req.json().catch(() => ({}));
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return new Response(JSON.stringify({ success: false, msg: 'invalid body' }), { status: 400, headers: corsHeaders });
+    }
+    // Must be tied to a real completion, otherwise it is not a row worth having.
+    if (!/^ka-[A-Za-z0-9-]{8,64}$/.test(String(body.result_id || ''))) {
+      return new Response(JSON.stringify({ success: false, msg: 'incomplete payload' }), { status: 400, headers: corsHeaders });
+    }
     const SHEETDB_URL = process.env.SUPPLEMENTARY_SHEETDB_URL;
     if (!SHEETDB_URL) return err('SHEETDB_URL not configured');
     const row = {
