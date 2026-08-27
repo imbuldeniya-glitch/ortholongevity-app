@@ -9,8 +9,30 @@ export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: corsHeaders });
   const ok = (msg, data = {}) => new Response(JSON.stringify({ success: true, msg, ...data }), { status: 200, headers: corsHeaders });
   const err = (msg) => new Response(JSON.stringify({ success: false, msg }), { status: 200, headers: corsHeaders });
+
+  // ── Blank-row guard (added 27 Aug 2026) ───────────────────────────────────
+  // There was no method check, so a bare GET from a crawler wrote an empty row.
+  // 15 such rows accumulated between 3 Apr and 27 Aug. Anything that is not a
+  // POST carrying a genuine completion is now rejected before any write.
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ success: false, msg: 'method not allowed' }), {
+      status: 405, headers: { ...corsHeaders, 'Allow': 'POST, OPTIONS' },
+    });
+  }
+
   try {
-    const body = await req.json().catch(() => ({}));
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return new Response(JSON.stringify({ success: false, msg: 'invalid body' }), { status: 400, headers: corsHeaders });
+    }
+    // A real completion always carries a result_id and an age. Without both this
+    // is not a quiz completion and must not become a row.
+    const hasResultId = typeof body.result_id === 'string' && /^ka-[A-Za-z0-9-]{8,64}$/.test(body.result_id);
+    const hasAge = body.age !== undefined && body.age !== null && body.age !== '' && Number.isFinite(Number(body.age));
+    if (!hasResultId || !hasAge) {
+      return new Response(JSON.stringify({ success: false, msg: 'incomplete payload' }), { status: 400, headers: corsHeaders });
+    }
+
     const {
       result_id = '',
       email = '',
